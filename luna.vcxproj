@@ -138,12 +138,18 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="core\Camera.cpp" />
+    <ClCompile Include="core\Mesh.cpp" />
+    <ClCompile Include="core\Shader.cpp" />
+    <ClCompile Include="core\Space.cpp" />
     <ClCompile Include="main\glad.c" />
     <ClCompile Include="main\main.cpp" />
     <ClCompile Include="main\main_time.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="core\Camera.h" />
+    <ClInclude Include="core\Mesh.h" />
+    <ClInclude Include="core\Shader.h" />
+    <ClInclude Include="core\Space.h" />
     <ClInclude Include="main\main.h" />
     <ClInclude Include="main\main_time.h" />
   </ItemGroup>

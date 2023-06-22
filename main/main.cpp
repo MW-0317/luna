@@ -2,17 +2,25 @@
 
 #include <thirdparty/glad/glad.h>
 #include <thirdparty/GLFW/glfw3.h>
-#include "thirdparty/stb/stb.h"
 #include <thirdparty/glm/glm.hpp>
 #include <thirdparty/glm/gtc/matrix_transform.hpp>
 #include <thirdparty/glm/gtc/type_ptr.hpp>
+#include <thirdparty/glm/gtx/string_cast.hpp>
+#define STB_IMAGE_IMPLEMENTATION
+#include "thirdparty/stb/stb_image.h"
 
 #include "main.h"
 #include "main_time.h"
+
 #include "core/Camera.h"
+#include "core/Space.h"
+#include "core/Mesh.h"
+#include "core/Shader.h"
 
 int main()
 {
+	stbi_set_flip_vertically_on_load(true);
+
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
@@ -34,12 +42,19 @@ int main()
 	}
 
 	glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+
+	CameraSettings cSet;
+	Camera* cam = new Camera2D(cSet);
+	Space s = Space(cam);
 
 	while (!glfwWindowShouldClose(window))
 	{
-		processInput(window);
+		s.updateSpace();
+		s.getCamera()->processInput(window, s.getDelta());
 
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
@@ -52,10 +67,4 @@ int main()
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
 	glViewport(0, 0, width, height);
-}
-
-void processInput(GLFWwindow* window)
-{
-	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-		glfwSetWindowShouldClose(window, true);
 }

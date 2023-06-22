@@ -1,5 +1,6 @@
 #pragma once
 #ifndef CAMERA_H
+#define CAMERA_H
 
 #include <thirdparty/GLFW/glfw3.h>
 #include <thirdparty/glm/glm.hpp>
@@ -7,8 +8,8 @@
 struct CameraSettings
 {
 	glm::vec3 position	= glm::vec3(0.0f);
-	glm::vec3 front		= glm::vec3(0.0f);
-	glm::vec3 up		= glm::vec3(0.0f);
+	glm::vec3 front		= glm::vec3(0.0f, 0.0f, -1.0f);
+	glm::vec3 up		= glm::vec3(0.0f, 1.0f, 0.0f);
 
 	float fov			= 45.0f;
 	float speed			= 2.5f;
@@ -20,6 +21,7 @@ protected:
 	CameraSettings cameraSettings;
 
 public:
+	Camera();
 	Camera(CameraSettings cameraSettings);
 	~Camera();
 
@@ -32,13 +34,17 @@ public:
 	void setSpeed(float speed);
 };
 
-class Camera2D : Camera
+class Camera2D : public Camera
 {
+public:
+	Camera2D(CameraSettings cameraSettings);
+	~Camera2D();
 	void processInput(GLFWwindow* window, float deltaframe);
 };
 
-class Camera3D : Camera
+class Camera3D : public Camera
 {
+public:
 	void processInput(GLFWwindow* window, float deltaframe);
 };
 

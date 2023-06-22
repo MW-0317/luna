@@ -1,9 +1,17 @@
 #include "Camera.h"
 
+#include <iostream>
+
+Camera::Camera() {}
+
 Camera::Camera(CameraSettings cameraSettings)
 {
 	this->cameraSettings = cameraSettings;
 }
+
+Camera::~Camera(){}
+
+void Camera::processInput(GLFWwindow* window, float deltaframe){}
 
 glm::vec3 Camera::getPosition()
 {
@@ -25,6 +33,10 @@ void Camera::setSpeed(float speed)
 	this->cameraSettings.speed = speed;
 }
 
+Camera2D::Camera2D(CameraSettings cameraSettings) : Camera(cameraSettings){}
+
+Camera2D::~Camera2D(){}
+
 void Camera2D::processInput(GLFWwindow* window, float deltaframe)
 {
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
@@ -38,14 +50,14 @@ void Camera2D::processInput(GLFWwindow* window, float deltaframe)
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
 		this->cameraSettings.position += glm::normalize(
 			glm::cross(this->cameraSettings.front,
-				this->cameraSettings.up) * frameCameraSpeed);
+				this->cameraSettings.up)) * frameCameraSpeed;
 	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
 		this->cameraSettings.position -= glm::normalize(
 			glm::cross(this->cameraSettings.front,
-				this->cameraSettings.up) * frameCameraSpeed);
+				this->cameraSettings.up)) * frameCameraSpeed;
 
 	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
 		this->cameraSettings.position += frameCameraSpeed * this->cameraSettings.up;
-	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
+	if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
 		this->cameraSettings.position -= frameCameraSpeed * this->cameraSettings.up;
 }
