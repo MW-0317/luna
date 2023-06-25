@@ -73,10 +73,12 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IncludePath>$(ProjectDir);$(ProjectDir)thirdparty;$(IncludePath)</IncludePath>
     <LibraryPath>$(ProjectDir)thirdparty;$(LibraryPath)</LibraryPath>
+    <ExecutablePath>$(ProjectDir);$(ExecutablePath)</ExecutablePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IncludePath>$(ProjectDir);$(ProjectDir)thirdparty;$(IncludePath)</IncludePath>
     <LibraryPath>$(ProjectDir)thirdparty;$(LibraryPath)</LibraryPath>
+    <ExecutablePath>$(ProjectDir);$(ExecutablePath)</ExecutablePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -138,7 +140,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="core\Camera.cpp" />
-    <ClCompile Include="core\Mesh.cpp" />
+    <ClCompile Include="core\Object.cpp" />
     <ClCompile Include="core\Shader.cpp" />
     <ClCompile Include="core\Space.cpp" />
     <ClCompile Include="main\glad.c" />
@@ -147,7 +149,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="core\Camera.h" />
-    <ClInclude Include="core\Mesh.h" />
+    <ClInclude Include="core\Object.h" />
     <ClInclude Include="core\Shader.h" />
     <ClInclude Include="core\Space.h" />
     <ClInclude Include="main\main.h" />

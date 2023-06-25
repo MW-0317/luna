@@ -30,10 +30,10 @@
     <ClCompile Include="core\Space.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="core\Mesh.cpp">
+    <ClCompile Include="core\Shader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="core\Shader.cpp">
+    <ClCompile Include="core\Object.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -50,10 +50,10 @@
     <ClInclude Include="core\Space.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="core\Mesh.h">
+    <ClInclude Include="core\Shader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="core\Shader.h">
+    <ClInclude Include="core\Object.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
