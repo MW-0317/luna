@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{06a47063-4fe3-470a-a3e9-488d31cb30fa}</ProjectGuid>
-    <RootNamespace>luna</RootNamespace>
+    <ProjectGuid>{acb2d82e-ce93-4c43-a500-cfc6700eebbd}</ProjectGuid>
+    <RootNamespace>sandbox</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -40,13 +40,13 @@
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -71,14 +71,14 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(ProjectDir);$(ProjectDir)thirdparty;$(IncludePath)</IncludePath>
-    <LibraryPath>$(ProjectDir)thirdparty;$(ProjectDir);$(LibraryPath)</LibraryPath>
-    <ExecutablePath>$(ProjectDir);$(ExecutablePath)</ExecutablePath>
+    <IncludePath>$(SolutionDir);$(SolutionDir)thirdparty;$(IncludePath)</IncludePath>
+    <ExecutablePath>$(SolutionDir);$(ExecutablePath)</ExecutablePath>
+    <LibraryPath>$(SolutionDir)thirdparty;$(SolutionDir);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(ProjectDir);$(ProjectDir)thirdparty;$(IncludePath)</IncludePath>
-    <LibraryPath>$(ProjectDir)thirdparty;$(ProjectDir);$(LibraryPath)</LibraryPath>
-    <ExecutablePath>$(ProjectDir);$(ExecutablePath)</ExecutablePath>
+    <IncludePath>$(SolutionDir);$(SolutionDir)thirdparty;$(IncludePath)</IncludePath>
+    <ExecutablePath>$(SolutionDir);$(ExecutablePath)</ExecutablePath>
+    <LibraryPath>$(SolutionDir)thirdparty;$(SolutionDir);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -114,13 +114,11 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>
-      </AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>"GLFW/glfw3.lib";opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -131,52 +129,22 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>
-      </AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>"GLFW/glfw3.lib";opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="core\Camera.cpp" />
-    <ClCompile Include="core\Object.cpp" />
-    <ClCompile Include="core\Shader.cpp" />
-    <ClCompile Include="core\Space.cpp" />
-    <ClCompile Include="example\entry.cpp" />
-    <ClCompile Include="main\glad.c" />
-    <ClCompile Include="main\luna.cpp" />
-    <ClCompile Include="main\main_time.cpp" />
-    <ClCompile Include="thirdparty\imgui\imgui.cpp" />
-    <ClCompile Include="thirdparty\imgui\imgui_demo.cpp" />
-    <ClCompile Include="thirdparty\imgui\imgui_draw.cpp" />
-    <ClCompile Include="thirdparty\imgui\imgui_impl_glfw.cpp" />
-    <ClCompile Include="thirdparty\imgui\imgui_impl_opengl3.cpp" />
-    <ClCompile Include="thirdparty\imgui\imgui_impl_win32.cpp" />
-    <ClCompile Include="thirdparty\imgui\imgui_tables.cpp" />
-    <ClCompile Include="thirdparty\imgui\imgui_widgets.cpp" />
+    <ProjectReference Include="..\luna.vcxproj">
+      <Project>{06a47063-4fe3-470a-a3e9-488d31cb30fa}</Project>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="core\Camera.h" />
-    <ClInclude Include="core\Object.h" />
-    <ClInclude Include="core\Shader.h" />
-    <ClInclude Include="core\Space.h" />
-    <ClInclude Include="main\luna.h" />
-    <ClInclude Include="main\main_time.h" />
-    <ClInclude Include="thirdparty\imgui\imconfig.h" />
-    <ClInclude Include="thirdparty\imgui\imgui.h" />
-    <ClInclude Include="thirdparty\imgui\imgui_impl_glfw.h" />
-    <ClInclude Include="thirdparty\imgui\imgui_impl_opengl3.h" />
-    <ClInclude Include="thirdparty\imgui\imgui_impl_opengl3_loader.h" />
-    <ClInclude Include="thirdparty\imgui\imgui_impl_win32.h" />
-    <ClInclude Include="thirdparty\imgui\imgui_internal.h" />
-    <ClInclude Include="thirdparty\imgui\imstb_rectpack.h" />
-    <ClInclude Include="thirdparty\imgui\imstb_textedit.h" />
-    <ClInclude Include="thirdparty\imgui\imstb_truetype.h" />
+    <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

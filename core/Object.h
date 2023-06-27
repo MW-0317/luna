@@ -15,6 +15,8 @@ struct Vertex
 	glm::vec3 position;
 	glm::vec3 normal;
 	glm::vec3 texcoords;
+	Vertex(glm::vec3 pos) : position(pos)
+	{}
 	Vertex(glm::vec3 pos, glm::vec3 nor, glm::vec3 tex) : position(pos), normal(nor), texcoords(tex)
 	{}
 };
@@ -41,6 +43,7 @@ public:
 	std::vector<Texture>		textures;
 
 	// Requires vertices to be triangulated
+	Mesh(std::vector<Vertex> vertices);
 	Mesh(std::vector<Vertex> vertices, std::vector<Texture> textures);
 	Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices,
 		std::vector<Texture> textures);
