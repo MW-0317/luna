@@ -1,7 +1,4 @@
 #pragma once
-#ifndef MESH_H
-#define MESH_H
-
 #include <string>
 #include <vector>
 #include <iostream>
@@ -51,5 +48,3 @@ public:
 
 	std::vector<unsigned int> triangulateMesh(std::vector<Vertex> vertices);
 };
-
-#endif // !MESH_H

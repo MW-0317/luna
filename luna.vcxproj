@@ -112,7 +112,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>LUNA_PLATFORM_WINDOWS;LUNA_BUILD_DLL;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>
       </AdditionalIncludeDirectories>
@@ -129,7 +129,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>LUNA_PLATFORM_WINDOWS;LUNA_BUILD_DLL;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>
       </AdditionalIncludeDirectories>
@@ -144,13 +144,16 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="core\Camera.cpp" />
+    <ClCompile Include="core\Globals.cpp" />
     <ClCompile Include="core\Object.cpp" />
     <ClCompile Include="core\Shader.cpp" />
     <ClCompile Include="core\Space.cpp" />
+    <ClCompile Include="core\Engine.cpp" />
     <ClCompile Include="example\entry.cpp" />
     <ClCompile Include="main\glad.c" />
     <ClCompile Include="main\luna.cpp" />
     <ClCompile Include="main\main_time.cpp" />
+    <ClCompile Include="renderer\Render.cpp" />
     <ClCompile Include="thirdparty\imgui\imgui.cpp" />
     <ClCompile Include="thirdparty\imgui\imgui_demo.cpp" />
     <ClCompile Include="thirdparty\imgui\imgui_draw.cpp" />
@@ -162,11 +165,16 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="core\Camera.h" />
+    <ClInclude Include="core\Core.h" />
+    <ClInclude Include="core\Globals.h" />
+    <ClInclude Include="core\includes.h" />
     <ClInclude Include="core\Object.h" />
     <ClInclude Include="core\Shader.h" />
     <ClInclude Include="core\Space.h" />
+    <ClInclude Include="core\Engine.h" />
     <ClInclude Include="main\luna.h" />
     <ClInclude Include="main\main_time.h" />
+    <ClInclude Include="renderer\Render.h" />
     <ClInclude Include="thirdparty\imgui\imconfig.h" />
     <ClInclude Include="thirdparty\imgui\imgui.h" />
     <ClInclude Include="thirdparty\imgui\imgui_impl_glfw.h" />

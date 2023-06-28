@@ -1,11 +1,14 @@
 #include <main/luna.h>
 
-namespace luna
-{
-	__declspec(dllimport) int run();
-}
-
 int main()
 {
-	return luna::run();
+	// luna::Render r = new Render();
+	// r.run();
+	// luna::Game g = new Game();
+	// g.run();
+	luna::Engine* e = new luna::Engine();
+	e->run();
+
+	//return luna::run();
+	return 0;
 }

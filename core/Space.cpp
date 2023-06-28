@@ -1,13 +1,20 @@
 #include "Space.h"
 
-Space::Space() : currentCamera() {}
+Space::Space()
+{
+	CameraSettings cs = CameraSettings();
+	currentCamera = new Camera(cs);
+}
 
 Space::Space(Camera* camera)
 {
 	this->currentCamera = camera;
 }
 
-Space::~Space() {}
+Space::~Space()
+{
+	delete currentCamera;
+}
 
 void Space::updateSpace()
 {

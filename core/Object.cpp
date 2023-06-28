@@ -1,7 +1,8 @@
-#include <thirdparty/glad/glad.h>
-#include <thirdparty/stb/stb_image.h>
-
 #include "Object.h"
+
+#include <thirdparty/glad/glad.h>
+#define STB_IMAGE_IMPLEMENTATION
+#include <thirdparty/stb/stb_image.h>
 
 int Texture::loadTexture(char* path)
 {

@@ -2,8 +2,7 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
-#include <thirdparty/GLFW/glfw3.h>
-#include <thirdparty/glm/glm.hpp>
+#include "includes.h"
 
 struct CameraSettings
 {
@@ -25,7 +24,7 @@ public:
 	Camera(CameraSettings cameraSettings);
 	~Camera();
 
-	virtual void processInput(GLFWwindow* window, float deltaframe) = 0;
+	void processInput(GLFWwindow* window, float deltaframe);
 
 	glm::vec3 getPosition();
 	float getSpeed();

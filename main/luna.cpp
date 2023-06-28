@@ -4,7 +4,7 @@ namespace luna
 {
 	int run()
 	{
-		stbi_set_flip_vertically_on_load(true);
+		//stbi_set_flip_vertically_on_load(true);
 
 		glfwInit();
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
@@ -111,11 +111,6 @@ namespace luna
 		glfwTerminate();
 
 		return 0;
-	}
-
-	void framebuffer_size_callback(GLFWwindow* window, int width, int height)
-	{
-		glViewport(0, 0, width, height);
 	}
 }
 
