@@ -12,3 +12,5 @@
 #include <thirdparty/glm/gtc/matrix_transform.hpp>
 #include <thirdparty/glm/gtc/type_ptr.hpp>
 #include <thirdparty/glm/gtx/string_cast.hpp>
+
+#include <thirdparty/ffmpeg.h>

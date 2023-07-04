@@ -8,6 +8,3 @@
 #include "core/Shader.h"
 #include "core/Engine.h"
 #include "renderer/Render.h"
-
-#define WINDOW_WIDTH 800
-#define WINDOW_HEIGHT 600

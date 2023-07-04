@@ -73,7 +73,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IncludePath>$(SolutionDir);$(SolutionDir)thirdparty;$(IncludePath)</IncludePath>
     <ExecutablePath>$(SolutionDir);$(ExecutablePath)</ExecutablePath>
-    <LibraryPath>$(SolutionDir)thirdparty;$(SolutionDir);$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)thirdparty;$(SolutionDir);C:\msys64\usr\local\lib;C:\dev\ffmpeg-prebuilt\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IncludePath>$(SolutionDir);$(SolutionDir)thirdparty;$(IncludePath)</IncludePath>
@@ -114,11 +114,12 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>LUNA_PLATFORM_WINDOWS;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>C:\dev\ffmpeg-prebuilt\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(CoreLibraryDependencies);avcodec.lib;avdevice.lib;avfilter.lib;avformat.lib;avutil.lib;swresample.lib;swscale.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">

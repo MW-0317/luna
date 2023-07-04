@@ -3,9 +3,11 @@
 
 namespace luna
 {
-	Engine::Engine()
+	LUNA_API Engine::Engine(int width, int height)
 	{
 		space = new Space();
+		this->width = width;
+		this->height = height;
 		//stbi_set_flip_vertically_on_load(true);
 
 		glfwInit();
@@ -14,7 +16,7 @@ namespace luna
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 		glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 
-		this->window = glfwCreateWindow(this->windowWidth, this->windowHeight, "luna", NULL, NULL);
+		this->window = glfwCreateWindow(width, height, "luna", NULL, NULL);
 		if (window == NULL)
 		{
 			std::cout << "MAIN::WINDOW_FAILED" << std::endl;
@@ -22,7 +24,7 @@ namespace luna
 			return;
 		}
 		glfwMakeContextCurrent(window);
-		glfwSwapInterval(1); // Enables vsync
+		// glfwSwapInterval(1); // Enables vsync, add to Game::Game()
 
 		if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 		{
@@ -38,10 +40,14 @@ namespace luna
 
 		ImGui::StyleColorsDark();
 
-		ImGui_ImplGlfw_InitForOpenGL(window, true);
-		ImGui_ImplOpenGL3_Init("#version 460 core");
+		if (!IMGUI_INIT)
+		{
+			ImGui_ImplGlfw_InitForOpenGL(window, true);
+			ImGui_ImplOpenGL3_Init("#version 460 core");
+			IMGUI_INIT = true;
+		}
 
-		glViewport(0, 0, this->windowWidth, this->windowHeight);
+		glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
 		glClearColor(1.0f, 0.5f, 1.0f, 1.0f);
 		glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 	}
@@ -56,25 +62,48 @@ namespace luna
 		glfwTerminate();
 		delete space;
 		delete window;
+
+		IMGUI_INIT = false;
 	}
 
 	int Engine::run()
 	{
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glfwSwapBuffers(window);
+		float delta = 0.0f;
 		while (!glfwWindowShouldClose(window))
 		{
-			frameUpdate();
+			glfwPollEvents();
+
+			ImGui_ImplOpenGL3_NewFrame();
+			ImGui_ImplGlfw_NewFrame();
+			ImGui::NewFrame();
+
+			mainFrameUpdate(delta);
+
+			ImGui::Render();
+
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+			space->updateSpace();
+			space->getCamera()->processInput(window, space->getDelta());
+			delta = space->getDelta();
+
+			ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+			glfwSwapBuffers(window);
 		}
 		return 0;
 	}
 
-	void Engine::frameUpdate()
+	void Engine::mainFrameUpdate(float deltatime)
 	{
-		glfwPollEvents();
+		frameUpdate(deltatime);
+	}
 
-		ImGui_ImplOpenGL3_NewFrame();
-		ImGui_ImplGlfw_NewFrame();
-		ImGui::NewFrame();
-
+	void Engine::frameUpdate(float deltatime)
+	{
+		// TODO: Figure out windows/widgets
 		if (testWindow) {
 			ImGui::Begin("Test Window", &testWindow);
 			ImGui::Text("Hello World!");
@@ -82,15 +111,5 @@ namespace luna
 				testWindow = false;
 			ImGui::End();
 		}
-		ImGui::Render();
-
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-		space->updateSpace();
-		space->getCamera()->processInput(window, space->getDelta());
-
-		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-
-		glfwSwapBuffers(window);
 	}
 }

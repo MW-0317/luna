@@ -72,7 +72,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IncludePath>$(ProjectDir);$(ProjectDir)thirdparty;$(IncludePath)</IncludePath>
-    <LibraryPath>$(ProjectDir)thirdparty;$(ProjectDir);$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(ProjectDir)thirdparty;$(ProjectDir);C:\msys64\usr\local\lib;C:\dev\ffmpeg-prebuilt\lib;$(LibraryPath)</LibraryPath>
     <ExecutablePath>$(ProjectDir);$(ExecutablePath)</ExecutablePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -114,13 +114,12 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>LUNA_PLATFORM_WINDOWS;LUNA_BUILD_DLL;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>
-      </AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\dev\ffmpeg-prebuilt\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>"GLFW/glfw3.lib";opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>"GLFW/glfw3.lib";opengl32.lib;avcodec.lib;avdevice.lib;avfilter.lib;avformat.lib;avutil.lib;swresample.lib;swscale.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -131,8 +130,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>LUNA_PLATFORM_WINDOWS;LUNA_BUILD_DLL;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>
-      </AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\dev\ffmpeg</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -162,6 +160,7 @@
     <ClCompile Include="thirdparty\imgui\imgui_impl_win32.cpp" />
     <ClCompile Include="thirdparty\imgui\imgui_tables.cpp" />
     <ClCompile Include="thirdparty\imgui\imgui_widgets.cpp" />
+    <ClCompile Include="core\media\Video.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="core\Camera.h" />
@@ -175,6 +174,7 @@
     <ClInclude Include="main\luna.h" />
     <ClInclude Include="main\main_time.h" />
     <ClInclude Include="renderer\Render.h" />
+    <ClInclude Include="thirdparty\ffmpeg.h" />
     <ClInclude Include="thirdparty\imgui\imconfig.h" />
     <ClInclude Include="thirdparty\imgui\imgui.h" />
     <ClInclude Include="thirdparty\imgui\imgui_impl_glfw.h" />
@@ -185,6 +185,7 @@
     <ClInclude Include="thirdparty\imgui\imstb_rectpack.h" />
     <ClInclude Include="thirdparty\imgui\imstb_textedit.h" />
     <ClInclude Include="thirdparty\imgui\imstb_truetype.h" />
+    <ClInclude Include="core\media\Video.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

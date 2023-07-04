@@ -10,19 +10,19 @@ namespace luna
 	LUNA_API class Engine
 	{
 	protected:
-		int windowHeight = 600;
-		int windowWidth = 800;
 		GLFWwindow* window;
-
 		Space* space;
+
+		int width, height;
 
 		bool testWindow = true;
 	public:
-		LUNA_API Engine();
+		LUNA_API Engine(int width, int height);
 		~Engine();
 
 		LUNA_API int run();
-		void frameUpdate();
+		virtual void mainFrameUpdate(float deltatime);
+		LUNA_API virtual void frameUpdate(float deltatime);
 	};
 }
 
