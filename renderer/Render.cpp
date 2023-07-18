@@ -3,9 +3,9 @@
 
 namespace luna
 {
-	Render::Render(const char* filename, float fps, float seconds, int width, int height) 
-		: Engine(width, height)
+	Render::Render(const char* filename, float fps, float seconds, int width, int height)
 	{
+		init(width, height);
 		video = new Video(filename, fps, seconds, width, height);
 	}
 
@@ -38,5 +38,32 @@ namespace luna
 	{
 		video->save();
 		video->free();
+	}
+
+	void Render::createWindow(int width, int height)
+	{
+		glfwInit();
+
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
+		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+		glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+		glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
+
+		this->window = glfwCreateWindow(width, height, "luna", NULL, NULL);
+		if (window == NULL)
+		{
+			std::cout << "MAIN::WINDOW_FAILED" << std::endl;
+			glfwTerminate();
+			return;
+		}
+		glfwMakeContextCurrent(window);
+		// glfwSwapInterval(1); // Enables vsync, add to Game::Game()
+
+		if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+		{
+			std::cout << "MAIN::GLAD_INIT_FAILED" << std::endl;
+			return;
+		}
 	}
 }

@@ -32,3 +32,9 @@ float Space::getDelta()
 {
 	return this->deltaframe;
 }
+
+// Temp function, to be removed with tickrate introduction
+void Space::forceStatic()
+{
+	this->isStatic = true;
+}

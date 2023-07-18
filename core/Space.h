@@ -10,6 +10,9 @@ private:
 
 	int width, height, length;
 
+	// Temp, to be removed with tickrate introduction
+	bool isStatic;
+
 public:
 	Space();
 	Space(Camera* camera);
@@ -19,4 +22,7 @@ public:
 
 	Camera* getCamera();
 	float getDelta();
+
+	// Temp function, to be removed with tickrate introduction
+	void forceStatic();
 };

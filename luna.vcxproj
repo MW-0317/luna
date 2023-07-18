@@ -72,7 +72,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IncludePath>$(ProjectDir);$(ProjectDir)thirdparty;$(IncludePath)</IncludePath>
-    <LibraryPath>$(ProjectDir)thirdparty;$(ProjectDir);C:\msys64\usr\local\lib;C:\dev\ffmpeg-prebuilt\lib;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(ProjectDir)thirdparty;$(ProjectDir);C:\msys64\usr\local\lib;C:\dev\prebuilts\lib;$(LibraryPath)</LibraryPath>
     <ExecutablePath>$(ProjectDir);$(ExecutablePath)</ExecutablePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -114,7 +114,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>LUNA_PLATFORM_WINDOWS;LUNA_BUILD_DLL;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\dev\ffmpeg-prebuilt\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\dev\prebuilts\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

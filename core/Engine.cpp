@@ -3,34 +3,14 @@
 
 namespace luna
 {
-	LUNA_API Engine::Engine(int width, int height)
+	void Engine::init(int width, int height)
 	{
 		space = new Space();
 		this->width = width;
 		this->height = height;
 		//stbi_set_flip_vertically_on_load(true);
 
-		glfwInit();
-		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
-		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-		glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-
-		this->window = glfwCreateWindow(width, height, "luna", NULL, NULL);
-		if (window == NULL)
-		{
-			std::cout << "MAIN::WINDOW_FAILED" << std::endl;
-			glfwTerminate();
-			return;
-		}
-		glfwMakeContextCurrent(window);
-		// glfwSwapInterval(1); // Enables vsync, add to Game::Game()
-
-		if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
-		{
-			std::cout << "MAIN::GLAD_INIT_FAILED" << std::endl;
-			return;
-		}
+		this->createWindow(width, height);
 
 		IMGUI_CHECKVERSION();
 		ImGui::CreateContext();
@@ -47,10 +27,17 @@ namespace luna
 			IMGUI_INIT = true;
 		}
 
-		glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+		glViewport(0, 0, width, height);
 		glClearColor(1.0f, 0.5f, 1.0f, 1.0f);
 		glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 	}
+
+	LUNA_API Engine::Engine(int width, int height)
+	{
+		init(width, height);
+	}
+
+	Engine::Engine() {}
 
 	Engine::~Engine()
 	{
@@ -110,6 +97,33 @@ namespace luna
 			if (ImGui::Button("Close"))
 				testWindow = false;
 			ImGui::End();
+		}
+	}
+
+	void Engine::createWindow(int width, int height)
+	{
+		std::cout << "h" << std::endl;
+		glfwInit();
+
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
+		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+		glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+
+		this->window = glfwCreateWindow(width, height, "luna", NULL, NULL);
+		if (window == NULL)
+		{
+			std::cout << "MAIN::WINDOW_FAILED" << std::endl;
+			glfwTerminate();
+			return;
+		}
+		glfwMakeContextCurrent(window);
+		// glfwSwapInterval(1); // Enables vsync, add to Game::Game()
+
+		if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+		{
+			std::cout << "MAIN::GLAD_INIT_FAILED" << std::endl;
+			return;
 		}
 	}
 }

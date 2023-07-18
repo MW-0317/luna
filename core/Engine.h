@@ -16,8 +16,13 @@ namespace luna
 		int width, height;
 
 		bool testWindow = true;
+
+		LUNA_API virtual void init(int width, int height);
+	private:
+		LUNA_API virtual void createWindow(int width, int height);
 	public:
 		LUNA_API Engine(int width, int height);
+		Engine();
 		~Engine();
 
 		LUNA_API int run();
