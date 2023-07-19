@@ -126,4 +126,9 @@ namespace luna
 			return;
 		}
 	}
+
+	void Engine::clearColor(float r, float g, float b, float a)
+	{
+		glClearColor(r, g, b, a);
+	}
 }

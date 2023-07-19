@@ -1,21 +1,29 @@
-//#define SOL_ALL_SAFETIES_ON 1
+#define SOL_ALL_SAFETIES_ON 1
 
 #include <main/luna.h>
-
-#include "ArgParser.h"
 
 #include <thirdparty/lua.h>
 #include <thirdparty/sol/sol.hpp>
 
+#include "ArgParser.h"
+#include "LuaManager.h"
+
 class LuaRender : public luna::Render
 {
+private:
+	sol::state* lua;
 public:
-	LuaRender(const char* filename, float fps, float seconds, int width, int height)
+	LuaRender(sol::state* lua, const char* filename, float fps, float seconds, int width, int height)
 		: Render(filename, fps, seconds, width, height)
-	{}
+	{
+		this->lua = lua;
+	}
 
 	void frameUpdate(float deltatime) override
 	{
+		// Call lua update() if it exists
+		auto update = (*lua)["update"];
+		if (update.valid()) update();
 		return;
 	}
 };
@@ -36,18 +44,21 @@ int main(int argc, char* argv[])
 		return -1;
 	}
 	
-	sol::state lua;
-	lua.open_libraries(sol::lib::base);
-	lua.script_file(luaFile);
-	auto WINDOW_WIDTH_V = lua["WINDOW_WIDTH"];
-	auto WINDOW_HEIGHT_V = lua["WINDOW_HEIGHT"];
-	int WINDOW_WIDTH = 800;
-	int WINDOW_HEIGHT = 600;
-	if (WINDOW_WIDTH_V.valid()) WINDOW_WIDTH = WINDOW_WIDTH_V;
-	if (WINDOW_HEIGHT_V.valid()) WINDOW_HEIGHT = WINDOW_HEIGHT_V;
-	//luna::WINDOW_WIDTH, luna::WINDOW_HEIGHT
-	LuaRender* r = new LuaRender(filename.c_str(), 30.0f, 2.0f,
-		WINDOW_WIDTH, WINDOW_HEIGHT);
+	sol::state* lua = new sol::state();
+	lua->open_libraries(sol::lib::base);
+
+	(*lua)["clearColor"] = &LuaRender::clearColor;
+
+	LuaManager::registerGlobals(lua);
+
+	LuaRender* r = new LuaRender(lua, filename.c_str(), 30.0f, 2.0f,
+		LuaManager::WINDOW_WIDTH, LuaManager::WINDOW_HEIGHT);
+
+	auto luaR = lua->script_file(luaFile, [](lua_State* L, sol::protected_function_result pfr) {
+		return pfr;
+	});
+	if (!luaR.valid()) return -1;
+
 	r->run();
 	r->save();
 

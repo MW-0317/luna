@@ -28,6 +28,8 @@ namespace luna
 		LUNA_API int run();
 		virtual void mainFrameUpdate(float deltatime);
 		LUNA_API virtual void frameUpdate(float deltatime);
+
+		LUNA_API static void clearColor(float r, float g, float b, float a);
 	};
 }
 
