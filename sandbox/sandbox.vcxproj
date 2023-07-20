@@ -147,12 +147,14 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\LuaManager.cpp" />
+    <ClCompile Include="src\luawormhole\LuaRender.cpp" />
+    <ClCompile Include="src\luawormhole\LuaManager.cpp" />
     <ClCompile Include="src\ArgParser.cpp" />
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\LuaManager.h" />
+    <ClInclude Include="src\luawormhole\LuaRender.h" />
+    <ClInclude Include="src\luawormhole\LuaManager.h" />
     <ClInclude Include="src\ArgParser.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

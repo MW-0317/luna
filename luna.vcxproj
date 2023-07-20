@@ -151,6 +151,7 @@
     <ClCompile Include="main\glad.c" />
     <ClCompile Include="main\luna.cpp" />
     <ClCompile Include="main\main_time.cpp" />
+    <ClCompile Include="core\particle\ParticleSystem.cpp" />
     <ClCompile Include="renderer\Render.cpp" />
     <ClCompile Include="thirdparty\imgui\imgui.cpp" />
     <ClCompile Include="thirdparty\imgui\imgui_demo.cpp" />
@@ -173,6 +174,7 @@
     <ClInclude Include="core\Engine.h" />
     <ClInclude Include="main\luna.h" />
     <ClInclude Include="main\main_time.h" />
+    <ClInclude Include="core\particle\ParticleSystem.h" />
     <ClInclude Include="renderer\Render.h" />
     <ClInclude Include="thirdparty\ffmpeg.h" />
     <ClInclude Include="thirdparty\imgui\imconfig.h" />

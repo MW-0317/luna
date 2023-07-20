@@ -32,6 +32,7 @@ namespace luna
 		video->encodeFrame(pixels, size);
 		if (video->isFull())
 			glfwSetWindowShouldClose(window, true);
+		free(pixels);
 	}
 
 	void Render::save()

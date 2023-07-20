@@ -80,6 +80,7 @@ namespace luna
 
 			glfwSwapBuffers(window);
 		}
+		glfwTerminate();
 		return 0;
 	}
 

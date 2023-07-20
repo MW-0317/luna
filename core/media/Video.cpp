@@ -156,7 +156,10 @@ namespace luna
 
 		AVFrame* rgbaFrame = av_frame_alloc();
 		int size = c->width * c->height * 4;
-		uint8_t* data = new uint8_t[size];
+		
+		uint8_t* data = (uint8_t*)malloc(sizeof(uint8_t) * size);
+		// Possibly a temporary exit on data not allocated.
+		if (data == nullptr) exit(-1);
 		int j = 0;
 		for (int y = c->height - 1; y >= 0; y--)
 		{
@@ -175,6 +178,8 @@ namespace luna
 
 		sws_scale(swsCtx, rgbaFrame->data, inLinesize, 0, c->height,
 			picture->data, picture->linesize);
+
+		std::free(data);
 
 		picture->pts = (frameNumber++) * stream->time_base.den / (stream->time_base.num * fps);
 

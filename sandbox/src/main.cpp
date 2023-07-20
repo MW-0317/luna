@@ -1,4 +1,7 @@
 #define SOL_ALL_SAFETIES_ON 1
+//#define _CRTDBG_MAP_ALLOC
+#include <stdlib.h>
+#include <crtdbg.h>
 
 #include <main/luna.h>
 
@@ -6,27 +9,8 @@
 #include <thirdparty/sol/sol.hpp>
 
 #include "ArgParser.h"
-#include "LuaManager.h"
-
-class LuaRender : public luna::Render
-{
-private:
-	sol::state* lua;
-public:
-	LuaRender(sol::state* lua, const char* filename, float fps, float seconds, int width, int height)
-		: Render(filename, fps, seconds, width, height)
-	{
-		this->lua = lua;
-	}
-
-	void frameUpdate(float deltatime) override
-	{
-		// Call lua update() if it exists
-		auto update = (*lua)["update"];
-		if (update.valid()) update();
-		return;
-	}
-};
+#include "luawormhole/LuaManager.h"
+#include "luawormhole/LuaRender.h"
 
 int main(int argc, char* argv[])
 {
@@ -47,9 +31,8 @@ int main(int argc, char* argv[])
 	sol::state* lua = new sol::state();
 	lua->open_libraries(sol::lib::base);
 
-	(*lua)["clearColor"] = &LuaRender::clearColor;
-
 	LuaManager::registerGlobals(lua);
+	LuaManager::registerFunctions(lua);
 
 	LuaRender* r = new LuaRender(lua, filename.c_str(), 30.0f, 2.0f,
 		LuaManager::WINDOW_WIDTH, LuaManager::WINDOW_HEIGHT);
@@ -62,6 +45,8 @@ int main(int argc, char* argv[])
 	r->run();
 	r->save();
 
-	//system("pause");
-	return 0;
+	_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_DEBUG);
+	_CrtDumpMemoryLeaks();
+	system("pause");
+	//return 0;
 }

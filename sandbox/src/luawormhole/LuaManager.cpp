@@ -9,6 +9,11 @@ void LuaManager::registerGlobals(sol::state* lua)
 	setGlobal(lua, "WINDOW_HEIGHT", &WINDOW_HEIGHT, 600);
 }
 
+void LuaManager::registerFunctions(sol::state* lua)
+{
+	(*lua)["clearColor"] = &LuaRender::clearColor;
+}
+
 template<typename T>
 void LuaManager::setGlobal(sol::state* lua, const char* name, T* callbackVar, T defaultVal)
 {
