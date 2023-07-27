@@ -1,5 +1,6 @@
 #include "luna.h"
 
+/*
 namespace luna
 {
 	int run()
@@ -90,7 +91,7 @@ namespace luna
 
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-			s.updateSpace();
+			s.simulate();
 			s.getCamera()->processInput(window, s.getDelta());
 
 			shader.use();
@@ -113,4 +114,4 @@ namespace luna
 		return 0;
 	}
 }
-
+*/

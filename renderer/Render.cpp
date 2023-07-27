@@ -3,8 +3,9 @@
 
 namespace luna
 {
-	Render::Render(const char* filename, float fps, float seconds, int width, int height)
+	Render::Render(const char* filename, float fps, float seconds, int width, int height, bool debug = false)
 	{
+		DEBUG = debug;
 		init(width, height);
 		video = new Video(filename, fps, seconds, width, height);
 	}
@@ -30,7 +31,7 @@ namespace luna
 		uint8_t* pixels = (uint8_t*)malloc(sizeof(uint8_t) * size);
 		glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_INT_8_8_8_8, pixels);
 		video->encodeFrame(pixels, size);
-		if (video->isFull())
+		if (video->isFull() && !DEBUG)
 			glfwSetWindowShouldClose(window, true);
 		free(pixels);
 	}
@@ -49,13 +50,17 @@ namespace luna
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 		glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-		glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
+		if (!DEBUG)
+			glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
 
-		this->window = glfwCreateWindow(width, height, "luna", NULL, NULL);
+		this->window = glfwCreateWindow(width, height, "lunaR", NULL, NULL);
 		if (window == NULL)
 		{
 			std::cout << "MAIN::WINDOW_FAILED" << std::endl;
+			std::cout << "MAIN::WINDOW_WIDTH::" << width << " "
+				<< "MAIN::WINDOW_HEIGHT::" << height << std::endl;
 			glfwTerminate();
+			abort();
 			return;
 		}
 		glfwMakeContextCurrent(window);

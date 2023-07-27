@@ -5,12 +5,19 @@ namespace luna
 {
 	void Engine::init(int width, int height)
 	{
-		space = new Space();
+		this->createWindow(width, height);
+
+		CameraSettings cs = CameraSettings();
+		cs.width = width;
+		cs.height = height;
+		cs.cameraType = CameraType::Orthographic;
+		cs.window = window;
+		Camera* cam = new Camera(cs);
+
+		space = new Space(cam);
 		this->width = width;
 		this->height = height;
 		//stbi_set_flip_vertically_on_load(true);
-
-		this->createWindow(width, height);
 
 		IMGUI_CHECKVERSION();
 		ImGui::CreateContext();
@@ -37,8 +44,9 @@ namespace luna
 		init(width, height);
 	}
 
-	Engine::Engine() {}
-
+	Engine::Engine()
+	{}
+	
 	Engine::~Engine()
 	{
 		ImGui_ImplOpenGL3_Shutdown();
@@ -72,8 +80,9 @@ namespace luna
 
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-			space->updateSpace();
-			space->getCamera()->processInput(window, space->getDelta());
+			space->frameUpdate();
+			if (space->tickUpdate())
+				tickUpdate(space->getDeltaTick());
 			delta = space->getDelta();
 
 			ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -92,18 +101,22 @@ namespace luna
 	void Engine::frameUpdate(float deltatime)
 	{
 		// TODO: Figure out windows/widgets
-		if (testWindow) {
-			ImGui::Begin("Test Window", &testWindow);
+		if (exampleWindow) {
+			ImGui::Begin("Example Window", &exampleWindow);
 			ImGui::Text("Hello World!");
 			if (ImGui::Button("Close"))
-				testWindow = false;
+				exampleWindow = false;
 			ImGui::End();
 		}
 	}
 
+	void Engine::tickUpdate(float deltatime)
+	{
+		// Basically complete virtual function, however will be used as a template.
+	}
+
 	void Engine::createWindow(int width, int height)
 	{
-		std::cout << "h" << std::endl;
 		glfwInit();
 
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
@@ -111,11 +124,14 @@ namespace luna
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 		glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 
-		this->window = glfwCreateWindow(width, height, "luna", NULL, NULL);
+		this->window = glfwCreateWindow(width, height, "lunaE", NULL, NULL);
 		if (window == NULL)
 		{
 			std::cout << "MAIN::WINDOW_FAILED" << std::endl;
+			std::cout << "MAIN::WINDOW_WIDTH::" << width << " "
+				<< "MAIN::WINDOW_HEIGHT::" << height << std::endl;
 			glfwTerminate();
+			abort();
 			return;
 		}
 		glfwMakeContextCurrent(window);

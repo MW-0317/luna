@@ -14,5 +14,6 @@ public:
 		int width, int height);
 
 	void frameUpdate(float deltatime) override;
+	void tickUpdate(float deltatime) override;
 };
 

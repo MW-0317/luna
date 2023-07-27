@@ -14,6 +14,7 @@ private:
 	unsigned int id;
 
 public:
+	Shader();
 	Shader(const char* vertexPath, const char* fragmentPath);
 	void use();
 	void setBool(const std::string& name, bool value);

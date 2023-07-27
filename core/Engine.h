@@ -15,7 +15,7 @@ namespace luna
 
 		int width, height;
 
-		bool testWindow = true;
+		bool exampleWindow = true;
 
 		LUNA_API virtual void init(int width, int height);
 	private:
@@ -28,6 +28,9 @@ namespace luna
 		LUNA_API int run();
 		virtual void mainFrameUpdate(float deltatime);
 		LUNA_API virtual void frameUpdate(float deltatime);
+
+		// Deltatime should be near zero, however could fluctuate.
+		LUNA_API virtual void tickUpdate(float deltatime);
 
 		LUNA_API static void clearColor(float r, float g, float b, float a);
 	};

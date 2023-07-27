@@ -32,10 +32,12 @@ int main(int argc, char* argv[])
 	lua->open_libraries(sol::lib::base);
 
 	LuaManager::registerGlobals(lua);
-	LuaManager::registerFunctions(lua);
 
 	LuaRender* r = new LuaRender(lua, filename.c_str(), 30.0f, 2.0f,
 		LuaManager::WINDOW_WIDTH, LuaManager::WINDOW_HEIGHT);
+
+	LuaManager::setLuaRender(r);
+	LuaManager::registerFunctions(lua);
 
 	auto luaR = lua->script_file(luaFile, [](lua_State* L, sol::protected_function_result pfr) {
 		return pfr;

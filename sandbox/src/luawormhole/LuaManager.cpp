@@ -1,7 +1,15 @@
+#include <main/luna.h>
 #include "LuaManager.h"
 
 int LuaManager::WINDOW_WIDTH;
 int LuaManager::WINDOW_HEIGHT;
+
+LuaRender* LuaManager::luaRender;
+
+void LuaManager::setLuaRender(LuaRender* luaRender)
+{
+	LuaManager::luaRender = luaRender;
+}
 
 void LuaManager::registerGlobals(sol::state* lua)
 {
