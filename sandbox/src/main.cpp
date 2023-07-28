@@ -32,7 +32,7 @@ int main(int argc, char* argv[])
 	lua->open_libraries(sol::lib::base);
 
 	LuaManager::registerGlobals(lua);
-
+	/*
 	LuaRender* r = new LuaRender(lua, filename.c_str(), 30.0f, 2.0f,
 		LuaManager::WINDOW_WIDTH, LuaManager::WINDOW_HEIGHT);
 
@@ -46,6 +46,26 @@ int main(int argc, char* argv[])
 
 	r->run();
 	r->save();
+	*/
+
+
+	// FOR DEBUG REASONS ONLY
+	Engine* e = new Engine(LuaManager::WINDOW_WIDTH, LuaManager::WINDOW_HEIGHT);
+	Engine::clearColor(0.5f, 0.5f, 0.5f, 1.0f);
+	//e->getSpace()->addObject(Object::createSquare());
+	ParticleSystemProps psp;
+	psp.mesh = Mesh::createSquare();
+	psp.shader = Shader::getDefaultShader();
+	psp.position = glm::vec3(0.0f);
+	psp.scale = glm::vec3(1.0f);
+	ParticleSystem p = ParticleSystem(psp);
+	Particle particle;
+	p.addParticle(particle);
+	e->getSpace()->addSystem(p);
+	e->getSpace()->addObject(p);
+	e->run();
+
+
 
 	_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_DEBUG);
 	_CrtDumpMemoryLeaks();

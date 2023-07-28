@@ -10,7 +10,7 @@ namespace luna
 		CameraSettings cs = CameraSettings();
 		cs.width = width;
 		cs.height = height;
-		cs.cameraType = CameraType::Orthographic;
+		cs.cameraType = CameraType::Perspective;
 		cs.window = window;
 		Camera* cam = new Camera(cs);
 
@@ -142,6 +142,11 @@ namespace luna
 			std::cout << "MAIN::GLAD_INIT_FAILED" << std::endl;
 			return;
 		}
+	}
+
+	Space* Engine::getSpace()
+	{
+		return this->space;
 	}
 
 	void Engine::clearColor(float r, float g, float b, float a)

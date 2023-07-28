@@ -4,10 +4,11 @@
 
 #include "core/Core.h"
 #include "core/Space.h"
+#include "core/System.h"
 
 namespace luna
 {
-	LUNA_API class Engine
+	LUNA_API class Engine : public virtual System
 	{
 	protected:
 		GLFWwindow* window;
@@ -27,10 +28,11 @@ namespace luna
 
 		LUNA_API int run();
 		virtual void mainFrameUpdate(float deltatime);
-		LUNA_API virtual void frameUpdate(float deltatime);
-
+		LUNA_API virtual void frameUpdate(float deltatime) override;
 		// Deltatime should be near zero, however could fluctuate.
-		LUNA_API virtual void tickUpdate(float deltatime);
+		LUNA_API virtual void tickUpdate(float deltatime) override;
+
+		LUNA_API Space* getSpace();
 
 		LUNA_API static void clearColor(float r, float g, float b, float a);
 	};

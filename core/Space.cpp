@@ -12,7 +12,7 @@ Space::Space()
 	CameraSettings cs = CameraSettings();
 	cs.width = luna::WINDOW_WIDTH;
 	cs.height = luna::WINDOW_HEIGHT;
-	cs.cameraType = CameraType::Orthographic;
+	cs.cameraType = CameraType::Perspective;
 	currentCamera = new Camera(cs);
 	init();
 }
@@ -35,6 +35,11 @@ void Space::frameUpdate()
 	lastframe = currentframe;
 
 	this->draw();
+
+	for (int i = 0; i < systems.size(); i++)
+	{
+		systems[i].frameUpdate(deltaframe);
+	}
 }
 
 bool Space::tickUpdate()
@@ -47,6 +52,10 @@ bool Space::tickUpdate()
 	{
 		lasttick = currenttick;
 		if (currentCamera->isWindow()) currentCamera->processInput(deltatick);
+		for (int i = 0; i < systems.size(); i++)
+		{
+			systems[i].tickUpdate(deltaframe);
+		}
 	}
 
 	return isTickable;
@@ -71,7 +80,9 @@ void Space::draw()
 {
 	for (int i = 0; i < objects.size(); i++)
 	{
-		objects[i].draw(currentCamera->getViewMatrix(), currentCamera->getProjectionMatrix());
+		objects[i].getShader()->setMat4("view", this->currentCamera->getViewMatrix());
+		objects[i].getShader()->setMat4("projection", this->currentCamera->getProjectionMatrix());
+		objects[i].draw();
 	}
 }
 
@@ -80,8 +91,7 @@ void Space::addObject(Object object)
 	objects.push_back(object);
 }
 
-// Temp function, to be removed with tickrate introduction
-void Space::forceStatic()
+void Space::addSystem(System system)
 {
-	this->isStatic = true;
+	systems.push_back(system);
 }

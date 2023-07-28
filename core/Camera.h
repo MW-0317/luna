@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Globals.h"
+#include "Object.h"
 
 enum CameraType
 {
@@ -10,23 +11,27 @@ enum CameraType
 
 struct CameraSettings
 {
-	glm::vec3 position	= glm::vec3(0.0f, 0.0f, 1.0f);
-	glm::vec3 front		= glm::vec3(0.0f, 0.0f, -1.0f);
-	glm::vec3 up		= glm::vec3(0.0f, 1.0f, 0.0f);
 	float width, height;
 
-	float fov			= 45.0f;
-	float speed			= 2.5f;
+	glm::vec3 position		= glm::vec3(0.0f, 0.0f, 1.0f);
+	glm::vec3 front			= glm::vec3(0.0f, 0.0f, -1.0f);
+	glm::vec3 up			= glm::vec3(0.0f, 1.0f, 0.0f);
+
+	float fov				= 45.0f;
+	float speed				= 2.5f;
+	float sensitivity = 0.1f;
 	CameraType cameraType;
 
 	GLFWwindow* window = nullptr;
 };
 
-class Camera
+class Camera : public Object
 {
 protected:
 	CameraSettings cameraSettings;
 	glm::mat4 view, proj;
+	double lastX = 0.0f, lastY = 0.0f;
+	double pitch = 0.0f, yaw = 0.0f;
 
 public:
 	Camera(CameraSettings cameraSettings);

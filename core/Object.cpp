@@ -120,6 +120,18 @@ void Mesh::toFloatArray()
 	}
 }
 
+Mesh Mesh::createSquare()
+{
+	std::vector<Vertex> vertices = {
+		Vertex(glm::vec3(-0.5f, -0.5f, 0.0f)),
+		Vertex(glm::vec3(-0.5f, 0.5f, 0.0f)),
+		Vertex(glm::vec3(0.5f, -0.5f, 0.0f)),
+		Vertex(glm::vec3(0.5f, 0.5f, 0.0f))
+	};
+
+	return Mesh(vertices);
+}
+
 // This is a mess!
 std::vector<unsigned int> Mesh::triangulateMesh(std::vector<Vertex> vertices)
 {
@@ -266,25 +278,23 @@ Object::~Object()
 {
 }
 
-void Object::draw(glm::mat4 view, glm::mat4 proj)
+Shader* Object::getShader()
+{
+	return &shader;
+}
+
+void Object::draw()
 {
 	this->shader.setMat4("model", model);
-	this->shader.setMat4("view", view);
-	this->shader.setMat4("projection", proj);
+	//this->shader.setMat4("view", glm::translate(view, position));
+	//this->shader.setMat4("projection", proj);
 	mesh.draw(shader);
 }
 
 Object Object::createSquare()
 {
-	std::vector<Vertex> vertices = {
-		Vertex(glm::vec3(-0.5f, -0.5f, 0.0f)),
-		Vertex(glm::vec3(-0.5f, 0.5f, 0.0f)),
-		Vertex(glm::vec3(0.5f, -0.5f, 0.0f)),
-		Vertex(glm::vec3(0.5f, 0.5f, 0.0f))
-	};
-
-	Mesh mesh = Mesh(vertices);
-	Shader shader = Shader("shaders/basic.vs", "shaders/basic.fs");
+	Mesh mesh = Mesh::createSquare();
+	Shader shader = Shader::getDefaultShader();
 
 	return Object(mesh, shader, glm::vec3(0.0f), glm::vec3(1.0f));
 }

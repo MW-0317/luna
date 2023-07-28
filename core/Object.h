@@ -88,8 +88,8 @@ public:
 	std::vector<Texture>		textures;
 
 	// Requires vertices to be triangulated
-	Mesh();
-	Mesh(std::vector<Vertex> vertices);
+	LUNA_API Mesh();
+	LUNA_API Mesh(std::vector<Vertex> vertices);
 	Mesh(std::vector<Vertex> vertices, std::vector<Texture> textures);
 	Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices,
 		std::vector<Texture> textures);
@@ -98,12 +98,12 @@ public:
 	void toFloatArray();
 	std::vector<unsigned int> triangulateMesh(std::vector<Vertex> vertices);
 
-	
+	LUNA_API static Mesh createSquare();
 };
 
 class Object
 {
-private:
+protected:
 	Mesh mesh;
 	Shader shader;
 	glm::vec3 position;
@@ -112,6 +112,7 @@ private:
 public:
 	LUNA_API Object(Mesh mesh, Shader shader, glm::vec3 position, glm::vec3 scale);
 	LUNA_API ~Object();
-	void draw(glm::mat4 view, glm::mat4 proj);
+	Shader* getShader();
+	LUNA_API virtual void draw();
 	LUNA_API static Object createSquare();
 };

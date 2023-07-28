@@ -153,6 +153,7 @@
     <ClCompile Include="main\main_time.cpp" />
     <ClCompile Include="core\particle\ParticleSystem.cpp" />
     <ClCompile Include="renderer\Render.cpp" />
+    <ClCompile Include="core\System.cpp" />
     <ClCompile Include="thirdparty\imgui\imgui.cpp" />
     <ClCompile Include="thirdparty\imgui\imgui_demo.cpp" />
     <ClCompile Include="thirdparty\imgui\imgui_draw.cpp" />
@@ -176,6 +177,7 @@
     <ClInclude Include="main\main_time.h" />
     <ClInclude Include="core\particle\ParticleSystem.h" />
     <ClInclude Include="renderer\Render.h" />
+    <ClInclude Include="core\System.h" />
     <ClInclude Include="thirdparty\ffmpeg.h" />
     <ClInclude Include="thirdparty\imgui\imconfig.h" />
     <ClInclude Include="thirdparty\imgui\imgui.h" />

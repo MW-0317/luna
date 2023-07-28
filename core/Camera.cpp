@@ -2,7 +2,8 @@
 
 #include <iostream>
 
-Camera::Camera(CameraSettings cameraSettings)
+Camera::Camera(CameraSettings cameraSettings) 
+	: Object(mesh, shader, cameraSettings.position, glm::vec3(1.0f))
 {
 	this->cameraSettings = cameraSettings;
 
@@ -26,6 +27,11 @@ Camera::Camera(CameraSettings cameraSettings)
 	{
 		proj = glm::mat4(1.0f);
 	}
+
+	glfwSetInputMode(cameraSettings.window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	if (glfwRawMouseMotionSupported())
+		glfwSetInputMode(cameraSettings.window, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
+	glfwGetCursorPos(cameraSettings.window, &lastX, &lastY);
 }
 
 Camera::~Camera(){}
@@ -53,6 +59,36 @@ void Camera::processInput(float deltatime)
 		this->cameraSettings.position += frameCameraSpeed * this->cameraSettings.up;
 	if (glfwGetKey(cameraSettings.window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
 		this->cameraSettings.position -= frameCameraSpeed * this->cameraSettings.up;
+
+	if (cameraSettings.cameraType != CameraType::Perspective)
+		return;
+
+	if (glfwGetKey(cameraSettings.window, GLFW_KEY_W) == GLFW_PRESS)
+		this->cameraSettings.position += glm::normalize(
+				cameraSettings.front
+			) * frameCameraSpeed;
+	if (glfwGetKey(cameraSettings.window, GLFW_KEY_S) == GLFW_PRESS)
+		this->cameraSettings.position -= glm::normalize(
+				cameraSettings.front
+			) * frameCameraSpeed;
+
+	double currX, currY;
+	glfwGetCursorPos(cameraSettings.window, &currX, &currY);
+	double diffX = currX - lastX;
+	double diffY = currY - lastY;
+	lastX = currX;
+	lastY = currY;
+	diffX *= cameraSettings.sensitivity;
+	diffY *= cameraSettings.sensitivity;
+	yaw += diffX;
+	pitch += diffY;
+	pitch = glm::clamp(pitch, (double) -90.0f, (double) 90.0f);
+
+	glm::vec3 dir;
+	dir.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
+	dir.y = sin(glm::radians(-pitch));
+	dir.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+	this->cameraSettings.front = glm::normalize(dir);
 }
 
 glm::vec3 Camera::getPosition()
@@ -68,7 +104,6 @@ glm::mat4 Camera::getViewMatrix()
 		cameraSettings.up
 	);
 	view = glm::translate(view, -cameraSettings.position);
-	std::cout << cameraSettings.position[0] << std::endl;
 	return view;
 }
 

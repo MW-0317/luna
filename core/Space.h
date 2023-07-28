@@ -3,6 +3,7 @@
 #include "Globals.h"
 #include "Camera.h"
 #include "Object.h"
+#include "System.h"
 #include <vector>
 
 using namespace luna;
@@ -25,9 +26,7 @@ private:
 	int width, height, length;
 
 	std::vector<Object> objects;
-
-	// Temp, to be removed with tickrate introduction
-	bool isStatic;
+	std::vector<System> systems;
 
 public:
 	void init();
@@ -46,7 +45,5 @@ public:
 	void draw();
 
 	LUNA_API void addObject(Object object);
-
-	// Temp function, to be removed with tickrate introduction
-	void forceStatic();
+	LUNA_API void addSystem(System system);
 };

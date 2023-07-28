@@ -5,7 +5,6 @@ LuaRender::LuaRender(sol::state* lua, const char* filename, float fps, float sec
 	: Render(filename, fps, seconds, width, height, true)
 {
 	this->lua = lua;
-	space->addObject(Object::createSquare());
 }
 
 void LuaRender::frameUpdate(float deltatime)
