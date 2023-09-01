@@ -4,7 +4,8 @@ using namespace luna;
 
 void Space::init()
 {
-	objects = std::vector<Object>();
+	objects = std::vector<Object*>();
+	rng = Random();
 }
 
 Space::Space()
@@ -38,7 +39,10 @@ void Space::frameUpdate()
 
 	for (int i = 0; i < systems.size(); i++)
 	{
-		systems[i].frameUpdate(deltaframe);
+		FrameProps fp;
+		fp.deltatime = deltaframe;
+		fp.rng = this->getRandom();
+		systems[i]->frameUpdate(fp);
 	}
 }
 
@@ -54,7 +58,10 @@ bool Space::tickUpdate()
 		if (currentCamera->isWindow()) currentCamera->processInput(deltatick);
 		for (int i = 0; i < systems.size(); i++)
 		{
-			systems[i].tickUpdate(deltaframe);
+			TickProps tp;
+			tp.deltatime = deltaframe;
+			tp.rng = this->getRandom();
+			systems[i]->tickUpdate(tp);
 		}
 	}
 
@@ -76,22 +83,27 @@ float Space::getDelta()
 	return this->deltaframe;
 }
 
+Random Space::getRandom()
+{
+	return this->rng;
+}
+
 void Space::draw()
 {
 	for (int i = 0; i < objects.size(); i++)
 	{
-		objects[i].getShader()->setMat4("view", this->currentCamera->getViewMatrix());
-		objects[i].getShader()->setMat4("projection", this->currentCamera->getProjectionMatrix());
-		objects[i].draw();
+		objects[i]->getShader()->setMat4("view", this->currentCamera->getViewMatrix());
+		objects[i]->getShader()->setMat4("projection", this->currentCamera->getProjectionMatrix());
+		objects[i]->draw();
 	}
 }
 
-void Space::addObject(Object object)
+void Space::addObject(Object* object)
 {
 	objects.push_back(object);
 }
 
-void Space::addSystem(System system)
+void Space::addSystem(System* system)
 {
 	systems.push_back(system);
 }

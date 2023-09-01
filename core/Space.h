@@ -4,6 +4,7 @@
 #include "Camera.h"
 #include "Object.h"
 #include "System.h"
+#include "random/Random.h"
 #include <vector>
 
 using namespace luna;
@@ -11,6 +12,8 @@ using namespace luna;
 class Space
 {
 private:
+	Random rng;
+
 	float const MAX_TPS = 60;
 	float const INV_TPS = 1 / MAX_TPS;
 
@@ -25,9 +28,8 @@ private:
 
 	int width, height, length;
 
-	std::vector<Object> objects;
-	std::vector<System> systems;
-
+	std::vector<Object*> objects;
+	std::vector<System*> systems;
 public:
 	void init();
 	Space();
@@ -41,9 +43,10 @@ public:
 
 	Camera* getCamera();
 	float getDelta();
+	Random getRandom();
 
 	void draw();
 
-	LUNA_API void addObject(Object object);
-	LUNA_API void addSystem(System system);
+	LUNA_API void addObject(Object* object);
+	LUNA_API void addSystem(System* system);
 };

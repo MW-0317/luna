@@ -27,10 +27,10 @@ namespace luna
 		~Engine();
 
 		LUNA_API int run();
-		virtual void mainFrameUpdate(float deltatime);
-		LUNA_API virtual void frameUpdate(float deltatime) override;
+		virtual void mainFrameUpdate(FrameProps fp);
+		LUNA_API virtual void frameUpdate(FrameProps fp) override;
 		// Deltatime should be near zero, however could fluctuate.
-		LUNA_API virtual void tickUpdate(float deltatime) override;
+		LUNA_API virtual void tickUpdate(TickProps tp) override;
 
 		LUNA_API Space* getSpace();
 

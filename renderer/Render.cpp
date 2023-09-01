@@ -15,13 +15,13 @@ namespace luna
 		video->free();
 	}
 
-	void Render::mainFrameUpdate(float deltatime)
+	void Render::mainFrameUpdate(FrameProps fp)
 	{
-		frameUpdate(deltatime);
-		renderFrameUpdate(deltatime);
+		frameUpdate(fp);
+		renderFrameUpdate(fp);
 	}
 
-	void Render::renderFrameUpdate(float deltatime)
+	void Render::renderFrameUpdate(FrameProps fp)
 	{
 		// POSSIBLE OPTIMIZATION:
 		// Do the converting process between the 

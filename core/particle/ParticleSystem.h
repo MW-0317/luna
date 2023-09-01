@@ -23,7 +23,7 @@ namespace luna
 		glm::vec3 scale;
 	};
 
-	struct ParticleSpawnerProps
+	struct ParticleSpawner
 	{
 		Mesh mesh = Mesh::createSquare();
 
@@ -47,27 +47,35 @@ namespace luna
 		float rotation = 0.0f;
 		float sizeBegin = 1.0f, sizeEnd = 1.0f;
 
-		float lifeTime = 1.0f;
+		float lifeTime = 5.0f;
 		float lifeRemaining = 0.0f;
 
 		bool active = false;
 	};
 
-	class ParticleSystem : public Object, public virtual System
+	class ParticleSystem : public Object, public System
 	{
 	private:
 		ParticleSystemProps systemProps;
 		std::vector<Particle> particles;
+		std::vector<ParticleSpawner> spawners;
 	public:
+		static const unsigned char NO_COLLISION		= 0b00000000;
+		static const unsigned char SELF_COLLISION	= 0b00000001;
+		static const unsigned char GROUND_COLLISION	= 0b00000010;
+
+		bool selfCollision = false;
+		bool groundCollision = false;
+
 		LUNA_API ParticleSystem(ParticleSystemProps props);
 
-		void frameUpdate(float deltatime) override;
-		void tickUpdate(float deltatime) override;
+		void frameUpdate(FrameProps fp) override;
+		void tickUpdate(TickProps tp) override;
 
 		void draw() override;
-		void drawParticle(int index);
+		void drawParticle(Particle particle);
 
 		LUNA_API void addParticle(Particle particle);
-		void createSpawner(ParticleSpawnerProps particleProps);
+		LUNA_API void createSpawner(ParticleSpawner particleSpawner);
 	};
 }

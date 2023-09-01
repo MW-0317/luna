@@ -48,6 +48,15 @@ int main(int argc, char* argv[])
 	r->save();
 	*/
 
+	/*
+	Random r = Random();
+
+	while (true)
+	{
+		double randomVal = r.generateUniformReal<double>();
+		std::cout << randomVal << std::endl;
+	}
+	*/
 
 	// FOR DEBUG REASONS ONLY
 	Engine* e = new Engine(LuaManager::WINDOW_WIDTH, LuaManager::WINDOW_HEIGHT);
@@ -58,13 +67,19 @@ int main(int argc, char* argv[])
 	psp.shader = Shader::getDefaultShader();
 	psp.position = glm::vec3(0.0f);
 	psp.scale = glm::vec3(1.0f);
-	ParticleSystem p = ParticleSystem(psp);
+	ParticleSystem* p = new ParticleSystem(psp);
 	Particle particle;
-	p.addParticle(particle);
+	particle.sizeBegin = 0.1f;
+	particle.sizeEnd = 0.0f;
+	particle.velocity = glm::vec3(0.0f, 0.001f, 0.0f);
+	p->addParticle(particle);
+	ParticleSpawner ps;
+	ps.velocity = glm::vec3(0.1f, 0.1f, 0.0f);
+	ps.velocityVariation = glm::vec3(0.2f);
+	p->createSpawner(ps);
 	e->getSpace()->addSystem(p);
 	e->getSpace()->addObject(p);
 	e->run();
-
 
 
 	_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_DEBUG);

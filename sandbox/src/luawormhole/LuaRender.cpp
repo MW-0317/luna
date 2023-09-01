@@ -7,7 +7,7 @@ LuaRender::LuaRender(sol::state* lua, const char* filename, float fps, float sec
 	this->lua = lua;
 }
 
-void LuaRender::frameUpdate(float deltatime)
+void LuaRender::frameUpdate(FrameProps fp)
 {
 	// Call lua update() if it exists
 	auto update = (*lua)["update"];
@@ -15,7 +15,7 @@ void LuaRender::frameUpdate(float deltatime)
 	return;
 }
 
-void LuaRender::tickUpdate(float deltatime)
+void LuaRender::tickUpdate(TickProps tp)
 {
 	auto tickUpdate = (*lua)["tickUpdate"];
 	if (tickUpdate.valid()) tickUpdate();

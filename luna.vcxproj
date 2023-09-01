@@ -144,6 +144,7 @@
     <ClCompile Include="core\Camera.cpp" />
     <ClCompile Include="core\Globals.cpp" />
     <ClCompile Include="core\Object.cpp" />
+    <ClCompile Include="core\random\Random.cpp" />
     <ClCompile Include="core\Shader.cpp" />
     <ClCompile Include="core\Space.cpp" />
     <ClCompile Include="core\Engine.cpp" />
@@ -170,6 +171,7 @@
     <ClInclude Include="core\Globals.h" />
     <ClInclude Include="core\includes.h" />
     <ClInclude Include="core\Object.h" />
+    <ClInclude Include="core\random\Random.h" />
     <ClInclude Include="core\Shader.h" />
     <ClInclude Include="core\Space.h" />
     <ClInclude Include="core\Engine.h" />

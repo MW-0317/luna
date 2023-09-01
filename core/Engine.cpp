@@ -74,7 +74,9 @@ namespace luna
 			ImGui_ImplGlfw_NewFrame();
 			ImGui::NewFrame();
 
-			mainFrameUpdate(delta);
+			FrameProps fp;
+			fp.deltatime = delta;
+			mainFrameUpdate(fp);
 
 			ImGui::Render();
 
@@ -82,7 +84,11 @@ namespace luna
 
 			space->frameUpdate();
 			if (space->tickUpdate())
-				tickUpdate(space->getDeltaTick());
+			{
+				TickProps tp;
+				tp.deltatime = space->getDeltaTick();
+				tickUpdate(tp);
+			}	
 			delta = space->getDelta();
 
 			ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -93,12 +99,12 @@ namespace luna
 		return 0;
 	}
 
-	void Engine::mainFrameUpdate(float deltatime)
+	void Engine::mainFrameUpdate(FrameProps fp)
 	{
-		frameUpdate(deltatime);
+		frameUpdate(fp);
 	}
 
-	void Engine::frameUpdate(float deltatime)
+	void Engine::frameUpdate(FrameProps fp)
 	{
 		// TODO: Figure out windows/widgets
 		if (exampleWindow) {
@@ -110,7 +116,7 @@ namespace luna
 		}
 	}
 
-	void Engine::tickUpdate(float deltatime)
+	void Engine::tickUpdate(TickProps fp)
 	{
 		// Basically complete virtual function, however will be used as a template.
 	}
