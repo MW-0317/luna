@@ -7,13 +7,13 @@ namespace luna
 	struct FrameProps
 	{
 		float deltatime;
-		Random rng;
+		Random* rng;
 	};
 
 	struct TickProps
 	{
 		float deltatime;
-		Random rng;
+		Random* rng;
 	};
 
 	class System

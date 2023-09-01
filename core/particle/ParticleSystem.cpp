@@ -21,16 +21,16 @@ void ParticleSystem::tickUpdate(TickProps tp)
 		ParticleSpawner s = spawners[i];
 		Particle p;
 		glm::vec3 randomPositionVariation = glm::vec3(
-			tp.rng.generateUniformReal<float>(-0.5f, 0.5f),
-			tp.rng.generateUniformReal<float>(-0.5f, 0.5f),
-			tp.rng.generateUniformReal<float>(-0.5f, 0.5f)
+			tp.rng->generateUniformReal<float>(-1.0f, 1.0f),
+			tp.rng->generateUniformReal<float>(-1.0f, 1.0f),
+			tp.rng->generateUniformReal<float>(-1.0f, 1.0f)
 		);
 		glm::vec3 randomVelocityVariation = glm::vec3(
-			tp.rng.generateUniformReal<float>(-0.5f, 0.5f),
-			tp.rng.generateUniformReal<float>(-0.5f, 0.5f),
-			tp.rng.generateUniformReal<float>(-0.5f, 0.5f)
+			tp.rng->generateUniformReal<float>(-1.0f, 1.0f),
+			tp.rng->generateUniformReal<float>(-1.0f, 1.0f),
+			tp.rng->generateUniformReal<float>(-1.0f, 1.0f)
 		);
-		std::cout << tp.rng.generateUniformReal<float>(-0.5f, 0.5f) << std::endl;
+		std::cout << tp.rng->generateUniformReal<float>(-1.0f, 1.0f) << std::endl;
 		p.position = s.position + s.positionVariation * randomPositionVariation;
 		p.velocity = s.velocity + s.velocityVariation * randomVelocityVariation;
 		addParticle(p);

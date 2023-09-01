@@ -12,7 +12,7 @@ using namespace luna;
 class Space
 {
 private:
-	Random rng;
+	Random* rng;
 
 	float const MAX_TPS = 60;
 	float const INV_TPS = 1 / MAX_TPS;
@@ -43,7 +43,7 @@ public:
 
 	Camera* getCamera();
 	float getDelta();
-	Random getRandom();
+	Random* getRandom();
 
 	void draw();
 

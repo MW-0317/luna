@@ -50,7 +50,6 @@ int main(int argc, char* argv[])
 
 	/*
 	Random r = Random();
-
 	while (true)
 	{
 		double randomVal = r.generateUniformReal<double>();
@@ -74,7 +73,7 @@ int main(int argc, char* argv[])
 	particle.velocity = glm::vec3(0.0f, 0.001f, 0.0f);
 	p->addParticle(particle);
 	ParticleSpawner ps;
-	ps.velocity = glm::vec3(0.1f, 0.1f, 0.0f);
+	ps.velocity = glm::vec3(0.0f, 0.0f, 0.0f);
 	ps.velocityVariation = glm::vec3(0.2f);
 	p->createSpawner(ps);
 	e->getSpace()->addSystem(p);

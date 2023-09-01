@@ -5,7 +5,7 @@ using namespace luna;
 void Space::init()
 {
 	objects = std::vector<Object*>();
-	rng = Random();
+	rng = new Random();
 }
 
 Space::Space()
@@ -83,7 +83,7 @@ float Space::getDelta()
 	return this->deltaframe;
 }
 
-Random Space::getRandom()
+Random* Space::getRandom()
 {
 	return this->rng;
 }
