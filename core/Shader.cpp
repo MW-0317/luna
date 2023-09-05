@@ -121,3 +121,8 @@ Shader Shader::getDefaultShader()
 {
 	return Shader("shaders/basic.vs", "shaders/basic.fs");
 }
+
+Shader Shader::getBillboardShader()
+{
+	return Shader("shaders/billboard.vs", "shaders/billboard.fs");
+}

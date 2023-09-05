@@ -29,7 +29,7 @@ namespace luna
 
 		glm::vec3 position = glm::vec3(0.0f), positionVariation = glm::vec3(0.0f);
 		glm::vec3 velocity = glm::vec3(0.0f), velocityVariation = glm::vec3(0.0f);
-		glm::vec3 acceleration = glm::vec3(0.0f, 0.0f, 0.0f);
+		glm::vec3 acceleration = glm::vec3(0.0f);
 
 		glm::vec4 colorBegin = glm::vec4(1.0f), colorEnd = glm::vec4(1.0f);
 		float sizeBegin = 1.0f, sizeEnd = 1.0f, sizeVariation = 0.0f;
@@ -42,7 +42,8 @@ namespace luna
 	{
 		Mesh mesh = Mesh::createSquare();
 
-		glm::vec3 position = glm::vec3(0.0f), velocity = glm::vec3(0.0f);
+		glm::vec3 position = glm::vec3(0.0f), velocity = glm::vec3(0.0f),
+			acceleration = glm::vec3(0.0f);
 		glm::vec4 colorBegin = glm::vec4(1.0f), colorEnd = glm::vec4(1.0f);
 		float rotation = 0.0f;
 		float sizeBegin = 1.0f, sizeEnd = 1.0f;

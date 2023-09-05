@@ -116,3 +116,8 @@ public:
 	LUNA_API virtual void draw();
 	LUNA_API static Object createSquare();
 };
+
+class Sprite : public Object
+{
+	LUNA_API void draw() override;
+};

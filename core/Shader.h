@@ -28,4 +28,5 @@ public:
 	void setMat4(const std::string& name, glm::mat4 matrix);
 
 	LUNA_API static Shader getDefaultShader();
+	LUNA_API static Shader getBillboardShader();
 };

@@ -63,7 +63,8 @@ int main(int argc, char* argv[])
 	//e->getSpace()->addObject(Object::createSquare());
 	ParticleSystemProps psp;
 	psp.mesh = Mesh::createSquare();
-	psp.shader = Shader::getDefaultShader();
+	//psp.shader = Shader::getDefaultShader();
+	psp.shader = Shader::getBillboardShader();
 	psp.position = glm::vec3(0.0f);
 	psp.scale = glm::vec3(1.0f);
 	ParticleSystem* p = new ParticleSystem(psp);
@@ -74,7 +75,8 @@ int main(int argc, char* argv[])
 	p->addParticle(particle);
 	ParticleSpawner ps;
 	ps.velocity = glm::vec3(0.0f, 0.0f, 0.0f);
-	ps.velocityVariation = glm::vec3(0.2f);
+	ps.velocityVariation = glm::vec3(20.0f);
+	ps.acceleration = glm::vec3(-50.0f, 50.0f, 0.0f);
 	p->createSpawner(ps);
 	e->getSpace()->addSystem(p);
 	e->getSpace()->addObject(p);

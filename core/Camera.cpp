@@ -1,6 +1,7 @@
 #include "Camera.h"
 
 #include <iostream>
+#include <glm/gtx/string_cast.hpp>
 
 Camera::Camera(CameraSettings cameraSettings) 
 	: Object(mesh, shader, cameraSettings.position, glm::vec3(1.0f))
@@ -12,7 +13,10 @@ Camera::Camera(CameraSettings cameraSettings)
 		cameraSettings.position + cameraSettings.front,
 		cameraSettings.up
 	);
+	std::cout << glm::to_string(view) << std::endl;
 	view = glm::translate(view, -cameraSettings.position);
+	std::cout << glm::to_string(view) << std::endl;
+	
 
 	if (cameraSettings.cameraType == CameraType::Orthographic)
 	{

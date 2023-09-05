@@ -33,6 +33,7 @@ void ParticleSystem::tickUpdate(TickProps tp)
 		std::cout << tp.rng->generateUniformReal<float>(-1.0f, 1.0f) << std::endl;
 		p.position = s.position + s.positionVariation * randomPositionVariation;
 		p.velocity = s.velocity + s.velocityVariation * randomVelocityVariation;
+		p.acceleration = s.acceleration;
 		addParticle(p);
 	}
 
@@ -41,8 +42,9 @@ void ParticleSystem::tickUpdate(TickProps tp)
 		particles[i].lifeRemaining -= tp.deltatime;
 		if (particles[i].lifeRemaining <= 0.0)
 			particles[i].active = false;
-
-		particles[i].position += particles[i].velocity;
+		
+		particles[i].velocity += particles[i].acceleration * tp.deltatime;
+		particles[i].position += particles[i].velocity * tp.deltatime;
 	}
 }
 

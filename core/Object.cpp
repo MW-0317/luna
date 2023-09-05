@@ -299,3 +299,7 @@ Object Object::createSquare()
 	return Object(mesh, shader, glm::vec3(0.0f), glm::vec3(1.0f));
 }
 
+void Sprite::draw()
+{
+
+}
