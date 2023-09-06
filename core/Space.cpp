@@ -35,7 +35,9 @@ void Space::frameUpdate()
 	deltaframe = currentframe - lastframe;
 	lastframe = currentframe;
 
-	this->draw();
+	RenderProps renderProps;
+	renderProps.space = this;
+	this->draw(renderProps);
 
 	for (int i = 0; i < systems.size(); i++)
 	{
@@ -88,13 +90,13 @@ Random* Space::getRandom()
 	return this->rng;
 }
 
-void Space::draw()
+void Space::draw(RenderProps renderProps)
 {
 	for (int i = 0; i < objects.size(); i++)
 	{
-		objects[i]->getShader()->setMat4("view", this->currentCamera->getViewMatrix());
-		objects[i]->getShader()->setMat4("projection", this->currentCamera->getProjectionMatrix());
-		objects[i]->draw();
+		renderProps.view = this->currentCamera->getViewMatrix();
+		renderProps.proj = this->currentCamera->getProjectionMatrix();
+		objects[i]->draw(renderProps);
 	}
 }
 

@@ -45,7 +45,7 @@ public:
 	float getDelta();
 	Random* getRandom();
 
-	void draw();
+	void draw(RenderProps renderProps);
 
 	LUNA_API void addObject(Object* object);
 	LUNA_API void addSystem(System* system);

@@ -7,6 +7,18 @@
 
 #include "Core.h"
 #include "Shader.h"
+#include "Space.h"
+#include "Camera.h"
+
+struct RenderProps
+{
+	Space* space;
+	Camera* camera;
+	Object* object;
+	glm::mat4 model;
+	glm::mat4 view;
+	glm::mat4 proj;
+};
 
 struct Vertex
 {
@@ -93,7 +105,7 @@ public:
 	Mesh(std::vector<Vertex> vertices, std::vector<Texture> textures);
 	Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices,
 		std::vector<Texture> textures);
-	void draw(Shader shader);
+	void draw(RenderProps renderProps, Shader shader);
 
 	void toFloatArray();
 	std::vector<unsigned int> triangulateMesh(std::vector<Vertex> vertices);
@@ -113,11 +125,11 @@ public:
 	LUNA_API Object(Mesh mesh, Shader shader, glm::vec3 position, glm::vec3 scale);
 	LUNA_API ~Object();
 	Shader* getShader();
-	LUNA_API virtual void draw();
+	LUNA_API virtual void draw(RenderProps renderProps);
 	LUNA_API static Object createSquare();
 };
 
 class Sprite : public Object
 {
-	LUNA_API void draw() override;
+	LUNA_API void draw(RenderProps renderProps) override;
 };

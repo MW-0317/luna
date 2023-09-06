@@ -97,8 +97,11 @@ Mesh::Mesh(std::vector<Vertex> vertices)
 	glEnableVertexAttribArray(2);
 }
 
-void Mesh::draw(Shader shader)
+void Mesh::draw(RenderProps renderProps, Shader shader)
 {
+	shader.setMat4("model", renderProps.model);
+	shader.setMat4("view", renderProps.view);
+	shader.setMat4("projection", renderProps.proj);
 	shader.use();
 	glBindVertexArray(VAO);
 	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
@@ -283,7 +286,7 @@ Shader* Object::getShader()
 	return &shader;
 }
 
-void Object::draw()
+void Object::draw(RenderProps renderProps)
 {
 	this->shader.setMat4("model", model);
 	//this->shader.setMat4("view", glm::translate(view, position));
@@ -299,7 +302,7 @@ Object Object::createSquare()
 	return Object(mesh, shader, glm::vec3(0.0f), glm::vec3(1.0f));
 }
 
-void Sprite::draw()
+void Sprite::draw(RenderProps renderProps)
 {
 
 }

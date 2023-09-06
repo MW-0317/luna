@@ -48,16 +48,16 @@ void ParticleSystem::tickUpdate(TickProps tp)
 	}
 }
 
-void ParticleSystem::draw()
+void ParticleSystem::draw(RenderProps renderProps)
 {
 	for (int i = 0; i < particles.size(); i++)
 	{
 		Particle currentParticle = particles[i];
-		drawParticle(currentParticle);
+		drawParticle(renderProps, currentParticle);
 	}	
 }
 
-void ParticleSystem::drawParticle(Particle currentParticle)
+void ParticleSystem::drawParticle(RenderProps renderProps, Particle currentParticle)
 {
 	if (!currentParticle.active)
 		return;
@@ -69,10 +69,10 @@ void ParticleSystem::drawParticle(Particle currentParticle)
 	);
 	particleModel = glm::translate(particleModel, currentParticle.position);
 	particleModel = glm::scale(particleModel, glm::vec3(currentSize));
-	this->shader.setMat4("model", particleModel);
+	renderProps.model = particleModel;
 	//this->shader.setMat4("view", glm::translate(view, currentParticle.position));
 	//this->shader.setMat4("projection", proj);
-	currentParticle.mesh.draw(shader);
+	currentParticle.mesh.draw(renderProps, shader);
 }
 
 void ParticleSystem::addParticle(Particle particle)
