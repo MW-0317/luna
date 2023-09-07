@@ -37,6 +37,7 @@ void Space::frameUpdate()
 
 	RenderProps renderProps;
 	renderProps.space = this;
+	renderProps.camera = currentCamera;
 	this->draw(renderProps);
 
 	for (int i = 0; i < systems.size(); i++)

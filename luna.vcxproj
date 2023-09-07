@@ -142,19 +142,20 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="core\Camera.cpp" />
+    <ClCompile Include="core\Engine.cpp" />
     <ClCompile Include="core\Globals.cpp" />
+    <ClCompile Include="core\media\Video.cpp" />
     <ClCompile Include="core\Object.cpp" />
+    <ClCompile Include="core\particle\ParticleSystem.cpp" />
     <ClCompile Include="core\random\Random.cpp" />
     <ClCompile Include="core\Shader.cpp" />
     <ClCompile Include="core\Space.cpp" />
-    <ClCompile Include="core\Engine.cpp" />
+    <ClCompile Include="core\System.cpp" />
     <ClCompile Include="example\entry.cpp" />
     <ClCompile Include="main\glad.c" />
     <ClCompile Include="main\luna.cpp" />
     <ClCompile Include="main\main_time.cpp" />
-    <ClCompile Include="core\particle\ParticleSystem.cpp" />
     <ClCompile Include="renderer\Render.cpp" />
-    <ClCompile Include="core\System.cpp" />
     <ClCompile Include="thirdparty\imgui\imgui.cpp" />
     <ClCompile Include="thirdparty\imgui\imgui_demo.cpp" />
     <ClCompile Include="thirdparty\imgui\imgui_draw.cpp" />
@@ -163,23 +164,23 @@
     <ClCompile Include="thirdparty\imgui\imgui_impl_win32.cpp" />
     <ClCompile Include="thirdparty\imgui\imgui_tables.cpp" />
     <ClCompile Include="thirdparty\imgui\imgui_widgets.cpp" />
-    <ClCompile Include="core\media\Video.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="core\Camera.h" />
     <ClInclude Include="core\Core.h" />
+    <ClInclude Include="core\Engine.h" />
     <ClInclude Include="core\Globals.h" />
     <ClInclude Include="core\includes.h" />
+    <ClInclude Include="core\media\Video.h" />
     <ClInclude Include="core\Object.h" />
+    <ClInclude Include="core\particle\ParticleSystem.h" />
     <ClInclude Include="core\random\Random.h" />
     <ClInclude Include="core\Shader.h" />
     <ClInclude Include="core\Space.h" />
-    <ClInclude Include="core\Engine.h" />
+    <ClInclude Include="core\System.h" />
     <ClInclude Include="main\luna.h" />
     <ClInclude Include="main\main_time.h" />
-    <ClInclude Include="core\particle\ParticleSystem.h" />
     <ClInclude Include="renderer\Render.h" />
-    <ClInclude Include="core\System.h" />
     <ClInclude Include="thirdparty\ffmpeg.h" />
     <ClInclude Include="thirdparty\imgui\imconfig.h" />
     <ClInclude Include="thirdparty\imgui\imgui.h" />
@@ -191,7 +192,6 @@
     <ClInclude Include="thirdparty\imgui\imstb_rectpack.h" />
     <ClInclude Include="thirdparty\imgui\imstb_textedit.h" />
     <ClInclude Include="thirdparty\imgui\imstb_truetype.h" />
-    <ClInclude Include="core\media\Video.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

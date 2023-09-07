@@ -7,8 +7,10 @@
 
 #include "Core.h"
 #include "Shader.h"
-#include "Space.h"
-#include "Camera.h"
+
+class Space;
+class Camera;
+class Object;
 
 struct RenderProps
 {
@@ -33,6 +35,10 @@ struct Vertex
 	{
 		normal = glm::vec3(0.0, 0.0, 1.0);
 		texcoords = glm::vec2(0.0);
+		toFloatArray();
+	}
+	Vertex(glm::vec3 pos, glm::vec3 nor) : position(pos), normal(nor)
+	{
 		toFloatArray();
 	}
 	Vertex(glm::vec3 pos, glm::vec3 nor, glm::vec2 tex) : position(pos), normal(nor), texcoords(tex)

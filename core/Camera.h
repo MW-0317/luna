@@ -19,7 +19,7 @@ struct CameraSettings
 
 	float fov				= 45.0f;
 	float speed				= 2.5f;
-	float sensitivity = 0.1f;
+	float sensitivity		= 0.1f;
 	CameraType cameraType;
 
 	GLFWwindow* window = nullptr;
@@ -40,6 +40,8 @@ public:
 	void processInput(float deltaframe);
 
 	glm::vec3 getPosition();
+	glm::vec3 getForwardVector();
+	glm::vec3 getUpwardVector();
 	glm::mat4 getViewMatrix();
 	glm::mat4 getProjectionMatrix();
 	float getSpeed();

@@ -7,7 +7,7 @@ Camera::Camera(CameraSettings cameraSettings)
 	: Object(mesh, shader, cameraSettings.position, glm::vec3(1.0f))
 {
 	this->cameraSettings = cameraSettings;
-
+	glm::mat4 view = glm::mat4(1.0f);
 	view = glm::lookAt(
 		cameraSettings.position,
 		cameraSettings.position + cameraSettings.front,
@@ -98,6 +98,16 @@ void Camera::processInput(float deltatime)
 glm::vec3 Camera::getPosition()
 {
 	return this->cameraSettings.position;
+}
+
+glm::vec3 Camera::getForwardVector()
+{
+	return this->cameraSettings.front;
+}
+
+glm::vec3 Camera::getUpwardVector()
+{
+	return this->cameraSettings.up;
 }
 
 glm::mat4 Camera::getViewMatrix()

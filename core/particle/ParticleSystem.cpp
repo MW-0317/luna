@@ -1,5 +1,7 @@
 #include "ParticleSystem.h"
 #include "../random/Random.h"
+#include "../Space.h"
+#include "../Camera.h"
 
 using namespace luna;
 
@@ -67,11 +69,15 @@ void ParticleSystem::drawParticle(RenderProps renderProps, Particle currentParti
 		currentParticle.sizeBegin, 
 		currentParticle.lifeRemaining / currentParticle.lifeTime
 	);
+	// NEED TO SOLVE WITH MATH
+	particleModel = glm::lookAt(
+		currentParticle.position,
+		currentParticle.position + renderProps.camera->getForwardVector(),
+		renderProps.camera->getUpwardVector()
+	);
 	particleModel = glm::translate(particleModel, currentParticle.position);
-	particleModel = glm::scale(particleModel, glm::vec3(currentSize));
+	//particleModel = glm::scale(particleModel, glm::vec3(currentSize));
 	renderProps.model = particleModel;
-	//this->shader.setMat4("view", glm::translate(view, currentParticle.position));
-	//this->shader.setMat4("projection", proj);
 	currentParticle.mesh.draw(renderProps, shader);
 }
 

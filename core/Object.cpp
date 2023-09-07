@@ -4,6 +4,9 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include <thirdparty/stb/stb_image.h>
 
+#include "Camera.h"
+#include "Space.h"
+
 int Texture::loadTexture(char* path)
 {
 	glGenTextures(1, &id);
@@ -126,10 +129,10 @@ void Mesh::toFloatArray()
 Mesh Mesh::createSquare()
 {
 	std::vector<Vertex> vertices = {
-		Vertex(glm::vec3(-0.5f, -0.5f, 0.0f)),
-		Vertex(glm::vec3(-0.5f, 0.5f, 0.0f)),
-		Vertex(glm::vec3(0.5f, -0.5f, 0.0f)),
-		Vertex(glm::vec3(0.5f, 0.5f, 0.0f))
+		Vertex(glm::vec3(-0.5f, -0.5f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f)),
+		Vertex(glm::vec3(-0.5f, 0.5f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f)),
+		Vertex(glm::vec3(0.5f, -0.5f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f)),
+		Vertex(glm::vec3(0.5f, 0.5f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f))
 	};
 
 	return Mesh(vertices);
@@ -288,10 +291,11 @@ Shader* Object::getShader()
 
 void Object::draw(RenderProps renderProps)
 {
-	this->shader.setMat4("model", model);
+	//renderProps.camera->getPosition();
+	renderProps.model = model;
 	//this->shader.setMat4("view", glm::translate(view, position));
 	//this->shader.setMat4("projection", proj);
-	mesh.draw(shader);
+	mesh.draw(renderProps, shader);
 }
 
 Object Object::createSquare()
