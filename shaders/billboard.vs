@@ -10,9 +10,13 @@ uniform mat4 projection;
 
 void main()
 {
+    vec3 pos_worldspace = model[3].xyz;
+    vec3 camera_right = {view[0][0], view[1][0], view[2][0]};
+    vec3 camera_up = {view[0][1], view[1][1], view[2][1]};
+    model[3].xyz = pos_worldspace + camera_right * aPos.x + camera_up * aPos.y;
     //mat4 inverseViewMat = inverse(view);
     //inverseViewMat[3].xyz = vec3(0, 0, -1);
     //mat4 mvMat = view * inverseViewMat;
     //gl_Position = projection * mvMat * model * vec4(aPos, 1.0);
-    gl_Position = projection * view * model * vec4(aPos, 1.0);
+    gl_Position = projection * view * model * vec4(1.0);
 }

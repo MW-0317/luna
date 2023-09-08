@@ -276,6 +276,7 @@ void Mesh::setNormalRotation(glm::vec3 vectorToMatch)
 {
 	for (int i = 0; i < indices.size() / 3; i++)
 	{
+		std::cout << i << std::endl;
 		Vertex p1 = vertices[indices[3*i]];
 		Vertex p2 = vertices[indices[3*i + 1]];
 		Vertex p3 = vertices[indices[3*i + 2]];
