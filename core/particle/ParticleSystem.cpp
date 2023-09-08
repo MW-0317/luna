@@ -32,7 +32,6 @@ void ParticleSystem::tickUpdate(TickProps tp)
 			tp.rng->generateUniformReal<float>(-1.0f, 1.0f),
 			tp.rng->generateUniformReal<float>(-1.0f, 1.0f)
 		);
-		std::cout << tp.rng->generateUniformReal<float>(-1.0f, 1.0f) << std::endl;
 		p.position = s.position + s.positionVariation * randomPositionVariation;
 		p.velocity = s.velocity + s.velocityVariation * randomVelocityVariation;
 		p.acceleration = s.acceleration;
@@ -69,15 +68,10 @@ void ParticleSystem::drawParticle(RenderProps renderProps, Particle currentParti
 		currentParticle.sizeBegin, 
 		currentParticle.lifeRemaining / currentParticle.lifeTime
 	);
-	// NEED TO SOLVE WITH MATH
-	particleModel = glm::lookAt(
-		currentParticle.position,
-		currentParticle.position + renderProps.camera->getForwardVector(),
-		renderProps.camera->getUpwardVector()
-	);
 	particleModel = glm::translate(particleModel, currentParticle.position);
-	//particleModel = glm::scale(particleModel, glm::vec3(currentSize));
+	particleModel = glm::scale(particleModel, glm::vec3(currentSize));
 	renderProps.model = particleModel;
+	currentParticle.mesh.setNormalRotation(renderProps.camera->getForwardVector());
 	currentParticle.mesh.draw(renderProps, shader);
 }
 

@@ -8,11 +8,9 @@ namespace luna
 {
 	Random::Random()
 	{
-		// WHY IS THIS BEING CALLED EVERY FRAME (OR TICK???) ?!?!?
-		std::cout << "Random Init" << std::endl;
-		//unsigned timeSeed = time(nullptr);
+		unsigned timeSeed = time(nullptr);
 
-		//rng.seed(timeSeed);
+		randomNumberEngine.seed(timeSeed);
 	}
 
 	template<typename T>

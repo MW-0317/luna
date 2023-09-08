@@ -10,5 +10,9 @@ uniform mat4 projection;
 
 void main()
 {
+    //mat4 inverseViewMat = inverse(view);
+    //inverseViewMat[3].xyz = vec3(0, 0, -1);
+    //mat4 mvMat = view * inverseViewMat;
+    //gl_Position = projection * mvMat * model * vec4(aPos, 1.0);
     gl_Position = projection * view * model * vec4(aPos, 1.0);
 }

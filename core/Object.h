@@ -116,6 +116,8 @@ public:
 	void toFloatArray();
 	std::vector<unsigned int> triangulateMesh(std::vector<Vertex> vertices);
 
+	void setNormalRotation(glm::vec3 vectorToMatch);
+
 	LUNA_API static Mesh createSquare();
 };
 

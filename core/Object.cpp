@@ -7,6 +7,8 @@
 #include "Camera.h"
 #include "Space.h"
 
+#include <glm/gtx/string_cast.hpp>
+
 int Texture::loadTexture(char* path)
 {
 	glGenTextures(1, &id);
@@ -69,6 +71,7 @@ Mesh::Mesh(std::vector<Vertex> vertices)
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, 
 		sizeof(unsigned int) * indices.size(), &indices[0], GL_STATIC_DRAW);
 
+	/*
 	for (int i = 0; i < verticesFloatArray.size(); i++)
 	{
 		std::cout << verticesFloatArray[i] << " ";
@@ -83,6 +86,7 @@ Mesh::Mesh(std::vector<Vertex> vertices)
 		<< sizeof(float) * verticesFloatArray.size() << " " 
 		<< indices.size() << " "
 		<< sizeof(float) * indices.size() << std::endl;
+	*/
 
 	// Position
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, Vertex::SIZE * sizeof(float), 
@@ -266,6 +270,38 @@ std::vector<unsigned int> Mesh::triangulateMesh(std::vector<Vertex> vertices)
 		}
 	}
 	return triangulated;
+}
+
+void Mesh::setNormalRotation(glm::vec3 vectorToMatch)
+{
+	for (int i = 0; i < indices.size() / 3; i++)
+	{
+		Vertex p1 = vertices[indices[3*i]];
+		Vertex p2 = vertices[indices[3*i + 1]];
+		Vertex p3 = vertices[indices[3*i + 2]];
+
+		glm::vec3 v1 = p2.position - p1.position;
+		glm::vec3 v2 = p3.position - p1.position;
+
+		glm::vec3 normal = glm::cross(v1, v2);
+		float sineAngleDifference = glm::dot(normal, vectorToMatch);
+		float radianDifference = glm::asin(sineAngleDifference);
+
+		glm::mat4 rotationMatrix = glm::mat4(1.0f);
+		rotationMatrix = glm::rotate(rotationMatrix, radianDifference, glm::cross(normal, vectorToMatch));
+		glm::vec4 newNormal, newV1, newV2;
+		newNormal = rotationMatrix * glm::vec4(normal, 1.0f);
+		newV1 = rotationMatrix * glm::vec4(v1, 1.0f);
+		newV2 = rotationMatrix * glm::vec4(v2, 1.0f);
+
+		std::cout << glm::to_string(v1) << glm::to_string(newV1) << glm::to_string(p1.position + (glm::vec3)newV1) << std::endl;
+		std::cout << glm::to_string(p1.position) << std::endl;
+		std::cout << glm::to_string(v2) << glm::to_string(newV2) << std::endl;
+
+		vertices[indices[3*i]] = Vertex(p1.position, newNormal, p1.texcoords);
+		vertices[indices[3*i + 1]] = Vertex(p1.position + (glm::vec3) newV1, newNormal, p2.texcoords);
+		vertices[indices[3*i + 2]] = Vertex(p1.position + (glm::vec3) newV2, newNormal, p3.texcoords);
+	}
 }
 
 Object::Object(Mesh mesh, Shader shader, glm::vec3 position, glm::vec3 scale)

@@ -13,10 +13,7 @@ Camera::Camera(CameraSettings cameraSettings)
 		cameraSettings.position + cameraSettings.front,
 		cameraSettings.up
 	);
-	std::cout << glm::to_string(view) << std::endl;
-	view = glm::translate(view, -cameraSettings.position);
-	std::cout << glm::to_string(view) << std::endl;
-	
+	view = glm::translate(view, -cameraSettings.position);	
 
 	if (cameraSettings.cameraType == CameraType::Orthographic)
 	{
