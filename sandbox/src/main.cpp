@@ -74,6 +74,8 @@ int main(int argc, char* argv[])
 	particle.velocity = glm::vec3(0.0f, 0.001f, 0.0f);
 	p->addParticle(particle);
 	ParticleSpawner ps;
+	ps.sizeBegin = 0.1f;
+	ps.sizeEnd = 0.0f;
 	ps.velocity = glm::vec3(0.0f, 0.0f, 0.0f);
 	ps.velocityVariation = glm::vec3(20.0f);
 	ps.acceleration = glm::vec3(-50.0f, 50.0f, 0.0f);

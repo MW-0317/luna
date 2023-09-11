@@ -87,12 +87,15 @@ public:
 	unsigned int id;
 	std::string type;
 
-	Texture(char* path)
+	Texture(const char* path)
 	{
 		loadTexture(path);
 	}
+
+	LUNA_API static Texture getDefault();
+	LUNA_API void bind();
 private:
-	int loadTexture(char* path);
+	int loadTexture(const char* path);
 };
 
 class Mesh
@@ -116,8 +119,6 @@ public:
 	void toFloatArray();
 	std::vector<unsigned int> triangulateMesh(std::vector<Vertex> vertices);
 
-	void setNormalRotation(glm::vec3 vectorToMatch);
-
 	LUNA_API static Mesh createSquare();
 };
 
@@ -139,5 +140,6 @@ public:
 
 class Sprite : public Object
 {
+	LUNA_API Sprite(Texture texture);
 	LUNA_API void draw(RenderProps renderProps) override;
 };

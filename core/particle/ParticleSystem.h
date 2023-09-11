@@ -41,6 +41,7 @@ namespace luna
 	struct Particle
 	{
 		Mesh mesh = Mesh::createSquare();
+		Texture tex = Texture::getDefault();
 
 		glm::vec3 position = glm::vec3(0.0f), velocity = glm::vec3(0.0f),
 			acceleration = glm::vec3(0.0f);

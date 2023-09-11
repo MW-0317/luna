@@ -22,6 +22,8 @@ void ParticleSystem::tickUpdate(TickProps tp)
 	{
 		ParticleSpawner s = spawners[i];
 		Particle p;
+		p.sizeBegin = s.sizeBegin;
+		p.sizeEnd = s.sizeEnd;
 		glm::vec3 randomPositionVariation = glm::vec3(
 			tp.rng->generateUniformReal<float>(-1.0f, 1.0f),
 			tp.rng->generateUniformReal<float>(-1.0f, 1.0f),
@@ -69,15 +71,9 @@ void ParticleSystem::drawParticle(RenderProps renderProps, Particle currentParti
 		currentParticle.lifeRemaining / currentParticle.lifeTime
 	);
 	particleModel = glm::translate(particleModel, currentParticle.position);
-	float sineAngleDifference = glm::dot(glm::vec3(1.0f, 0.0f, 0.0f), renderProps.camera->getForwardVector());
-	float radianDifference = glm::asin(sineAngleDifference);
-	std::cout << glm::degrees(radianDifference) << std::endl;
-	//particleModel = glm::rotate(particleModel, radianDifference, glm::cross(glm::vec3(1.0f, 0.0f, 0.0f), renderProps.camera->getForwardVector()));
-
-	
 	particleModel = glm::scale(particleModel, glm::vec3(currentSize));
 	renderProps.model = particleModel;
-	//currentParticle.mesh.setNormalRotation(renderProps.camera->getForwardVector());
+	currentParticle.tex.bind();
 	currentParticle.mesh.draw(renderProps, shader);
 }
 

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="210mm"
+   height="297mm"
+   viewBox="0 0 210 297"
+   version="1.1"
+   id="svg5"
+   inkscape:version="1.2 (dc2aedaf03, 2022-05-15)"
+   sodipodi:docname="default.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview7"
+     pagecolor="#505050"
+     bordercolor="#eeeeee"
+     borderopacity="1"
+     inkscape:showpageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#505050"
+     inkscape:document-units="mm"
+     showgrid="false"
+     inkscape:zoom="0.71000982"
+     inkscape:cx="-161.96959"
+     inkscape:cy="480.27505"
+     inkscape:window-width="1920"
+     inkscape:window-height="1017"
+     inkscape:window-x="1912"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs2" />
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <rect
+       style="fill:#ff3fff;stroke-width:1;stroke-linejoin:round;stroke-miterlimit:1;paint-order:stroke fill markers;stop-color:#000000"
+       id="rect234"
+       width="38.382687"
+       height="38.382687"
+       x="-191.91342"
+       y="40.991219"
+       inkscape:export-filename="..\textures\default.jpg"
+       inkscape:export-xdpi="5.29"
+       inkscape:export-ydpi="5.29" />
+    <rect
+       style="fill:#ff7fff;stroke-width:1;stroke-linejoin:round;stroke-miterlimit:1;paint-order:stroke fill markers;stop-color:#000000;fill-opacity:1"
+       id="rect234-4"
+       width="38.382687"
+       height="38.382687"
+       x="-153.53073"
+       y="40.991215" />
+    <rect
+       style="fill:#ff7fff;stroke-width:1;stroke-linejoin:round;stroke-miterlimit:1;paint-order:stroke fill markers;stop-color:#000000;fill-opacity:1"
+       id="rect234-7"
+       width="38.382687"
+       height="38.382687"
+       x="-191.91342"
+       y="79.373901" />
+    <rect
+       style="fill:#ff3fff;stroke-width:1;stroke-linejoin:round;stroke-miterlimit:1;paint-order:stroke fill markers;stop-color:#000000"
+       id="rect234-6"
+       width="38.382687"
+       height="38.382687"
+       x="-153.53073"
+       y="79.373901" />
+  </g>
+</svg>

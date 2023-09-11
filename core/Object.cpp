@@ -9,8 +9,9 @@
 
 #include <glm/gtx/string_cast.hpp>
 
-int Texture::loadTexture(char* path)
+int Texture::loadTexture(const char* path)
 {
+	stbi_set_flip_vertically_on_load(true);
 	glGenTextures(1, &id);
 
 	int width, height, nrComponents;
@@ -26,7 +27,7 @@ int Texture::loadTexture(char* path)
 	if (nrComponents >= 1 && nrComponents <= 4)
 	{
 		GLenum formats[4] = {GL_RED, GL_RG, GL_RGB, GL_RGBA};
-		format = formats[nrComponents];
+		format = formats[nrComponents-1];
 	}
 	else
 	{
@@ -46,6 +47,16 @@ int Texture::loadTexture(char* path)
 
 	stbi_image_free(data);
 	return id;
+}
+
+Texture Texture::getDefault()
+{
+	return Texture("resources/textures/ash.png");
+}
+
+void Texture::bind()
+{
+	glBindTexture(GL_TEXTURE_2D, id);
 }
 
 Mesh::Mesh()
@@ -133,10 +144,14 @@ void Mesh::toFloatArray()
 Mesh Mesh::createSquare()
 {
 	std::vector<Vertex> vertices = {
-		Vertex(glm::vec3(-0.5f, -0.5f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f)),
-		Vertex(glm::vec3(-0.5f, 0.5f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f)),
-		Vertex(glm::vec3(0.5f, -0.5f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f)),
-		Vertex(glm::vec3(0.5f, 0.5f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f))
+		Vertex(glm::vec3(-0.5f, -0.5f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f),
+					glm::vec2(0.0f, 0.0f)),
+		Vertex(glm::vec3(-0.5f, 0.5f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f),
+					glm::vec2(0.0f, 1.0f)),
+		Vertex(glm::vec3(0.5f, -0.5f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f),
+					glm::vec2(1.0f, 0.0f)),
+		Vertex(glm::vec3(0.5f, 0.5f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f),
+					glm::vec2(1.0f, 1.0f))
 	};
 
 	return Mesh(vertices);
@@ -272,39 +287,6 @@ std::vector<unsigned int> Mesh::triangulateMesh(std::vector<Vertex> vertices)
 	return triangulated;
 }
 
-void Mesh::setNormalRotation(glm::vec3 vectorToMatch)
-{
-	for (int i = 0; i < indices.size() / 3; i++)
-	{
-		std::cout << i << std::endl;
-		Vertex p1 = vertices[indices[3*i]];
-		Vertex p2 = vertices[indices[3*i + 1]];
-		Vertex p3 = vertices[indices[3*i + 2]];
-
-		glm::vec3 v1 = p2.position - p1.position;
-		glm::vec3 v2 = p3.position - p1.position;
-
-		glm::vec3 normal = glm::cross(v1, v2);
-		float sineAngleDifference = glm::dot(normal, vectorToMatch);
-		float radianDifference = glm::asin(sineAngleDifference);
-
-		glm::mat4 rotationMatrix = glm::mat4(1.0f);
-		rotationMatrix = glm::rotate(rotationMatrix, radianDifference, glm::cross(normal, vectorToMatch));
-		glm::vec4 newNormal, newV1, newV2;
-		newNormal = rotationMatrix * glm::vec4(normal, 1.0f);
-		newV1 = rotationMatrix * glm::vec4(v1, 1.0f);
-		newV2 = rotationMatrix * glm::vec4(v2, 1.0f);
-
-		std::cout << glm::to_string(v1) << glm::to_string(newV1) << glm::to_string(p1.position + (glm::vec3)newV1) << std::endl;
-		std::cout << glm::to_string(p1.position) << std::endl;
-		std::cout << glm::to_string(v2) << glm::to_string(newV2) << std::endl;
-
-		vertices[indices[3*i]] = Vertex(p1.position, newNormal, p1.texcoords);
-		vertices[indices[3*i + 1]] = Vertex(p1.position + (glm::vec3) newV1, newNormal, p2.texcoords);
-		vertices[indices[3*i + 2]] = Vertex(p1.position + (glm::vec3) newV2, newNormal, p3.texcoords);
-	}
-}
-
 Object::Object(Mesh mesh, Shader shader, glm::vec3 position, glm::vec3 scale)
 {
 	this->mesh = mesh;
@@ -328,10 +310,7 @@ Shader* Object::getShader()
 
 void Object::draw(RenderProps renderProps)
 {
-	//renderProps.camera->getPosition();
 	renderProps.model = model;
-	//this->shader.setMat4("view", glm::translate(view, position));
-	//this->shader.setMat4("projection", proj);
 	mesh.draw(renderProps, shader);
 }
 
