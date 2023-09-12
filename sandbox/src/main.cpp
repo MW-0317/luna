@@ -58,6 +58,7 @@ int main(int argc, char* argv[])
 	*/
 
 	// FOR DEBUG REASONS ONLY
+	/*
 	Engine* e = new Engine(LuaManager::WINDOW_WIDTH, LuaManager::WINDOW_HEIGHT);
 	Engine::clearColor(0.5f, 0.5f, 0.5f, 1.0f);
 	//e->getSpace()->addObject(Object::createSquare());
@@ -69,11 +70,12 @@ int main(int argc, char* argv[])
 	psp.scale = glm::vec3(1.0f);
 	ParticleSystem* p = new ParticleSystem(psp);
 	Particle particle;
-	particle.sizeBegin = 0.1f;
+	particle.sizeBegin = 1.0f;
 	particle.sizeEnd = 0.0f;
 	particle.velocity = glm::vec3(0.0f, 0.001f, 0.0f);
 	p->addParticle(particle);
 	ParticleSpawner ps;
+	ps.count = 1000;
 	ps.sizeBegin = 0.1f;
 	ps.sizeEnd = 0.0f;
 	ps.velocity = glm::vec3(0.0f, 0.0f, 0.0f);
@@ -83,6 +85,28 @@ int main(int argc, char* argv[])
 	e->getSpace()->addSystem(p);
 	e->getSpace()->addObject(p);
 	e->run();
+	*/
+	
+	// Todo for erosion/dissintegration effect
+	/*
+		Implement better Textures
+			- Allow the inclusion of as many textures into a shader as possible.
+			- Need to figure out how to render transparent/opaque test given a noise
+				texture.
+		Figure out how to send information from the shader back to the gpu
+			(to get screen space coordinates).
+			- I'm assuming this is done with some buffer that can be written to.
+			- Need to figure out how to send the information to spawn a
+				particle once. I don't want the particle to spawn every frame
+				after the object has dissappeared.
+		Convert screen space coordinates to world space coordinates.
+			- This should be trivial (I know I'll regret this wording)
+			since I know where the camera and object are positioned, 
+			however difference in space along the object could trip me up
+			since I only know the difference from the objects center.
+			- Could also use some depth buffer?
+		Spawn particle
+	*/
 
 
 	_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_DEBUG);

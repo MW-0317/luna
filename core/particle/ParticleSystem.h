@@ -36,6 +36,7 @@ namespace luna
 
 		float lifeTime = 1.0f;
 		int count = 1;
+		int n = 0;
 	};
 
 	struct Particle
@@ -62,6 +63,7 @@ namespace luna
 		std::vector<Particle> particles;
 		std::vector<ParticleSpawner> spawners;
 	public:
+		// TODO: Collision
 		static const unsigned char NO_COLLISION		= 0b00000000;
 		static const unsigned char SELF_COLLISION	= 0b00000001;
 		static const unsigned char GROUND_COLLISION	= 0b00000010;

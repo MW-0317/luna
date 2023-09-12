@@ -20,6 +20,8 @@ void ParticleSystem::tickUpdate(TickProps tp)
 {
 	for (int i = 0; i < spawners.size(); i++)
 	{
+		if (spawners[i].n >= spawners[i].count)
+			continue;
 		ParticleSpawner s = spawners[i];
 		Particle p;
 		p.sizeBegin = s.sizeBegin;
@@ -38,6 +40,7 @@ void ParticleSystem::tickUpdate(TickProps tp)
 		p.velocity = s.velocity + s.velocityVariation * randomVelocityVariation;
 		p.acceleration = s.acceleration;
 		addParticle(p);
+		spawners[i].n++;
 	}
 
 	for (int i = 0; i < particles.size(); i++)
@@ -71,7 +74,7 @@ void ParticleSystem::drawParticle(RenderProps renderProps, Particle currentParti
 		currentParticle.lifeRemaining / currentParticle.lifeTime
 	);
 	particleModel = glm::translate(particleModel, currentParticle.position);
-	particleModel = glm::scale(particleModel, glm::vec3(currentSize));
+	renderProps.view = glm::scale(renderProps.view, glm::vec3(currentSize));
 	renderProps.model = particleModel;
 	currentParticle.tex.bind();
 	currentParticle.mesh.draw(renderProps, shader);
