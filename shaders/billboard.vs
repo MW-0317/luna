@@ -17,5 +17,5 @@ void main()
     vec3 pos_worldspace = model[3].xyz;
     vec3 camera_right = {view[0][0], view[1][0], view[2][0]};
     vec3 camera_up = {view[0][1], view[1][1], view[2][1]};
-    gl_Position = projection * view * vec4(pos_worldspace + camera_right * aPos.x + camera_up * aPos.y, 1.0f);
+    gl_Position = projection * view * vec4(pos_worldspace + camera_right * aPos.x + camera_up * aPos.y, 1.0);
 }

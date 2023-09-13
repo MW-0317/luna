@@ -86,6 +86,18 @@ int main(int argc, char* argv[])
 	e->getSpace()->addObject(p);
 	e->run();
 	*/
+
+	// Todo for engine
+	/*
+		- Must add createCube and createSphere for meshes and objects.
+		- Must add a .obj parser since it seems easiest to parse.
+			- Can later add a 3d model parser, but still want to write
+				the .obj parser.
+		- Must create own shader code that defaults to some basic shader.
+			- Shader environment that mounts on top of GLSL.
+		- Initalization of OpenGL should exist outside the creation
+			of the engine/render/game.
+	*/
 	
 	// Todo for erosion/dissintegration effect
 	/*
@@ -107,6 +119,14 @@ int main(int argc, char* argv[])
 			- Could also use some depth buffer?
 		Spawn particle
 	*/
+
+	// ENGINE MUST BE CALLED BEFORE ALL OTHER FUNCTIONS TO INITIALIZE
+	// OpenGL functions. This must be changed in later versions.
+	Engine* e = new Engine(LuaManager::WINDOW_WIDTH, LuaManager::WINDOW_HEIGHT);
+	Object square = Object::createSquare();
+	Engine::clearColor(0.5f, 0.5f, 0.5f, 1.0f);
+	e->getSpace()->addObject(&square);
+	e->run();
 
 
 	_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_DEBUG);
