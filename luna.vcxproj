@@ -171,6 +171,7 @@
     <ClInclude Include="core\Engine.h" />
     <ClInclude Include="core\Globals.h" />
     <ClInclude Include="core\includes.h" />
+    <ClInclude Include="core\math\Vector.h" />
     <ClInclude Include="core\media\Video.h" />
     <ClInclude Include="core\Object.h" />
     <ClInclude Include="core\particle\ParticleSystem.h" />

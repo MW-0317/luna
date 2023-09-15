@@ -144,9 +144,15 @@ int main(int argc, char* argv[])
 	// OpenGL functions. This must be changed in later versions.
 	Engine* e = new Engine(LuaManager::WINDOW_WIDTH, LuaManager::WINDOW_HEIGHT);
 	Object square = Object::createSquare();
+	std::vector<const char*> paths = {
+		"./resources/textures/default.png",
+		"./resources/textures/Milky 5 - 128x128.png"
+	};
 	Engine::clearColor(0.5f, 0.5f, 0.5f, 1.0f);
 	e->getSpace()->addObject(&square);
 	e->run();
+
+	
 
 
 	_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_DEBUG);

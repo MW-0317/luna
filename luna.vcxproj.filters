@@ -164,5 +164,8 @@
     <ClInclude Include="core\System.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="core\math\Vector.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

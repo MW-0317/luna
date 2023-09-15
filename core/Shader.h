@@ -3,12 +3,26 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
+#include <vector>
 
 #include <thirdparty/glad/glad.h>
 #include <thirdparty/glm/glm.hpp>
 #include <thirdparty/glm/gtc/type_ptr.hpp>
 
 #include "Core.h"
+
+class ShaderStack
+{
+private:
+	std::vector<char> languageStack;
+public:
+	ShaderStack();
+
+	void parse(char p);
+
+	bool isEmpty();
+	int size();
+};
 
 class Shader
 {
@@ -17,6 +31,7 @@ private:
 
 public:
 	LUNA_API Shader();
+	LUNA_API Shader(const char* shdaerPath);
 	LUNA_API Shader(const char* vertexPath, const char* fragmentPath);
 	void use();
 	void setBool(const std::string& name, bool value);

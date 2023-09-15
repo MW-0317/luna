@@ -7,6 +7,7 @@
 
 #include "Core.h"
 #include "Shader.h"
+#include "math/Vector.h"
 
 class Space;
 class Camera;
@@ -85,17 +86,48 @@ class Texture
 {
 public:
 	unsigned int id;
+	unsigned int index;
 	std::string type;
 
 	Texture(const char* path)
 	{
-		loadTexture(path);
+		loadTexture(path, 0);
+	}
+
+	Texture(const char* path, int index)
+	{
+		loadTexture(path, index);
 	}
 
 	LUNA_API static Texture getDefault();
 	LUNA_API void bind();
+
+	LUNA_API static MaxSizeVector<Texture, 16> 
+		generateFromPaths(std::vector<const char*> paths)
+	{
+		MaxSizeVector<Texture, 16> textures;
+		for (int i = 0; i < paths.size(); i++)
+		{
+			textures.push_back(Texture(paths[i], i));
+		}
+
+		return textures;
+	}
+
 private:
-	int loadTexture(const char* path);
+	int loadTexture(const char* path, int index);
+};
+
+class Effect
+{
+public:
+	Effect();
+	~Effect();
+
+	LUNA_API void virtual draw();
+	LUNA_API void virtual postDraw();
+private:
+
 };
 
 class Mesh
@@ -106,18 +138,18 @@ private:
 public:
 	std::vector<Vertex>			vertices;
 	std::vector<unsigned int>	indices;
-	std::vector<Texture>		textures;
+	MaxSizeVector<Texture, 16>	textures;
 
 	void init(std::vector<Vertex> vertices, std::vector<unsigned int> indices,
-		std::vector<Texture> textures);
+		MaxSizeVector<Texture, 16>	textures);
 
 	// Requires vertices to be triangulated
 	LUNA_API Mesh();
 	LUNA_API Mesh(const char* objPath);
 	LUNA_API Mesh(std::vector<Vertex> vertices);
-	Mesh(std::vector<Vertex> vertices, std::vector<Texture> textures);
+	Mesh(std::vector<Vertex> vertices, MaxSizeVector<Texture, 16>	textures);
 	Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices,
-		std::vector<Texture> textures);
+		MaxSizeVector<Texture, 16>	textures);
 	void draw(RenderProps renderProps, Shader shader);
 
 	void toFloatArray();

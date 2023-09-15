@@ -9,8 +9,9 @@
 
 #include <glm/gtx/string_cast.hpp>
 
-int Texture::loadTexture(const char* path)
+int Texture::loadTexture(const char* path, int index)
 {
+	this->index = index;
 	stbi_set_flip_vertically_on_load(true);
 	glGenTextures(1, &id);
 
@@ -36,14 +37,14 @@ int Texture::loadTexture(const char* path)
 		return -1;
 	}
 
-	glBindTexture(GL_TEXTURE_2D, id);
-	glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
-	glGenerateMipmap(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D + index, id);
+	glTexImage2D(GL_TEXTURE_2D + index, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
+	glGenerateMipmap(GL_TEXTURE_2D + index);
 
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D + index, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D + index, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D + index, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D + index, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
 	stbi_image_free(data);
 	return id;
@@ -56,11 +57,11 @@ Texture Texture::getDefault()
 
 void Texture::bind()
 {
-	glBindTexture(GL_TEXTURE_2D, id);
+	glBindTexture(GL_TEXTURE_2D + this->index, id);
 }
 
 void Mesh::init(std::vector<Vertex> vertices, std::vector<unsigned int> indices,
-	std::vector<Texture> textures)
+	MaxSizeVector<Texture, 16> textures)
 {
 	this->vertices = vertices;
 	toFloatArray();
@@ -78,7 +79,7 @@ void Mesh::init(std::vector<Vertex> vertices, std::vector<unsigned int> indices,
 	glGenBuffers(1, &EBO);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER,
-		sizeof(unsigned int) * indices.size(), &indices[0], GL_STATIC_DRAW);
+		sizeof(unsigned int) * this->indices.size(), &this->indices[0], GL_STATIC_DRAW);
 
 	// Position
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, Vertex::SIZE * sizeof(float),
@@ -106,7 +107,12 @@ Mesh::Mesh(const char* objPath)
 
 Mesh::Mesh(std::vector<Vertex> vertices)
 {
-	init(vertices, std::vector<unsigned int>(), std::vector<Texture>());
+	init(vertices, std::vector<unsigned int>(), MaxSizeVector<Texture, 16>());
+}
+
+Mesh::Mesh(std::vector<Vertex> vertices, MaxSizeVector<Texture, 16>	textures)
+{
+	init(vertices, std::vector<unsigned int>(), textures);
 }
 
 void Mesh::draw(RenderProps renderProps, Shader shader)
@@ -116,6 +122,10 @@ void Mesh::draw(RenderProps renderProps, Shader shader)
 	shader.setMat4("projection", renderProps.proj);
 	shader.use();
 	glBindVertexArray(VAO);
+	for (int i = 0; i < textures.size(); i++)
+	{
+		textures[i].bind();
+	}
 	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
 }

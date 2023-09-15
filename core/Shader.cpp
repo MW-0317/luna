@@ -1,7 +1,85 @@
 #include "Shader.h"
 
+ShaderStack::ShaderStack()
+{
+	this->languageStack = std::vector<char>();
+}
+
+void ShaderStack::parse(char p)
+{
+	if (p == '{')
+		languageStack.push_back(p);
+	else if (p == '}')
+		languageStack.pop_back();
+}
+
+bool ShaderStack::isEmpty()
+{
+	return languageStack.empty();
+}
+
+int ShaderStack::size()
+{
+	return languageStack.size();
+}
+
 Shader::Shader()
 {}
+
+Shader::Shader(const char* shaderPath)
+{
+	std::string shaderCode;
+	std::string vertexCode;
+	std::string fragmentCode;
+	const char* vShaderCode;
+	const char* fShaderCode;
+	const char* charShaderCode;
+	std::ifstream shaderFile;
+	shaderFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
+	try
+	{
+		shaderFile.open(shaderPath);
+		std::stringstream shaderStream;
+		shaderStream << shaderFile.rdbuf();
+		shaderFile.close();
+		shaderCode = shaderStream.str();
+		charShaderCode = shaderCode.c_str();
+
+		ShaderStack s;
+		int i = 0;
+		size_t vsStart;
+		size_t vsEnd;
+		size_t fsStart;
+		size_t fsEnd;
+		std::string currentShader = "";
+		while (true)
+		{
+			char curr = shaderCode[i];
+			char next = shaderCode[i + 1];
+			s.parse(curr);
+
+			if (curr == '\0' || next == '\0')
+				break;
+
+			std::string cell = shaderCode.substr(i, 2);
+			if (cell == "VS" && s.isEmpty())
+			{
+				currentShader = "VS";
+			}
+			else if (cell == "FS" && s.isEmpty())
+			{
+				currentShader = "FS";
+			}
+
+			if (currentShader)
+			i++;
+		}
+	}
+	catch (std::ifstream::failure e)
+	{
+		std::cout << "CORE::SHADER::FILE_NOT_SUCCESSFULLY_READ" << std::endl;
+	}
+}
 
 Shader::Shader(const char* vertexPath, const char* fragmentPath)
 {
@@ -61,7 +139,7 @@ Shader::Shader(const char* vertexPath, const char* fragmentPath)
 		return;
 	}
 
-	id = glCreateProgram();
+	this->id = glCreateProgram();
 	glAttachShader(id, vertex);
 	glAttachShader(id, fragment);
 	glLinkProgram(id);
