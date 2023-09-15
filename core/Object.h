@@ -108,8 +108,12 @@ public:
 	std::vector<unsigned int>	indices;
 	std::vector<Texture>		textures;
 
+	void init(std::vector<Vertex> vertices, std::vector<unsigned int> indices,
+		std::vector<Texture> textures);
+
 	// Requires vertices to be triangulated
 	LUNA_API Mesh();
+	LUNA_API Mesh(const char* objPath);
 	LUNA_API Mesh(std::vector<Vertex> vertices);
 	Mesh(std::vector<Vertex> vertices, std::vector<Texture> textures);
 	Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices,
