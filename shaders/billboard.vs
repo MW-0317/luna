@@ -13,7 +13,7 @@ out vec2 TexCoord;
 void main()
 {
     TexCoord = aTexCoord;
-
+    
     vec3 pos_worldspace = model[3].xyz;
     vec3 camera_right = {view[0][0], view[1][0], view[2][0]};
     vec3 camera_up = {view[0][1], view[1][1], view[2][1]};
