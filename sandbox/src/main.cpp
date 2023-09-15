@@ -103,6 +103,8 @@ int main(int argc, char* argv[])
 	/*
 		Implement better Textures
 			- Allow the inclusion of as many textures into a shader as possible.
+			- Give meshes a texture array and generate the appropriate buffers
+				based on the array index (keeping in mind the max is 16 textures).
 			- Need to figure out how to render transparent/opaque test given a noise
 				texture.
 		Figure out how to send information from the shader back to the gpu
@@ -118,6 +120,24 @@ int main(int argc, char* argv[])
 			since I only know the difference from the objects center.
 			- Could also use some depth buffer?
 		Spawn particle
+	*/
+
+	/*
+		Steps for Dissintegration effect
+		1. Use and send noise texture to the shader.
+		2. Create SSBO (shader storage buffer object) and send to shader.
+		3. Send the deltatime and current game time to the shader.
+			(Maybe start using a UBO (uniform buffer object) to send
+			large amounts of data)
+		4. Compare the game time with modulo against the noise texture.
+			4a. If the texture is less than the game time, remove the fragment.
+		5. If the current fragment will be removed next frame, by adding
+			deltatime to the current time, send the pixel coordinates to
+			the SSBO.
+		6. Somehow read the SSBO back in C++ and use the depth buffer to
+			extract 3d coordinates from the camera normal.
+			6a. Need to figure out reading the SSBO in C++ and using
+			a depth buffer.
 	*/
 
 	// ENGINE MUST BE CALLED BEFORE ALL OTHER FUNCTIONS TO INITIALIZE
