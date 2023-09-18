@@ -98,6 +98,7 @@ void Space::draw(RenderProps renderProps)
 		renderProps.view = this->currentCamera->getViewMatrix();
 		renderProps.proj = this->currentCamera->getProjectionMatrix();
 		objects[i]->draw(renderProps);
+		primitives[i]->draw(renderProps, primitives[i]->getBasicShader());
 	}
 }
 
@@ -109,6 +110,11 @@ void Space::addObject(Object* object)
 void Space::addSystem(System* system)
 {
 	systems.push_back(system);
+}
+
+void Space::addPrimitive(Primitive* primitive)
+{
+	primitives.push_back(primitive);
 }
 
 // TODO

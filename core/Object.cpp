@@ -64,6 +64,45 @@ namespace luna
 		glBindTexture(GL_TEXTURE_2D, id);
 	}
 
+	Line::Line(std::vector<LineVertex> lines)
+	{
+		this->lines = lines;
+
+		glGenVertexArrays(1, &VAO);
+		glBindVertexArray(VAO);
+
+		glGenBuffers(1, &VBO);
+		glBindBuffer(GL_ARRAY_BUFFER, VBO);
+		glBufferData(GL_ARRAY_BUFFER,
+			sizeof(float) * lines.size(), &lines[0], GL_STATIC_DRAW);
+
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float),
+			(void*)0);
+		glEnableVertexAttribArray(0);
+
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float),
+			(void*)(3 * sizeof(float)));
+		glEnableVertexAttribArray(1);
+	}
+
+	// TODO __
+	void Line::draw(RenderProps renderProps, Shader shader)
+	{
+		shader.setFloat("time", glfwGetTime());
+		shader.setFloat("deltatime", renderProps.deltatime);
+
+		shader.setInt("width", renderProps.width);
+		shader.setInt("height", renderProps.height);
+
+		shader.setMat4("model", renderProps.model);
+		shader.setMat4("view", renderProps.view);
+		shader.setMat4("projection", renderProps.proj);
+		shader.use();
+		glBindVertexArray(VAO);
+		glDrawArrays(GL_LINE, 0, lines.size());
+		glBindVertexArray(0);
+	}
+
 	void Mesh::init(std::vector<Vertex> vertices, std::vector<unsigned int> indices,
 		MaxSizeVector<Texture, 16> textures)
 	{
@@ -100,29 +139,6 @@ namespace luna
 		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, Vertex::SIZE * sizeof(float),
 			(void*)(6 * sizeof(float)));
 		glEnableVertexAttribArray(2);
-	}
-
-	Line::Line(std::vector<LineVertex> lines)
-	{
-		this->lines = lines;
-	}
-
-	// TODO __
-	void Line::draw(RenderProps renderProps, Shader shader)
-	{
-		shader.setFloat("time", glfwGetTime());
-		shader.setFloat("deltatime", renderProps.deltatime);
-
-		shader.setInt("width", renderProps.width);
-		shader.setInt("height", renderProps.height);
-
-		shader.setMat4("model", renderProps.model);
-		shader.setMat4("view", renderProps.view);
-		shader.setMat4("projection", renderProps.proj);
-		shader.use();
-		glBindVertexArray(VAO);
-		glDrawArrays(GL_LINE, 0, lines.size());
-		glBindVertexArray(0);
 	}
 
 	Mesh::Mesh()

@@ -146,24 +146,34 @@ namespace luna
 		int loadTexture(const char* path, int index);
 	};
 
-	struct LineVertex
+	// TODO: Reorganize primitive -> mesh and mesh -> 3D mesh
+	class Primitive
 	{
-		glm::vec3 start, end;
+	protected:
+		unsigned int VAO, VBO, EBO;
+	public:
+		virtual void draw(RenderProps renderProps, Shader shader) {}
+		virtual Shader getBasicShader() {}
 	};
 
-	class Line
+	// TODO: LineVertex -> Line
+	struct LineVertex
 	{
-	private:
-		unsigned int VAO, VBO;
-		
+		glm::vec3 start;
+		glm::vec3 color;
+	};
+
+	// TODO: Line -> LineArray
+	class Line : public Primitive
+	{
 	public:
 		std::vector<LineVertex> lines;
 
 		void init(std::vector<LineVertex> lines);
-
 		LUNA_API Line(std::vector<LineVertex> lines);
+		void draw(RenderProps renderProps, Shader shader) override;
 
-		void draw(RenderProps renderProps, Shader shader);
+		Shader getBasicShader() override;
 
 		float* getFlatArray()
 		{
@@ -173,10 +183,9 @@ namespace luna
 		}
 	};
 
-	class Mesh
+	class Mesh : public Primitive
 	{
 	private:
-		unsigned int VAO, VBO, EBO;
 		std::vector<float>			verticesFloatArray;
 	public:
 		std::vector<Vertex>			vertices;
