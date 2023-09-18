@@ -84,6 +84,9 @@
     <ClCompile Include="core\System.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="core\effects\Effect.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main\main_time.h">
@@ -165,6 +168,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="core\math\Vector.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="core\effects\Effect.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

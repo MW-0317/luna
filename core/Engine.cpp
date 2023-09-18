@@ -82,7 +82,10 @@ namespace luna
 
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-			space->frameUpdate();
+			RenderProps renderProps;
+			renderProps.width = this->width;
+			renderProps.height = this->height;
+			space->frameUpdate(renderProps);
 			if (space->tickUpdate())
 			{
 				TickProps tp;

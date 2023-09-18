@@ -16,7 +16,6 @@ namespace luna
 
 	struct ParticleSystemProps
 	{
-		GLFWwindow* window;
 		Mesh mesh;
 		Shader shader;
 		glm::vec3 position;
@@ -56,7 +55,7 @@ namespace luna
 		bool active = false;
 	};
 
-	class ParticleSystem : public Object, public System
+	class SpriteParticleSystem : public Object, public System
 	{
 	private:
 		ParticleSystemProps systemProps;
@@ -71,7 +70,7 @@ namespace luna
 		bool selfCollision = false;
 		bool groundCollision = false;
 
-		LUNA_API ParticleSystem(ParticleSystemProps props);
+		LUNA_API SpriteParticleSystem(ParticleSystemProps props);
 
 		void frameUpdate(FrameProps fp) override;
 		void tickUpdate(TickProps tp) override;
@@ -80,6 +79,38 @@ namespace luna
 		void drawParticle(RenderProps renderProps, Particle particle);
 
 		LUNA_API void addParticle(Particle particle);
+		LUNA_API void createSpawner(ParticleSpawner particleSpawner);
+	};
+
+
+	struct ShaderParticle
+	{
+		glm::vec3 position, velocity, acceleration;
+		float life;
+		unsigned int active;
+	};
+
+	class ParticleSystem : public Object, public System
+	{
+	private:
+		ParticleSystemProps systemProps;
+		std::vector<ShaderParticle> particles;
+		std::vector<ParticleSpawner> spawners;
+
+		unsigned int VAO, VBO;
+
+		float* particlesToFlatArray();
+		int getParticlesSize();
+	public:
+		LUNA_API ParticleSystem(ParticleSystemProps props);
+
+		void frameUpdate(FrameProps fp) override;
+		void tickUpdate(TickProps tp) override;
+
+		void draw(RenderProps renderProps) override;
+		void drawParticle(RenderProps renderProps, ShaderParticle particle);
+
+		LUNA_API void addParticle(ShaderParticle particle);
 		LUNA_API void createSpawner(ParticleSpawner particleSpawner);
 	};
 }

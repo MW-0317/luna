@@ -29,15 +29,15 @@ Space::~Space()
 	delete currentCamera;
 }
 
-void Space::frameUpdate()
+void Space::frameUpdate(RenderProps renderProps)
 {
 	float currentframe = glfwGetTime();
 	deltaframe = currentframe - lastframe;
 	lastframe = currentframe;
 
-	RenderProps renderProps;
 	renderProps.space = this;
 	renderProps.camera = currentCamera;
+	renderProps.deltatime = deltaframe;
 	this->draw(renderProps);
 
 	for (int i = 0; i < systems.size(); i++)
@@ -109,4 +109,10 @@ void Space::addObject(Object* object)
 void Space::addSystem(System* system)
 {
 	systems.push_back(system);
+}
+
+// TODO
+void Space::createDebugLines()
+{
+
 }

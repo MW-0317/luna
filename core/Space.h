@@ -7,46 +7,49 @@
 #include "random/Random.h"
 #include <vector>
 
-using namespace luna;
-
-class Space
+namespace luna
 {
-private:
-	Random* rng;
+	class Space
+	{
+	private:
+		Random* rng;
 
-	float const MAX_TPS = 60;
-	float const INV_TPS = 1 / MAX_TPS;
+		float const MAX_TPS = 60;
+		float const INV_TPS = 1 / MAX_TPS;
 
-	Camera* currentCamera;
-	std::vector<Camera> cameras;
+		Camera* currentCamera;
+		std::vector<Camera> cameras;
 
-	float deltaframe = 0.0f;
-	float lastframe = 0.0f;
+		float deltaframe = 0.0f;
+		float lastframe = 0.0f;
 
-	float deltatick = 0.0f;
-	float lasttick = 0.0f;
+		float deltatick = 0.0f;
+		float lasttick = 0.0f;
 
-	int width, height, length;
+		int width, height, length;
 
-	std::vector<Object*> objects;
-	std::vector<System*> systems;
-public:
-	void init();
-	Space();
-	Space(Camera* camera);
-	~Space();
+		std::vector<Object*> objects;
+		std::vector<System*> systems;
+	public:
+		void init();
+		Space();
+		Space(Camera* camera);
+		~Space();
 
-	void frameUpdate();
-	// Returns true if a tick can be processed outside of the Space class.
-	bool tickUpdate();
-	float getDeltaTick();
+		void frameUpdate(RenderProps renderProps);
+		// Returns true if a tick can be processed outside of the Space class.
+		bool tickUpdate();
+		float getDeltaTick();
 
-	Camera* getCamera();
-	float getDelta();
-	Random* getRandom();
+		Camera* getCamera();
+		float getDelta();
+		Random* getRandom();
 
-	void draw(RenderProps renderProps);
+		void draw(RenderProps renderProps);
 
-	LUNA_API void addObject(Object* object);
-	LUNA_API void addSystem(System* system);
-};
+		LUNA_API void addObject(Object* object);
+		LUNA_API void addSystem(System* system);
+
+		LUNA_API void createDebugLines();
+	};
+}

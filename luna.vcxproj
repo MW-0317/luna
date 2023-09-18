@@ -151,6 +151,7 @@
     <ClCompile Include="core\Shader.cpp" />
     <ClCompile Include="core\Space.cpp" />
     <ClCompile Include="core\System.cpp" />
+    <ClCompile Include="core\effects\Effect.cpp" />
     <ClCompile Include="example\entry.cpp" />
     <ClCompile Include="main\glad.c" />
     <ClCompile Include="main\luna.cpp" />
@@ -179,6 +180,7 @@
     <ClInclude Include="core\Shader.h" />
     <ClInclude Include="core\Space.h" />
     <ClInclude Include="core\System.h" />
+    <ClInclude Include="core\effects\Effect.h" />
     <ClInclude Include="main\luna.h" />
     <ClInclude Include="main\main_time.h" />
     <ClInclude Include="renderer\Render.h" />

@@ -12,6 +12,8 @@
 #include "luawormhole/LuaManager.h"
 #include "luawormhole/LuaRender.h"
 
+using namespace luna;
+
 int main(int argc, char* argv[])
 {
 	ArgParser arguments = ArgParser(argc, argv);
@@ -120,6 +122,13 @@ int main(int argc, char* argv[])
 			since I only know the difference from the objects center.
 			- Could also use some depth buffer?
 		Spawn particle
+
+
+		SO I have found out how inefficient it is to do most of the particle
+		movement on the CPU and JUST render the particle on the GPU. I now will
+		be switching my focus to simulating and rendering these particles on the GPU.
+		The current ParticleSystem will become SpriteParticleSystem
+		This new ParticleSystem will become the normal.
 	*/
 
 	/*
@@ -143,17 +152,36 @@ int main(int argc, char* argv[])
 	// ENGINE MUST BE CALLED BEFORE ALL OTHER FUNCTIONS TO INITIALIZE
 	// OpenGL functions. This must be changed in later versions.
 	Engine* e = new Engine(LuaManager::WINDOW_WIDTH, LuaManager::WINDOW_HEIGHT);
-	Object square = Object::createSquare();
+	
 	std::vector<const char*> paths = {
 		"./resources/textures/default.png",
-		"./resources/textures/Milky 5 - 128x128.png"
+		"./resources/textures/Perlin 7 - 128x128.png"
 	};
+	std::vector<const char*> names = {
+		"defaultTexture",
+		"noiseTexture"
+	};
+
+	Shader shader = Shader("shaders/disintegrate.glsl");
+	Mesh testMesh = Mesh(Vertex::getSquareVector(), Texture::generateFromPaths(paths, names));
+	Object square = Object(testMesh, shader, glm::vec3(0.0f), glm::vec3(1.0f));
+	ParticleSystemProps psp;
+	psp.mesh = Mesh::createSquare();
+	psp.shader = Shader("shaders/particle.glsl");
+	psp.position = glm::vec3(0.0f);
+	psp.scale = glm::vec3(1.0f);
+	ParticleSystem* particleSystem = new ParticleSystem(psp);
+	ParticleSpawner particleSpawner;
+	particleSpawner.lifeTime = 10.0f;
+	particleSpawner.count = 1000;
+	particleSystem->createSpawner(particleSpawner);
+	//DisintegrationEffect* effect = new DisintegrationEffect(particleSystem);
+	//square.addEffect(effect);
 	Engine::clearColor(0.5f, 0.5f, 0.5f, 1.0f);
+	e->getSpace()->addSystem(particleSystem);
+	e->getSpace()->addObject(particleSystem);
 	e->getSpace()->addObject(&square);
 	e->run();
-
-	
-
 
 	_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_DEBUG);
 	_CrtDumpMemoryLeaks();

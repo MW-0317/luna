@@ -7,175 +7,223 @@
 
 #include "Core.h"
 #include "Shader.h"
+#include "effects/Effect.h"
 #include "math/Vector.h"
 
-class Space;
-class Camera;
-class Object;
-
-struct RenderProps
+namespace luna
 {
-	Space* space;
-	Camera* camera;
-	Object* object;
-	glm::mat4 model;
-	glm::mat4 view;
-	glm::mat4 proj;
-};
+	class Space;
+	class Camera;
+	class Object;
 
-struct Vertex
-{
-	static const int SIZE = 3 * 2 + 2;
-	glm::vec3 position;
-	glm::vec3 normal;
-	glm::vec2 texcoords;
-
-	float* floatArray = nullptr;
-
-	Vertex(glm::vec3 pos) : position(pos)
+	struct RenderProps
 	{
-		normal = glm::vec3(0.0, 0.0, 1.0);
-		texcoords = glm::vec2(0.0);
-		toFloatArray();
-	}
-	Vertex(glm::vec3 pos, glm::vec3 nor) : position(pos), normal(nor)
-	{
-		toFloatArray();
-	}
-	Vertex(glm::vec3 pos, glm::vec3 nor, glm::vec2 tex) : position(pos), normal(nor), texcoords(tex)
-	{
-		toFloatArray();
-	}
+		Space* space;
+		Camera* camera;
+		Object* object;
 
-	~Vertex()
-	{
-		//freeFloatArray();
-	}
+		glm::mat4 model;
+		glm::mat4 view;
+		glm::mat4 proj;
 
-	void toFloatArray()
-	{
-		floatArray = (float*) malloc(sizeof(float) * SIZE);
-		if (!floatArray) abort();
+		int width;
+		int height;
 
-		for (int i = 0; i < 3; i++)
+		float deltatime;
+	};
+
+	struct Vertex
+	{
+		static const int SIZE = 3 * 2 + 2;
+		glm::vec3 position;
+		glm::vec3 normal;
+		glm::vec2 texcoords;
+
+		float* floatArray = nullptr;
+
+		Vertex(glm::vec3 pos) : position(pos)
 		{
-			floatArray[i] = glm::value_ptr(position)[i];
+			normal = glm::vec3(0.0, 0.0, 1.0);
+			texcoords = glm::vec2(0.0);
+			toFloatArray();
 		}
-		for (int i = 0; i < 3; i++)
+		Vertex(glm::vec3 pos, glm::vec3 nor) : position(pos), normal(nor)
 		{
-			floatArray[3 + i] = glm::value_ptr(normal)[i];
+			toFloatArray();
 		}
-		for (int i = 0; i < 2; i++)
+		Vertex(glm::vec3 pos, glm::vec3 nor, glm::vec2 tex) : position(pos), normal(nor), texcoords(tex)
 		{
-			floatArray[6 + i] = glm::value_ptr(texcoords)[i];
-		}
-	}
-
-	void freeFloatArray()
-	{
-		if (floatArray) free(floatArray);
-	}
-
-	float* getFloatArray()
-	{
-		return floatArray;
-	}
-};
-
-class Texture
-{
-public:
-	unsigned int id;
-	unsigned int index;
-	std::string type;
-
-	Texture(const char* path)
-	{
-		loadTexture(path, 0);
-	}
-
-	Texture(const char* path, int index)
-	{
-		loadTexture(path, index);
-	}
-
-	LUNA_API static Texture getDefault();
-	LUNA_API void bind();
-
-	LUNA_API static MaxSizeVector<Texture, 16> 
-		generateFromPaths(std::vector<const char*> paths)
-	{
-		MaxSizeVector<Texture, 16> textures;
-		for (int i = 0; i < paths.size(); i++)
-		{
-			textures.push_back(Texture(paths[i], i));
+			toFloatArray();
 		}
 
-		return textures;
-	}
+		~Vertex()
+		{
+			//freeFloatArray();
+		}
 
-private:
-	int loadTexture(const char* path, int index);
-};
+		void toFloatArray()
+		{
+			floatArray = (float*)malloc(sizeof(float) * SIZE);
+			if (!floatArray) abort();
 
-class Effect
-{
-public:
-	Effect();
-	~Effect();
+			for (int i = 0; i < 3; i++)
+			{
+				floatArray[i] = glm::value_ptr(position)[i];
+			}
+			for (int i = 0; i < 3; i++)
+			{
+				floatArray[3 + i] = glm::value_ptr(normal)[i];
+			}
+			for (int i = 0; i < 2; i++)
+			{
+				floatArray[6 + i] = glm::value_ptr(texcoords)[i];
+			}
+		}
 
-	LUNA_API void virtual draw();
-	LUNA_API void virtual postDraw();
-private:
+		void freeFloatArray()
+		{
+			if (floatArray) free(floatArray);
+		}
 
-};
+		float* getFloatArray()
+		{
+			return floatArray;
+		}
 
-class Mesh
-{
-private:
-	unsigned int VAO, VBO, EBO;
-	std::vector<float>			verticesFloatArray;
-public:
-	std::vector<Vertex>			vertices;
-	std::vector<unsigned int>	indices;
-	MaxSizeVector<Texture, 16>	textures;
+		static std::vector<Vertex> getSquareVector()
+		{
+			std::vector<Vertex> vertices = {
+			Vertex(glm::vec3(-0.5f, -0.5f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f),
+						glm::vec2(0.0f, 0.0f)),
+			Vertex(glm::vec3(-0.5f, 0.5f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f),
+						glm::vec2(0.0f, 1.0f)),
+			Vertex(glm::vec3(0.5f, -0.5f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f),
+						glm::vec2(1.0f, 0.0f)),
+			Vertex(glm::vec3(0.5f, 0.5f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f),
+						glm::vec2(1.0f, 1.0f))
+			};
+			return vertices;
+		}
+	};
 
-	void init(std::vector<Vertex> vertices, std::vector<unsigned int> indices,
-		MaxSizeVector<Texture, 16>	textures);
+	class Texture
+	{
+	public:
+		unsigned int id;
+		unsigned int index;
+		std::string type;
+		const char* name;
 
-	// Requires vertices to be triangulated
-	LUNA_API Mesh();
-	LUNA_API Mesh(const char* objPath);
-	LUNA_API Mesh(std::vector<Vertex> vertices);
-	Mesh(std::vector<Vertex> vertices, MaxSizeVector<Texture, 16>	textures);
-	Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices,
-		MaxSizeVector<Texture, 16>	textures);
-	void draw(RenderProps renderProps, Shader shader);
+		Texture(const char* name, const char* path)
+		{
+			loadTexture(path, 0);
+			this->name = name;
+		}
 
-	void toFloatArray();
-	std::vector<unsigned int> triangulateMesh(std::vector<Vertex> vertices);
+		Texture(const char* name, const char* path, int index)
+		{
+			loadTexture(path, index);
+			this->name = name;
+		}
 
-	LUNA_API static Mesh createSquare();
-};
+		LUNA_API static Texture getDefault();
+		LUNA_API void bind();
 
-class Object
-{
-protected:
-	Mesh mesh;
-	Shader shader;
-	glm::vec3 position;
-	glm::vec3 scale;
-	glm::mat4 model;
-public:
-	LUNA_API Object(Mesh mesh, Shader shader, glm::vec3 position, glm::vec3 scale);
-	LUNA_API ~Object();
-	Shader* getShader();
-	LUNA_API virtual void draw(RenderProps renderProps);
-	LUNA_API static Object createSquare();
-};
+		LUNA_API static MaxSizeVector<Texture, 16>
+			generateFromPaths(std::vector<const char*> paths,
+				std::vector<const char*> names)
+		{
+			MaxSizeVector<Texture, 16> textures;
+			for (int i = 0; i < paths.size(); i++)
+			{
+				textures.push_back(Texture(names[i], paths[i], i));
+			}
 
-class Sprite : public Object
-{
-	LUNA_API Sprite(Texture texture);
-	LUNA_API void draw(RenderProps renderProps) override;
-};
+			return textures;
+		}
+
+	private:
+		int loadTexture(const char* path, int index);
+	};
+
+	struct LineVertex
+	{
+		glm::vec3 start, end;
+	};
+
+	class Line
+	{
+	private:
+		unsigned int VAO, VBO;
+		
+	public:
+		std::vector<LineVertex> lines;
+
+		void init(std::vector<LineVertex> lines);
+
+		LUNA_API Line(std::vector<LineVertex> lines);
+
+		void draw(RenderProps renderProps, Shader shader);
+
+		float* getFlatArray()
+		{
+			if (lines.size() == 0)
+				return nullptr;
+			return &lines[0].start.x;
+		}
+	};
+
+	class Mesh
+	{
+	private:
+		unsigned int VAO, VBO, EBO;
+		std::vector<float>			verticesFloatArray;
+	public:
+		std::vector<Vertex>			vertices;
+		std::vector<unsigned int>	indices;
+		MaxSizeVector<Texture, 16>	textures;
+
+		void init(std::vector<Vertex> vertices, std::vector<unsigned int> indices,
+			MaxSizeVector<Texture, 16>	textures);
+
+		// Requires vertices to be triangulated
+		LUNA_API Mesh();
+		LUNA_API Mesh(const char* objPath);
+		LUNA_API Mesh(std::vector<Vertex> vertices);
+		LUNA_API Mesh(std::vector<Vertex> vertices, MaxSizeVector<Texture, 16>	textures);
+		Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices,
+			MaxSizeVector<Texture, 16>	textures);
+		void draw(RenderProps renderProps, Shader shader);
+
+		void toFloatArray();
+		std::vector<unsigned int> triangulateMesh(std::vector<Vertex> vertices);
+
+		LUNA_API static Mesh createSquare();
+	};
+
+	class Object
+	{
+	protected:
+		Mesh mesh;
+		Shader shader;
+		glm::vec3 position;
+		glm::vec3 scale;
+		glm::mat4 model;
+
+		std::vector<Effect*> effects;
+	public:
+		LUNA_API Object(Mesh mesh, Shader shader, glm::vec3 position, glm::vec3 scale);
+		LUNA_API ~Object();
+		Shader* getShader();
+		LUNA_API virtual void draw(RenderProps renderProps);
+		LUNA_API static Object createSquare();
+
+		LUNA_API void addEffect(Effect* effect);
+	};
+
+	class Sprite : public Object
+	{
+		LUNA_API Sprite(Texture texture);
+		LUNA_API void draw(RenderProps renderProps) override;
+	};
+}
