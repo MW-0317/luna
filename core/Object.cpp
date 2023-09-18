@@ -64,9 +64,9 @@ namespace luna
 		glBindTexture(GL_TEXTURE_2D, id);
 	}
 
-	Line::Line(std::vector<LineVertex> lines)
+	Line::Line(std::vector<LineVertex> points)
 	{
-		this->lines = lines;
+		this->points = points;
 
 		glGenVertexArrays(1, &VAO);
 		glBindVertexArray(VAO);
@@ -74,7 +74,7 @@ namespace luna
 		glGenBuffers(1, &VBO);
 		glBindBuffer(GL_ARRAY_BUFFER, VBO);
 		glBufferData(GL_ARRAY_BUFFER,
-			sizeof(float) * lines.size(), &lines[0], GL_STATIC_DRAW);
+			sizeof(float) * points.size(), &points[0], GL_STATIC_DRAW);
 
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float),
 			(void*)0);
@@ -99,7 +99,7 @@ namespace luna
 		shader.setMat4("projection", renderProps.proj);
 		shader.use();
 		glBindVertexArray(VAO);
-		glDrawArrays(GL_LINE, 0, lines.size());
+		glDrawArrays(GL_LINE, 0, points.size());
 		glBindVertexArray(0);
 	}
 

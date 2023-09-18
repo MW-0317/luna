@@ -146,44 +146,48 @@ namespace luna
 		int loadTexture(const char* path, int index);
 	};
 
-	// TODO: Reorganize primitive -> mesh and mesh -> 3D mesh
-	class Primitive
+	class Cell
 	{
 	protected:
 		unsigned int VAO, VBO, EBO;
 	public:
-		virtual void draw(RenderProps renderProps, Shader shader) {}
-		virtual Shader getBasicShader() {}
+		LUNA_API virtual void draw(RenderProps renderProps, Shader shader) {}
+		LUNA_API virtual Shader getBasicShader()
+		{
+			return Shader("example.glsl");
+		}
 	};
 
-	// TODO: LineVertex -> Line
 	struct LineVertex
 	{
 		glm::vec3 start;
 		glm::vec3 color;
 	};
 
-	// TODO: Line -> LineArray
-	class Line : public Primitive
+	class Line : public Cell
 	{
 	public:
-		std::vector<LineVertex> lines;
+		std::vector<LineVertex> points;
 
-		void init(std::vector<LineVertex> lines);
-		LUNA_API Line(std::vector<LineVertex> lines);
+		void init(std::vector<LineVertex> points);
+		LUNA_API Line(std::vector<LineVertex> points);
+		LUNA_API Line(std::vector<glm::vec3> positions);
 		void draw(RenderProps renderProps, Shader shader) override;
 
-		Shader getBasicShader() override;
+		Shader getBasicShader() override
+		{
+			return Shader("line.glsl");
+		}
 
 		float* getFlatArray()
 		{
-			if (lines.size() == 0)
+			if (points.size() == 0)
 				return nullptr;
-			return &lines[0].start.x;
+			return &points[0].start.x;
 		}
 	};
 
-	class Mesh : public Primitive
+	class Mesh : public Cell
 	{
 	private:
 		std::vector<float>			verticesFloatArray;
@@ -202,7 +206,7 @@ namespace luna
 		LUNA_API Mesh(std::vector<Vertex> vertices, MaxSizeVector<Texture, 16>	textures);
 		Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices,
 			MaxSizeVector<Texture, 16>	textures);
-		void draw(RenderProps renderProps, Shader shader);
+		LUNA_API void draw(RenderProps renderProps, Shader shader);
 
 		void toFloatArray();
 		std::vector<unsigned int> triangulateMesh(std::vector<Vertex> vertices);

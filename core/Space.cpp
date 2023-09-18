@@ -93,12 +93,17 @@ Random* Space::getRandom()
 
 void Space::draw(RenderProps renderProps)
 {
+	renderProps.view = this->currentCamera->getViewMatrix();
+	renderProps.proj = this->currentCamera->getProjectionMatrix();
+
 	for (int i = 0; i < objects.size(); i++)
 	{
-		renderProps.view = this->currentCamera->getViewMatrix();
-		renderProps.proj = this->currentCamera->getProjectionMatrix();
 		objects[i]->draw(renderProps);
-		primitives[i]->draw(renderProps, primitives[i]->getBasicShader());
+	}
+
+	for (int i = 0; i < cells.size(); i++)
+	{
+		cells[i]->draw(renderProps, cells[i]->getBasicShader());
 	}
 }
 
@@ -112,13 +117,21 @@ void Space::addSystem(System* system)
 	systems.push_back(system);
 }
 
-void Space::addPrimitive(Primitive* primitive)
+void Space::addCell(Cell* cell)
 {
-	primitives.push_back(primitive);
+	cells.push_back(cell);
 }
 
 // TODO
 void Space::createDebugLines()
 {
+	std::vector<Line*> lines =
+	{
+		new Line({ glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f) })
+	};
 
+	for (int i = 0; i < lines.size(); i++)
+	{
+		cells.push_back(lines[i]);
+	}
 }
