@@ -64,9 +64,17 @@ namespace luna
 		glBindTexture(GL_TEXTURE_2D, id);
 	}
 
-	Line::Line(std::vector<LineVertex> points)
+	void Line::init(std::vector<LineVertex> points)
 	{
+		basicShader = Shader("shaders/line.glsl");
 		this->points = points;
+
+		flatarray = getFlatArray();
+
+		for (int i = 0; i < 6 * points.size(); i++)
+		{
+			std::cout << flatarray[i] << std::endl;
+		}
 
 		glGenVertexArrays(1, &VAO);
 		glBindVertexArray(VAO);
@@ -74,7 +82,7 @@ namespace luna
 		glGenBuffers(1, &VBO);
 		glBindBuffer(GL_ARRAY_BUFFER, VBO);
 		glBufferData(GL_ARRAY_BUFFER,
-			sizeof(float) * points.size(), &points[0], GL_STATIC_DRAW);
+			6 * sizeof(float) * points.size(), flatarray, GL_STATIC_DRAW);
 
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float),
 			(void*)0);
@@ -83,6 +91,25 @@ namespace luna
 		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float),
 			(void*)(3 * sizeof(float)));
 		glEnableVertexAttribArray(1);
+		glBindVertexArray(0);
+	}
+
+	Line::Line(std::vector<LineVertex> points)
+	{
+		init(points);
+	}
+
+	Line::Line(std::vector<glm::vec3> positions)
+	{
+		std::vector<LineVertex> points;
+		for (int i = 0; i < positions.size(); i++)
+		{
+			LineVertex line;
+			line.color = glm::vec3(0.1f, 0.2f, 0.3f);
+			line.position = positions[i];
+			points.push_back(line);
+		}
+		init(points);
 	}
 
 	// TODO __
@@ -99,7 +126,8 @@ namespace luna
 		shader.setMat4("projection", renderProps.proj);
 		shader.use();
 		glBindVertexArray(VAO);
-		glDrawArrays(GL_LINE, 0, points.size());
+		glDrawArrays(GL_LINE_STRIP, 0, points.size());
+		//glDrawArrays(GL_LINE,)
 		glBindVertexArray(0);
 	}
 
@@ -139,6 +167,7 @@ namespace luna
 		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, Vertex::SIZE * sizeof(float),
 			(void*)(6 * sizeof(float)));
 		glEnableVertexAttribArray(2);
+		glBindVertexArray(0);
 	}
 
 	Mesh::Mesh()
