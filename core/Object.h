@@ -170,8 +170,10 @@ namespace luna
 	public:
 		float* flatarray;
 		std::vector<LineVertex> points;
+		std::vector<unsigned int> indices;
 
-		void init(std::vector<LineVertex> points);
+		void init(std::vector<LineVertex> points,
+			std::vector<unsigned int> indices);
 		LUNA_API Line(std::vector<LineVertex> points);
 		LUNA_API Line(std::vector<glm::vec3> positions);
 		LUNA_API Line(std::vector<glm::vec3> positions,
