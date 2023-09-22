@@ -14,7 +14,7 @@ VS
     void main()
     {
         color = aColor;
-        gl_Position = projection * view * model * vec4(position, 1.0);
+        gl_Position = projection * view * model * vec4(aPosition, 1.0);
     }
 }
 

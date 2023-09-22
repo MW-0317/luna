@@ -152,19 +152,17 @@ int main(int argc, char* argv[])
 	// ENGINE MUST BE CALLED BEFORE ALL OTHER FUNCTIONS TO INITIALIZE
 	// OpenGL functions. This must be changed in later versions.
 	Engine* e = new Engine(LuaManager::WINDOW_WIDTH, LuaManager::WINDOW_HEIGHT);
-	
+	e->getSpace()->createDebugLines();
+
 	std::vector<const char*> paths = {
-		"./resources/textures/default.png",
-		"./resources/textures/Perlin 7 - 128x128.png"
+	"./resources/textures/default.png",
+	"./resources/textures/Perlin 7 - 128x128.png"
 	};
 	std::vector<const char*> names = {
 		"defaultTexture",
 		"noiseTexture"
 	};
 
-	Shader shader = Shader("shaders/disintegrate.glsl");
-	Mesh testMesh = Mesh(Vertex::getSquareVector(), Texture::generateFromPaths(paths, names));
-	Object square = Object(testMesh, shader, glm::vec3(0.0f), glm::vec3(1.0f));
 	ParticleSystemProps psp;
 	psp.mesh = Mesh::createSquare();
 	psp.shader = Shader("shaders/particle.glsl");
@@ -180,6 +178,10 @@ int main(int argc, char* argv[])
 	Engine::clearColor(0.5f, 0.5f, 0.5f, 1.0f);
 	e->getSpace()->addSystem(particleSystem);
 	e->getSpace()->addObject(particleSystem);
+
+	Shader shader = Shader("shaders/disintegrate.glsl");
+	Mesh testMesh = Mesh(Vertex::getSquareVector(), Texture::generateFromPaths(paths, names));
+	Object square = Object(testMesh, shader, glm::vec3(0.0f), glm::vec3(1.0f));
 	e->getSpace()->addObject(&square);
 	e->run();
 

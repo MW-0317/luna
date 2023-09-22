@@ -193,11 +193,14 @@ void ParticleSystem::draw(RenderProps renderProps)
 	shader.setMat4("projection", renderProps.proj);
 	shader.use();
 	glBindVertexArray(VAO);
-	glBufferData(GL_ARRAY_BUFFER, getParticlesSize(), particlesToFlatArray(), GL_STATIC_DRAW);
-	//glBufferData(GL_ARRAY_BUFFER,
-	//		sizeof(float) * verticesFloatArray.size(), &verticesFloatArray[0], GL_STATIC_DRAW);
+	if (particles.size() > 0)
+	{
+		glBufferData(GL_ARRAY_BUFFER, getParticlesSize(), particlesToFlatArray(), GL_STATIC_DRAW);
+		//glBufferData(GL_ARRAY_BUFFER,
+		//		sizeof(float) * verticesFloatArray.size(), &verticesFloatArray[0], GL_STATIC_DRAW);
 
-	glDrawArrays(GL_POINT, 0, particles.size());
+		glDrawArrays(GL_POINT, 0, particles.size());
+	}
 	glBindVertexArray(0);
 }
 

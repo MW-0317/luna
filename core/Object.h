@@ -150,6 +150,7 @@ namespace luna
 	{
 	protected:
 		unsigned int VAO, VBO, EBO;
+		Shader basicShader;
 	public:
 		LUNA_API virtual void draw(RenderProps renderProps, Shader shader) {}
 		LUNA_API virtual Shader getBasicShader()
@@ -160,13 +161,14 @@ namespace luna
 
 	struct LineVertex
 	{
-		glm::vec3 start;
+		glm::vec3 position;
 		glm::vec3 color;
 	};
 
 	class Line : public Cell
 	{
 	public:
+		float* flatarray;
 		std::vector<LineVertex> points;
 
 		void init(std::vector<LineVertex> points);
@@ -178,14 +180,14 @@ namespace luna
 
 		Shader getBasicShader() override
 		{
-			return Shader("line.glsl");
+			return basicShader;
 		}
 
 		float* getFlatArray()
 		{
 			if (points.size() == 0)
 				return nullptr;
-			return &points[0].start.x;
+			return &points[0].position.x;
 		}
 	};
 
