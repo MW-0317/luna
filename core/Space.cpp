@@ -127,8 +127,20 @@ void Space::createDebugLines()
 {
 	std::vector<Line*> lines =
 	{
-		new Line({ glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f) })
+		new Line(
+					{ 
+						glm::vec3(0.0f, 0.0f, 0.0f), 
+						glm::vec3(1.0f, 0.0f, 0.0f),
+						glm::vec3(0.0f, 1.0f, 0.0f),
+						glm::vec3(0.0f, 0.0f, 1.0f)
+					},
+					{
+						0, 1, 0, 2, 0, 3
+					}
+				)
 	};
+
+
 
 	for (int i = 0; i < lines.size(); i++)
 	{

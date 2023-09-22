@@ -172,6 +172,8 @@ namespace luna
 		void init(std::vector<LineVertex> points);
 		LUNA_API Line(std::vector<LineVertex> points);
 		LUNA_API Line(std::vector<glm::vec3> positions);
+		LUNA_API Line(std::vector<glm::vec3> positions,
+			std::vector<unsigned int> indices);
 		void draw(RenderProps renderProps, Shader shader) override;
 
 		Shader getBasicShader() override
