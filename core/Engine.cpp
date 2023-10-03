@@ -24,6 +24,8 @@ namespace luna
 		ImGuiIO& io = ImGui::GetIO(); (void)io;
 		io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
 		io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
+		io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 
 		ImGui::StyleColorsDark();
 
@@ -78,8 +80,6 @@ namespace luna
 			fp.deltatime = delta;
 			mainFrameUpdate(fp);
 
-			ImGui::Render();
-
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 			RenderProps renderProps;
@@ -93,6 +93,13 @@ namespace luna
 				tickUpdate(tp);
 			}	
 			delta = space->getDelta();
+
+			ImGui::Render();
+			if (ImGui::GetIO().ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+			{
+				ImGui::UpdatePlatformWindows();
+				ImGui::RenderPlatformWindowsDefault();
+			}
 
 			ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
