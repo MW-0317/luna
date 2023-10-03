@@ -24,6 +24,8 @@ namespace luna
 		ImGuiIO& io = ImGui::GetIO(); (void)io;
 		io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
 		io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
+		io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 
 		ImGui::StyleColorsDark();
 
@@ -60,7 +62,6 @@ namespace luna
 
 	int Engine::run()
 	{
-
 		glEnable(GL_LINE_SMOOTH);
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -73,17 +74,16 @@ namespace luna
 		{
 			glfwPollEvents();
 
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
 			ImGui_ImplOpenGL3_NewFrame();
 			ImGui_ImplGlfw_NewFrame();
 			ImGui::NewFrame();
-
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+			ImGui::ShowDemoWindow();
 
 			FrameProps fp;
 			fp.deltatime = delta;
 			mainFrameUpdate(fp);
-
-			ImGui::Render();
 
 			RenderProps renderProps;
 			renderProps.width = this->width;
@@ -97,8 +97,19 @@ namespace luna
 			}	
 			delta = space->getDelta();
 
-			ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+			ImGui::Render();
+			int display_w, display_h;
+			glfwGetFramebufferSize(window, &display_h, &display_w);
+			glViewport(0, 0, display_w, display_h);
 
+			ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+			if (ImGui::GetIO().ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+			{
+				GLFWwindow* backup_current_context = glfwGetCurrentContext();
+				ImGui::UpdatePlatformWindows();
+				ImGui::RenderPlatformWindowsDefault();
+				glfwMakeContextCurrent(backup_current_context);
+			}
 			glfwSwapBuffers(window);
 		}
 		glfwTerminate();
@@ -114,9 +125,9 @@ namespace luna
 	{
 		// TODO: Figure out windows/widgets
 		if (debug) {
-			ImGui::Begin("Example Window", &exampleWindow);
-			
-			
+			ImGui::Begin("Debug Screen", &exampleWindow);
+
+			ImGui::Text("Test2");
 
 			ImGui::End();
 		}

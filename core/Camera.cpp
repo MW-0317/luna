@@ -42,7 +42,10 @@ namespace luna
 	void Camera::processInput(float deltatime)
 	{
 		if (glfwGetKey(cameraSettings.window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-			glfwSetWindowShouldClose(cameraSettings.window, true);
+			glfwSetInputMode(cameraSettings.window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+
+		if (!(glfwGetInputMode(cameraSettings.window, GLFW_CURSOR) == GLFW_CURSOR_DISABLED))
+			return;
 
 		float frameCameraSpeed = this->getSpeed() * deltatime;
 

@@ -144,6 +144,7 @@
     <ClCompile Include="core\Camera.cpp" />
     <ClCompile Include="core\Engine.cpp" />
     <ClCompile Include="core\Globals.cpp" />
+    <ClCompile Include="core\logs\ImguiLogs.cpp" />
     <ClCompile Include="core\media\Video.cpp" />
     <ClCompile Include="core\Object.cpp" />
     <ClCompile Include="core\particle\ParticleSystem.cpp" />
@@ -172,6 +173,7 @@
     <ClInclude Include="core\Engine.h" />
     <ClInclude Include="core\Globals.h" />
     <ClInclude Include="core\includes.h" />
+    <ClInclude Include="core\logs\ImguiLogs.h" />
     <ClInclude Include="core\math\Vector.h" />
     <ClInclude Include="core\media\Video.h" />
     <ClInclude Include="core\Object.h" />
