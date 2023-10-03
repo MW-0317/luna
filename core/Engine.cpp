@@ -33,9 +33,6 @@ namespace luna
 			ImGui_ImplOpenGL3_Init("#version 460 core");
 			IMGUI_INIT = true;
 		}
-
-		glViewport(0, 0, width, height);
-		glClearColor(1.0f, 0.5f, 1.0f, 1.0f);
 		glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 	}
 
@@ -63,6 +60,12 @@ namespace luna
 
 	int Engine::run()
 	{
+
+		glEnable(GL_LINE_SMOOTH);
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glViewport(0, 0, width, height);
+		glClearColor(1.0f, 0.5f, 1.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glfwSwapBuffers(window);
 		float delta = 0.0f;
@@ -74,13 +77,13 @@ namespace luna
 			ImGui_ImplGlfw_NewFrame();
 			ImGui::NewFrame();
 
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
 			FrameProps fp;
 			fp.deltatime = delta;
 			mainFrameUpdate(fp);
 
 			ImGui::Render();
-
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 			RenderProps renderProps;
 			renderProps.width = this->width;
@@ -110,11 +113,11 @@ namespace luna
 	void Engine::frameUpdate(FrameProps fp)
 	{
 		// TODO: Figure out windows/widgets
-		if (exampleWindow) {
+		if (debug) {
 			ImGui::Begin("Example Window", &exampleWindow);
-			ImGui::Text("Hello World!");
-			if (ImGui::Button("Close"))
-				exampleWindow = false;
+			
+			
+
 			ImGui::End();
 		}
 	}

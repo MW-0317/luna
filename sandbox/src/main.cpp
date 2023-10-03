@@ -1,3 +1,16 @@
+/*
+* Things I want this engine to be able to create through Lua:
+*	- Disintegration Effect
+*	- Smoke simulation (turbulence simulation)
+*	- Bloom Simulation
+*	- Chaos Simulation
+*	- Raymarched Cloud Simulation
+*		- Using Horizon Zero Dawn's technique
+*	- Lightning Simulation
+*	- Wheel of Fortune game
+*	- Star Wars Intro generator
+*/
+
 #define SOL_ALL_SAFETIES_ON 1
 //#define _CRTDBG_MAP_ALLOC
 #include <stdlib.h>
@@ -151,7 +164,7 @@ int main(int argc, char* argv[])
 
 	// ENGINE MUST BE CALLED BEFORE ALL OTHER FUNCTIONS TO INITIALIZE
 	// OpenGL functions. This must be changed in later versions.
-	Engine* e = new Engine(LuaManager::WINDOW_WIDTH, LuaManager::WINDOW_HEIGHT);
+	Engine* e = new Engine(1000, 800);
 	e->getSpace()->createDebugLines();
 
 	std::vector<const char*> paths = {
@@ -183,6 +196,7 @@ int main(int argc, char* argv[])
 	Mesh testMesh = Mesh(Vertex::getSquareVector(), Texture::generateFromPaths(paths, names));
 	Object square = Object(testMesh, shader, glm::vec3(0.0f), glm::vec3(1.0f));
 	e->getSpace()->addObject(&square);
+	e->enableDebug();
 	e->run();
 
 	_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_DEBUG);

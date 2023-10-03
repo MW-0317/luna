@@ -1,5 +1,5 @@
-WINDOW_WIDTH = 800
-WINDOW_HEIGHT = 600
+WINDOW_WIDTH = 1000
+WINDOW_HEIGHT = 800
 
 clearColor(0.5, 0.5, 0.5, 1.0)
 function update()

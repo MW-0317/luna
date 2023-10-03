@@ -11,6 +11,8 @@ namespace luna
 	LUNA_API class Engine : public virtual System
 	{
 	protected:
+		bool debug;
+
 		GLFWwindow* window;
 		Space* space;
 
@@ -25,6 +27,9 @@ namespace luna
 		LUNA_API Engine(int width, int height);
 		Engine();
 		~Engine();
+
+		LUNA_API void enableDebug() { this->debug = true; }
+		LUNA_API void disableDebug() { this->debug = false; }
 
 		LUNA_API int run();
 		virtual void mainFrameUpdate(FrameProps fp);
