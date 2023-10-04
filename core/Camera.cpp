@@ -31,6 +31,8 @@ namespace luna
 			proj = glm::mat4(1.0f);
 		}
 
+		if (!cameraSettings.movement)
+			return;
 		glfwSetInputMode(cameraSettings.window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 		if (glfwRawMouseMotionSupported())
 			glfwSetInputMode(cameraSettings.window, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);

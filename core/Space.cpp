@@ -14,6 +14,7 @@ Space::Space()
 	cs.width = luna::WINDOW_WIDTH;
 	cs.height = luna::WINDOW_HEIGHT;
 	cs.cameraType = CameraType::Perspective;
+	cs.movement = false;
 	currentCamera = new Camera(cs);
 	init();
 }

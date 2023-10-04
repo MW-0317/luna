@@ -1,5 +1,6 @@
 #include "Engine.h"
 #include "Globals.h"
+#include "logs/ImguiLogs.h"
 
 namespace luna
 {
@@ -12,6 +13,7 @@ namespace luna
 		cs.height = height;
 		cs.cameraType = CameraType::Perspective;
 		cs.window = window;
+		//cs.movement = false;
 		Camera* cam = new Camera(cs);
 
 		space = new Space(cam);
@@ -64,6 +66,7 @@ namespace luna
 	{
 		glEnable(GL_LINE_SMOOTH);
 		glEnable(GL_BLEND);
+		glEnable(GL_PROGRAM_POINT_SIZE);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		glViewport(0, 0, width, height);
 		glClearColor(1.0f, 0.5f, 1.0f, 1.0f);
@@ -79,7 +82,6 @@ namespace luna
 			ImGui_ImplOpenGL3_NewFrame();
 			ImGui_ImplGlfw_NewFrame();
 			ImGui::NewFrame();
-			ImGui::ShowDemoWindow();
 
 			FrameProps fp;
 			fp.deltatime = delta;
@@ -88,6 +90,7 @@ namespace luna
 			RenderProps renderProps;
 			renderProps.width = this->width;
 			renderProps.height = this->height;
+			renderProps.engine = this;
 			space->frameUpdate(renderProps);
 			if (space->tickUpdate())
 			{
@@ -100,7 +103,7 @@ namespace luna
 			ImGui::Render();
 			int display_w, display_h;
 			glfwGetFramebufferSize(window, &display_h, &display_w);
-			glViewport(0, 0, display_w, display_h);
+			glViewport(0, 0, display_h, display_w);
 
 			ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 			if (ImGui::GetIO().ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
@@ -125,11 +128,9 @@ namespace luna
 	{
 		// TODO: Figure out windows/widgets
 		if (debug) {
-			ImGui::Begin("Debug Screen", &exampleWindow);
-
-			ImGui::Text("Test2");
-
-			ImGui::End();
+			oLog.update("deltaframe", fp.deltatime);
+			log.draw("Log:", &debug);
+			oLog.draw("Overlay:");
 		}
 	}
 

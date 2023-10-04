@@ -12,12 +12,14 @@
 
 namespace luna
 {
+	class Engine;
 	class Space;
 	class Camera;
 	class Object;
 
 	struct RenderProps
 	{
+		Engine* engine;
 		Space* space;
 		Camera* camera;
 		Object* object;

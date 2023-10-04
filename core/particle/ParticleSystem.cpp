@@ -1,4 +1,5 @@
 #include "ParticleSystem.h"
+#include "../Engine.h"
 #include "../random/Random.h"
 #include "../Space.h"
 #include "../Camera.h"
@@ -193,13 +194,14 @@ void ParticleSystem::draw(RenderProps renderProps)
 	shader.setMat4("projection", renderProps.proj);
 	shader.use();
 	glBindVertexArray(VAO);
+	renderProps.engine->oLog.update("Size", particles.size());
+	renderProps.engine->oLog.update("PSize", getParticlesSize());
 	if (particles.size() > 0)
 	{
 		glBufferData(GL_ARRAY_BUFFER, getParticlesSize(), particlesToFlatArray(), GL_STATIC_DRAW);
 		//glBufferData(GL_ARRAY_BUFFER,
 		//		sizeof(float) * verticesFloatArray.size(), &verticesFloatArray[0], GL_STATIC_DRAW);
-
-		glDrawArrays(GL_POINT, 0, particles.size());
+		//glDrawArrays(GL_POINTS, 0, particles.size());
 	}
 	glBindVertexArray(0);
 }

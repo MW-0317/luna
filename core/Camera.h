@@ -25,6 +25,8 @@ namespace luna
 		CameraType cameraType;
 
 		GLFWwindow* window = nullptr;
+
+		bool movement = true;
 	};
 
 	class Camera : public Object

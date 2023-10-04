@@ -20,6 +20,7 @@ VS
     void main()
     {
         gl_Position = projection * view * model * vec4(position, 1.0);
+        gl_PointSize = 1.0;
     }
 }
 
@@ -31,6 +32,6 @@ FS
 
     void main()
     {
-        FragColor = vec4(1.0, 0.5, 1.0, 1.0);
+        FragColor = vec4(1.0, 1.0, 1.0, 1.0);
     }
 }
