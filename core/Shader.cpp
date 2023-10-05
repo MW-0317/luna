@@ -210,6 +210,11 @@ namespace luna
 		glUseProgram(id);
 	}
 
+	void Shader::disable()
+	{
+		glUseProgram(0);
+	}
+
 	void Shader::setBool(const std::string& name, bool value)
 	{
 		glUniform1i(glGetUniformLocation(id, name.c_str()), (int)value);

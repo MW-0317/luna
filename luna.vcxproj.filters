@@ -90,6 +90,9 @@
     <ClCompile Include="core\logs\ImguiLogs.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="core\logging\ImguiLogs.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main\main_time.h">
@@ -177,6 +180,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="core\logs\ImguiLogs.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="core\logging\ImguiLogs.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

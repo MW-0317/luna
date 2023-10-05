@@ -56,6 +56,7 @@ namespace luna
 		LUNA_API Shader(const char* shdaerPath);
 		LUNA_API Shader(const char* vertexPath, const char* fragmentPath);
 		void use();
+		void disable();
 		void setBool(const std::string& name, bool value);
 		void setInt(const std::string& name, int value);
 		void setFloat(const std::string& name, float value);

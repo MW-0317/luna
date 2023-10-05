@@ -87,7 +87,7 @@ namespace luna
 	{
 		glm::vec3 position, velocity, acceleration;
 		float life;
-		unsigned int active;
+		//unsigned int active;
 	};
 
 	class ParticleSystem : public Object, public System

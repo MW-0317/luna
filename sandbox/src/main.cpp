@@ -112,6 +112,17 @@ int main(int argc, char* argv[])
 			- Shader environment that mounts on top of GLSL.
 		- Initalization of OpenGL should exist outside the creation
 			of the engine/render/game.
+		- Need to rewrite or modify
+			- Meshes, Cells, and Objects
+			- RenderProps -> System.h or Interval.h (yet to be created)
+			- Look into engine run loop
+			- The interaction between camera and space
+			- Debug log needs to be global and static, not attached to engine
+			  (Engine should only draw the logs).
+			- Effect needs to be removed.
+			- A lot of clean up in Object.cpp, Engine.cpp, and ParticleSystem.cpp.
+			  ParticleSystem will probably not be changed until everything else
+			  is cleaned up.
 	*/
 	
 	// Todo for erosion/dissintegration effect
@@ -166,7 +177,8 @@ int main(int argc, char* argv[])
 	// OpenGL functions. This must be changed in later versions.
 	Engine* e = new Engine(1000, 800);
 	e->getSpace()->createDebugLines();
-
+	e->enableDebug();
+	
 	std::vector<const char*> paths = {
 	"./resources/textures/default.png",
 	"./resources/textures/Perlin 7 - 128x128.png"
@@ -184,7 +196,7 @@ int main(int argc, char* argv[])
 	ParticleSystem* particleSystem = new ParticleSystem(psp);
 	ParticleSpawner particleSpawner;
 	particleSpawner.lifeTime = 10.0f;
-	particleSpawner.count = 1000;
+	particleSpawner.count = 10000;
 	particleSystem->createSpawner(particleSpawner);
 	//DisintegrationEffect* effect = new DisintegrationEffect(particleSystem);
 	//square.addEffect(effect);
@@ -196,7 +208,6 @@ int main(int argc, char* argv[])
 	Mesh testMesh = Mesh(Vertex::getSquareVector(), Texture::generateFromPaths(paths, names));
 	Object square = Object(testMesh, shader, glm::vec3(0.0f), glm::vec3(1.0f));
 	e->getSpace()->addObject(&square);
-	e->enableDebug();
 	e->run();
 
 	_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_DEBUG);

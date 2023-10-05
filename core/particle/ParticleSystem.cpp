@@ -106,29 +106,31 @@ ParticleSystem::ParticleSystem(ParticleSystemProps props)
 	//glBufferData(GL_ARRAY_BUFFER, );
 
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 
-		10 * sizeof(float) + sizeof(unsigned int), 
+		10 * sizeof(float), 
 		(void*)0);
 	glEnableVertexAttribArray(0);
 
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 
-		10 * sizeof(float) + sizeof(unsigned int), 
+		10 * sizeof(float), 
 		(void*)(3 * sizeof(float)));
 	glEnableVertexAttribArray(1);
 
 	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 
-		10 * sizeof(float) + sizeof(unsigned int), 
+		10 * sizeof(float), 
 		(void*)(6 * sizeof(float)));
 	glEnableVertexAttribArray(2);
 
 	glVertexAttribPointer(3, 1, GL_FLOAT, GL_FALSE, 
-		10 * sizeof(float) + sizeof(unsigned int), 
+		10 * sizeof(float), 
 		(void*)(9 * sizeof(float)));
 	glEnableVertexAttribArray(3);
 
+	/*
 	glVertexAttribPointer(4, 1, GL_UNSIGNED_INT, GL_FALSE, 
 		10 * sizeof(float) + sizeof(unsigned int), 
 		(void*)(10 * sizeof(float)));
 	glEnableVertexAttribArray(4);
+	*/
 
 	glBindVertexArray(0);
 }
@@ -142,7 +144,7 @@ float* ParticleSystem::particlesToFlatArray()
 
 int ParticleSystem::getParticlesSize()
 {
-	return particles.size() * (10 * sizeof(float) + sizeof(unsigned int));
+	return particles.size() * (10 * sizeof(float)); // + sizeof(unsigned int)
 }
 
 void ParticleSystem::frameUpdate(FrameProps fp)
@@ -179,10 +181,12 @@ void ParticleSystem::tickUpdate(TickProps tp)
 
 void ParticleSystem::draw(RenderProps renderProps)
 {
+	shader.use();
 	glm::mat4 model = glm::mat4(1.0f);
 	model = glm::scale(model, scale);
 	model = glm::translate(model, position);
 	renderProps.model = model;
+
 	shader.setFloat("time", glfwGetTime());
 	shader.setFloat("deltatime", renderProps.deltatime);
 
@@ -192,18 +196,21 @@ void ParticleSystem::draw(RenderProps renderProps)
 	shader.setMat4("model", renderProps.model);
 	shader.setMat4("view", renderProps.view);
 	shader.setMat4("projection", renderProps.proj);
-	shader.use();
+
+	float* testArray = particlesToFlatArray();
 	glBindVertexArray(VAO);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	renderProps.engine->oLog.update("Size", particles.size());
 	renderProps.engine->oLog.update("PSize", getParticlesSize());
 	if (particles.size() > 0)
 	{
-		glBufferData(GL_ARRAY_BUFFER, getParticlesSize(), particlesToFlatArray(), GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, getParticlesSize(), testArray, GL_STATIC_DRAW);
 		//glBufferData(GL_ARRAY_BUFFER,
 		//		sizeof(float) * verticesFloatArray.size(), &verticesFloatArray[0], GL_STATIC_DRAW);
-		//glDrawArrays(GL_POINTS, 0, particles.size());
+		glDrawArrays(GL_POINTS, 0, particles.size());
 	}
 	glBindVertexArray(0);
+	shader.disable();
 }
 
 void ParticleSystem::drawParticle(RenderProps renderProps, ShaderParticle particle)
@@ -213,7 +220,7 @@ void ParticleSystem::drawParticle(RenderProps renderProps, ShaderParticle partic
 
 void ParticleSystem::addParticle(ShaderParticle particle)
 {
-	particle.active = true;
+	//particle.active = true;
 	particles.push_back(particle);
 }
 

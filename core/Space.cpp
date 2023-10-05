@@ -1,4 +1,5 @@
 #include "Space.h"
+#include "Engine.h"
 
 using namespace luna;
 
@@ -94,8 +95,15 @@ Random* Space::getRandom()
 
 void Space::draw(RenderProps renderProps)
 {
-	renderProps.view = this->currentCamera->getViewMatrix();
-	renderProps.proj = this->currentCamera->getProjectionMatrix();
+	renderProps.space	= this;
+	renderProps.camera	= this->currentCamera;
+	renderProps.view	= this->currentCamera->getViewMatrix();
+	renderProps.proj	= this->currentCamera->getProjectionMatrix();
+
+	glm::vec3 pos = this->currentCamera->getPosition();
+	renderProps.engine->oLog.update("x", pos.x);
+	renderProps.engine->oLog.update("y", pos.y);
+	renderProps.engine->oLog.update("z", pos.z);
 
 	for (int i = 0; i < objects.size(); i++)
 	{
@@ -104,6 +112,7 @@ void Space::draw(RenderProps renderProps)
 
 	for (int i = 0; i < cells.size(); i++)
 	{
+		renderProps.engine->log.log("C_i: %d\n", i);
 		cells[i]->draw(renderProps, cells[i]->getBasicShader());
 	}
 }

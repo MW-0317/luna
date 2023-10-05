@@ -1,6 +1,5 @@
 #include "Engine.h"
 #include "Globals.h"
-#include "logs/ImguiLogs.h"
 
 namespace luna
 {
@@ -38,6 +37,14 @@ namespace luna
 			IMGUI_INIT = true;
 		}
 		glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+
+		glEnable(GL_LINE_SMOOTH);
+		glEnable(GL_BLEND);
+		glEnable(GL_PROGRAM_POINT_SIZE);
+		glEnable(GL_DEPTH_TEST);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glViewport(0, 0, width, height);
+		glClearColor(1.0f, 0.5f, 1.0f, 1.0f);
 	}
 
 	LUNA_API Engine::Engine(int width, int height)
@@ -64,12 +71,6 @@ namespace luna
 
 	int Engine::run()
 	{
-		glEnable(GL_LINE_SMOOTH);
-		glEnable(GL_BLEND);
-		glEnable(GL_PROGRAM_POINT_SIZE);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		glViewport(0, 0, width, height);
-		glClearColor(1.0f, 0.5f, 1.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glfwSwapBuffers(window);
 		float delta = 0.0f;

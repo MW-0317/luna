@@ -155,9 +155,10 @@ namespace luna
 		Shader basicShader;
 	public:
 		LUNA_API virtual void draw(RenderProps renderProps, Shader shader) {}
-		LUNA_API virtual Shader getBasicShader()
+		LUNA_API Shader getBasicShader()
 		{
-			return Shader("example.glsl");
+			//return Shader("shaders/example.glsl");
+			return basicShader;
 		}
 	};
 
@@ -181,11 +182,6 @@ namespace luna
 		LUNA_API Line(std::vector<glm::vec3> positions,
 			std::vector<unsigned int> indices);
 		void draw(RenderProps renderProps, Shader shader) override;
-
-		Shader getBasicShader() override
-		{
-			return basicShader;
-		}
 
 		float* getFlatArray()
 		{

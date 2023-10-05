@@ -6,6 +6,7 @@
 
 #include "Camera.h"
 #include "Space.h"
+#include "Engine.h"
 
 #include <glm/gtx/string_cast.hpp>
 
@@ -66,16 +67,11 @@ namespace luna
 
 	void Line::init(std::vector<LineVertex> points, std::vector<unsigned int> indices)
 	{
-		basicShader = Shader("shaders/line.glsl");
+		this->basicShader = Shader("shaders/line.glsl");
 		this->points = points;
 		this->indices = indices;
 
 		flatarray = getFlatArray();
-
-		for (int i = 0; i < 6 * points.size(); i++)
-		{
-			std::cout << flatarray[i] << std::endl;
-		}
 
 		glGenVertexArrays(1, &VAO);
 		glBindVertexArray(VAO);
@@ -100,6 +96,7 @@ namespace luna
 		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float),
 			(void*)(3 * sizeof(float)));
 		glEnableVertexAttribArray(1);
+
 		glBindVertexArray(0);
 	}
 
@@ -137,23 +134,28 @@ namespace luna
 	// TODO __
 	void Line::draw(RenderProps renderProps, Shader shader)
 	{
+		shader.use();
 		shader.setFloat("time", glfwGetTime());
 		shader.setFloat("deltatime", renderProps.deltatime);
 
 		shader.setInt("width", renderProps.width);
 		shader.setInt("height", renderProps.height);
 
+		//renderProps.engine->log.log("%s", );
+		renderProps.model = glm::mat4(1.0f);
+		//std::cout << glm::to_string(renderProps.model) << std::endl;
 		shader.setMat4("model", renderProps.model);
 		shader.setMat4("view", renderProps.view);
 		shader.setMat4("projection", renderProps.proj);
-		shader.use();
+		
 		glBindVertexArray(VAO);
 		if (indices.empty())
-			glDrawArrays(GL_LINE_STRIP, 0, points.size());
+			glDrawArrays(GL_LINES, 0, points.size());
 		else
-			glDrawElements(GL_LINE_STRIP, indices.size(), GL_UNSIGNED_INT, 0);
-		//glDrawArrays(GL_LINE,)
+			glDrawElements(GL_LINES, indices.size(), GL_UNSIGNED_INT, 0);
+		//shader.disable();
 		glBindVertexArray(0);
+		shader.disable();
 	}
 
 	void Mesh::init(std::vector<Vertex> vertices, std::vector<unsigned int> indices,
@@ -215,16 +217,16 @@ namespace luna
 
 	void Mesh::draw(RenderProps renderProps, Shader shader)
 	{
+		shader.use();
 		shader.setFloat("time", glfwGetTime());
 		shader.setFloat("deltatime", renderProps.deltatime);
-
+		
 		shader.setInt("width", renderProps.width);
 		shader.setInt("height", renderProps.height);
-
+		
 		shader.setMat4("model", renderProps.model);
 		shader.setMat4("view", renderProps.view);
 		shader.setMat4("projection", renderProps.proj);
-		shader.use();
 		glBindVertexArray(VAO);
 		for (int i = 0; i < textures.size(); i++)
 		{
@@ -233,6 +235,7 @@ namespace luna
 		}
 		glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
 		glBindVertexArray(0);
+		shader.disable();
 	}
 
 	void Mesh::toFloatArray()

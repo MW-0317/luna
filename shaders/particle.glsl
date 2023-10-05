@@ -6,7 +6,7 @@ VS
     layout (location = 1) in vec3 velocity;
     layout (location = 2) in vec3 acceleration;
     layout (location = 3) in float life;
-    layout (location = 4) in uint alive;
+    //layout (location = 4) in uint alive;
 
     uniform mat4 model;
     uniform mat4 view;
@@ -20,7 +20,7 @@ VS
     void main()
     {
         gl_Position = projection * view * model * vec4(position, 1.0);
-        gl_PointSize = 1.0;
+        gl_PointSize = 5.0;
     }
 }
 
@@ -32,6 +32,6 @@ FS
 
     void main()
     {
-        FragColor = vec4(1.0, 1.0, 1.0, 1.0);
+        FragColor = vec4(1.0);
     }
 }

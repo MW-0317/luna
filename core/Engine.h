@@ -6,7 +6,7 @@
 #include "core/Space.h"
 #include "core/System.h"
 
-#include "logs/ImguiLogs.h"
+#include "logging/ImguiLogs.h"
 
 namespace luna
 {
