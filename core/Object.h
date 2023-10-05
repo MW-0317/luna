@@ -12,102 +12,6 @@
 
 namespace luna
 {
-	class Engine;
-	class Space;
-	class Camera;
-	class Object;
-
-	struct RenderProps
-	{
-		Engine* engine;
-		Space* space;
-		Camera* camera;
-		Object* object;
-
-		glm::mat4 model;
-		glm::mat4 view;
-		glm::mat4 proj;
-
-		int width;
-		int height;
-
-		float deltatime;
-	};
-
-	struct Vertex
-	{
-		static const int SIZE = 3 * 2 + 2;
-		glm::vec3 position;
-		glm::vec3 normal;
-		glm::vec2 texcoords;
-
-		float* floatArray = nullptr;
-
-		Vertex(glm::vec3 pos) : position(pos)
-		{
-			normal = glm::vec3(0.0, 0.0, 1.0);
-			texcoords = glm::vec2(0.0);
-			toFloatArray();
-		}
-		Vertex(glm::vec3 pos, glm::vec3 nor) : position(pos), normal(nor)
-		{
-			toFloatArray();
-		}
-		Vertex(glm::vec3 pos, glm::vec3 nor, glm::vec2 tex) : position(pos), normal(nor), texcoords(tex)
-		{
-			toFloatArray();
-		}
-
-		~Vertex()
-		{
-			//freeFloatArray();
-		}
-
-		void toFloatArray()
-		{
-			floatArray = (float*)malloc(sizeof(float) * SIZE);
-			if (!floatArray) abort();
-
-			for (int i = 0; i < 3; i++)
-			{
-				floatArray[i] = glm::value_ptr(position)[i];
-			}
-			for (int i = 0; i < 3; i++)
-			{
-				floatArray[3 + i] = glm::value_ptr(normal)[i];
-			}
-			for (int i = 0; i < 2; i++)
-			{
-				floatArray[6 + i] = glm::value_ptr(texcoords)[i];
-			}
-		}
-
-		void freeFloatArray()
-		{
-			if (floatArray) free(floatArray);
-		}
-
-		float* getFloatArray()
-		{
-			return floatArray;
-		}
-
-		static std::vector<Vertex> getSquareVector()
-		{
-			std::vector<Vertex> vertices = {
-			Vertex(glm::vec3(-0.5f, -0.5f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f),
-						glm::vec2(0.0f, 0.0f)),
-			Vertex(glm::vec3(-0.5f, 0.5f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f),
-						glm::vec2(0.0f, 1.0f)),
-			Vertex(glm::vec3(0.5f, -0.5f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f),
-						glm::vec2(1.0f, 0.0f)),
-			Vertex(glm::vec3(0.5f, 0.5f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f),
-						glm::vec2(1.0f, 1.0f))
-			};
-			return vertices;
-		}
-	};
-
 	class Texture
 	{
 	public:
@@ -148,10 +52,53 @@ namespace luna
 		int loadTexture(const char* path, int index);
 	};
 
-	class Cell
+	class Engine;
+	class Space;
+	class Camera;
+	class Object;
+
+	// NEED TO MOVE TO INTERVAL/SYSTEM
+	struct RenderProps
+	{
+		Engine* engine;
+		Space* space;
+		Camera* camera;
+		Object* object;
+
+		glm::mat4 model;
+		glm::mat4 view;
+		glm::mat4 proj;
+
+		int width;
+		int height;
+
+		float deltatime;
+	};
+
+	struct PrimitiveVertex
+	{
+		glm::vec3 position;
+		glm::vec3 color;
+	};
+
+	struct Vertex : public PrimitiveVertex
+	{
+		glm::vec3 normal;
+		glm::vec2 texcoords;
+	};
+
+	enum PrimitiveType
+	{
+		POINT,
+		LINE,
+		LINE_STRIP
+	};
+
+	class Primitive
 	{
 	protected:
 		unsigned int VAO, VBO, EBO;
+		PrimitiveType type;
 		Shader basicShader;
 	public:
 		LUNA_API virtual void draw(RenderProps renderProps, Shader shader) {}
@@ -162,22 +109,15 @@ namespace luna
 		}
 	};
 
-	struct LineVertex
-	{
-		glm::vec3 position;
-		glm::vec3 color;
-	};
-
-	class Line : public Cell
+	class Line : public Primitive
 	{
 	public:
-		float* flatarray;
-		std::vector<LineVertex> points;
+		std::vector<PrimitiveVertex> points;
 		std::vector<unsigned int> indices;
 
-		void init(std::vector<LineVertex> points,
+		void init(std::vector<PrimitiveVertex> points,
 			std::vector<unsigned int> indices);
-		LUNA_API Line(std::vector<LineVertex> points);
+		LUNA_API Line(std::vector<PrimitiveVertex> points);
 		LUNA_API Line(std::vector<glm::vec3> positions);
 		LUNA_API Line(std::vector<glm::vec3> positions,
 			std::vector<unsigned int> indices);
@@ -191,7 +131,7 @@ namespace luna
 		}
 	};
 
-	class Mesh : public Cell
+	class Mesh : public Primitive
 	{
 	private:
 		std::vector<float>			verticesFloatArray;

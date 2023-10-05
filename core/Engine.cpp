@@ -84,14 +84,20 @@ namespace luna
 			ImGui_ImplGlfw_NewFrame();
 			ImGui::NewFrame();
 
-			FrameProps fp;
-			fp.deltatime = delta;
-			mainFrameUpdate(fp);
+			Frame frame;
+			frame.engine = this;
+			frame.width = this->width;
+			frame.height = this->height;
+			frame.deltatime = delta;
 
-			RenderProps renderProps;
-			renderProps.width = this->width;
-			renderProps.height = this->height;
-			renderProps.engine = this;
+			Tick tick;
+			tick.engine = this;
+			tick.width = this->width;
+			tick.height = this->height;
+			tick.deltatime = delta;
+
+			mainFrameUpdate(frame);
+			mainTickUpdate(tick);
 			space->frameUpdate(renderProps);
 			if (space->tickUpdate())
 			{

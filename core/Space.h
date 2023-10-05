@@ -30,7 +30,7 @@ namespace luna
 
 		std::vector<Object*>	objects;
 		std::vector<System*>	systems;
-		std::vector<Cell*>		cells;
+		std::vector<Primitive*>	primitives;
 	public:
 		void init();
 		Space();
@@ -50,7 +50,7 @@ namespace luna
 
 		LUNA_API void addObject(Object* object);
 		LUNA_API void addSystem(System* system);
-		LUNA_API void addCell(Cell* cell);
+		LUNA_API void addPrimitive(Primitive* primitive);
 
 		LUNA_API void createDebugLines();
 	};

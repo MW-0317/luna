@@ -105,16 +105,6 @@ void Space::draw(RenderProps renderProps)
 	renderProps.engine->oLog.update("y", pos.y);
 	renderProps.engine->oLog.update("z", pos.z);
 
-	for (int i = 0; i < objects.size(); i++)
-	{
-		objects[i]->draw(renderProps);
-	}
-
-	for (int i = 0; i < cells.size(); i++)
-	{
-		renderProps.engine->log.log("C_i: %d\n", i);
-		cells[i]->draw(renderProps, cells[i]->getBasicShader());
-	}
 }
 
 void Space::addObject(Object* object)
@@ -127,12 +117,11 @@ void Space::addSystem(System* system)
 	systems.push_back(system);
 }
 
-void Space::addCell(Cell* cell)
+void Space::addPrimitive(Primitive* primitive)
 {
-	cells.push_back(cell);
+	primitives.push_back(primitive);
 }
 
-// TODO
 void Space::createDebugLines()
 {
 	std::vector<Line*> lines =
@@ -154,6 +143,6 @@ void Space::createDebugLines()
 
 	for (int i = 0; i < lines.size(); i++)
 	{
-		cells.push_back(lines[i]);
+		primitives.push_back(lines[i]);
 	}
 }

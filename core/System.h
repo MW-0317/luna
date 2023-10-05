@@ -4,22 +4,35 @@
 
 namespace luna
 {
-	struct FrameProps
+	struct Interval
 	{
 		float deltatime;
 		Random* rng;
+		Engine* engine;
+		Space* space;
+		Camera* camera;
+		Object* object;
+
+		int width;
+		int height;
 	};
 
-	struct TickProps
+	struct Frame : public Interval
 	{
-		float deltatime;
-		Random* rng;
+		glm::mat4 model;
+		glm::mat4 view;
+		glm::mat4 proj;
+	};
+
+	struct Tick : public Interval
+	{
+
 	};
 
 	class System
 	{
 	public:
-		LUNA_API virtual void frameUpdate(FrameProps fp) {}
-		LUNA_API virtual void tickUpdate(TickProps tp) {}
+		LUNA_API virtual void frameUpdate(Frame frame) {}
+		LUNA_API virtual void tickUpdate(Tick tick) {}
 	};
 }
