@@ -113,13 +113,10 @@ int main(int argc, char* argv[])
 		- Initalization of OpenGL should exist outside the creation
 			of the engine/render/game.
 		- Need to rewrite or modify
-			- Meshes, Cells, and Objects
-			- RenderProps -> System.h or Interval.h (yet to be created)
-			- Look into engine run loop
 			- The interaction between camera and space
 			- Debug log needs to be global and static, not attached to engine
 			  (Engine should only draw the logs).
-			- Effect needs to be removed.
+			- Effect needs to be heavily modified.
 			- A lot of clean up in Object.cpp, Engine.cpp, and ParticleSystem.cpp.
 			  ParticleSystem will probably not be changed until everything else
 			  is cleaned up.

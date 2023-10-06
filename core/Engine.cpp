@@ -1,5 +1,6 @@
 #include "Engine.h"
 #include "Globals.h"
+#include "logging/ImguiLogs.h"
 
 namespace luna
 {
@@ -141,9 +142,8 @@ namespace luna
 	{
 		// TODO: Figure out windows/widgets
 		if (debug) {
-			oLog.update("deltaframe", frame.deltatime);
-			log.draw("Log:", &debug);
-			oLog.draw("Overlay:");
+			Log::updateOverlay("deltaframe", frame.deltatime);
+			Log::draw(&debug);
 		}
 	}
 
@@ -157,7 +157,7 @@ namespace luna
 	void Engine::tickUpdate(Tick tick)
 	{
 		if (debug) {
-			oLog.update("deltatick", tick.deltatime);
+			Log::updateOverlay("deltatick", tick.deltatime);
 		}
 	}
 

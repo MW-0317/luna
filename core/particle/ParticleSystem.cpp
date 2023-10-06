@@ -3,6 +3,7 @@
 #include "../random/Random.h"
 #include "../Space.h"
 #include "../Camera.h"
+#include "../logging/ImguiLogs.h"
 
 using namespace luna;
 
@@ -202,8 +203,8 @@ void ParticleSystem::draw(Frame frame)
 	float* testArray = particlesToFlatArray();
 	glBindVertexArray(VAO);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	frame.engine->oLog.update("Size", particles.size());
-	frame.engine->oLog.update("PSize", getParticlesSize());
+	Log::updateOverlay("Size", particles.size());
+	Log::updateOverlay("PSize", getParticlesSize());
 	if (particles.size() > 0)
 	{
 		glBufferData(GL_ARRAY_BUFFER, getParticlesSize(), testArray, GL_STATIC_DRAW);

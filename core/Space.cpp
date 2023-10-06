@@ -1,5 +1,6 @@
 #include "Space.h"
 #include "Engine.h"
+#include "logging/ImguiLogs.h"
 
 using namespace luna;
 
@@ -79,9 +80,9 @@ void Space::draw(Frame frame)
 	frame.proj	= this->currentCamera->getProjectionMatrix();
 
 	glm::vec3 pos = this->currentCamera->getPosition();
-	frame.engine->oLog.update("x", pos.x);
-	frame.engine->oLog.update("y", pos.y);
-	frame.engine->oLog.update("z", pos.z);
+	Log::updateOverlay("x", pos.x);
+	Log::updateOverlay("y", pos.y);
+	Log::updateOverlay("z", pos.z);
 
 	for (int i = 0; i < objects.size(); i++)
 	{
