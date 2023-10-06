@@ -201,13 +201,13 @@ int main(int argc, char* argv[])
 	//DisintegrationEffect* effect = new DisintegrationEffect(particleSystem);
 	//square.addEffect(effect);
 	Engine::clearColor(0.5f, 0.5f, 0.5f, 1.0f);
-	e->getSpace()->addSystem(particleSystem);
-	e->getSpace()->addObject(particleSystem);
+	e->getSpace(0)->addSystem(particleSystem);
+	e->getSpace(0)->addObject(particleSystem);
 
 	Shader shader = Shader("shaders/disintegrate.glsl");
 	Mesh testMesh = Mesh(Vertex::getSquareVector(), Texture::generateFromPaths(paths, names));
 	Object square = Object(testMesh, shader, glm::vec3(0.0f), glm::vec3(1.0f));
-	e->getSpace()->addObject(&square);
+	e->getSpace(0)->addObject(&square);
 	e->run();
 
 	_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_DEBUG);

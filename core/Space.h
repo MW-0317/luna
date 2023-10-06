@@ -14,9 +14,6 @@ namespace luna
 	private:
 		Random* rng;
 
-		float const MAX_TPS = 60;
-		float const INV_TPS = 1 / MAX_TPS;
-
 		Camera* currentCamera;
 		std::vector<Camera> cameras;
 
@@ -37,16 +34,15 @@ namespace luna
 		Space(Camera* camera);
 		~Space();
 
-		void frameUpdate(RenderProps renderProps);
+		void frameUpdate(Frame frame);
 		// Returns true if a tick can be processed outside of the Space class.
-		bool tickUpdate();
-		float getDeltaTick();
+		void tickUpdate(Tick tick);
 
 		Camera* getCamera();
 		float getDelta();
 		Random* getRandom();
 
-		void draw(RenderProps renderProps);
+		void draw(Frame frame);
 
 		LUNA_API void addObject(Object* object);
 		LUNA_API void addSystem(System* system);

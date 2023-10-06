@@ -65,13 +65,13 @@ namespace luna
 		glBindTexture(GL_TEXTURE_2D, id);
 	}
 
-	void Line::init(std::vector<LineVertex> points, std::vector<unsigned int> indices)
+	void Line::init(std::vector<PrimitiveVertex> points, std::vector<unsigned int> indices)
 	{
 		this->basicShader = Shader("shaders/line.glsl");
 		this->points = points;
 		this->indices = indices;
 
-		flatarray = getFlatArray();
+		float* flatarray = getFlatArray();
 
 		glGenVertexArrays(1, &VAO);
 		glBindVertexArray(VAO);
@@ -100,17 +100,17 @@ namespace luna
 		glBindVertexArray(0);
 	}
 
-	Line::Line(std::vector<LineVertex> points)
+	Line::Line(std::vector<PrimitiveVertex> points)
 	{
 		init(points, {});
 	}
 
 	Line::Line(std::vector<glm::vec3> positions)
 	{
-		std::vector<LineVertex> points;
+		std::vector<PrimitiveVertex> points;
 		for (int i = 0; i < positions.size(); i++)
 		{
-			LineVertex line;
+			PrimitiveVertex line;
 			line.color = glm::vec3(0.1f, 0.2f, 0.3f);
 			line.position = positions[i];
 			points.push_back(line);
@@ -120,10 +120,10 @@ namespace luna
 
 	Line::Line(std::vector<glm::vec3> positions, std::vector<unsigned int> indices)
 	{
-		std::vector<LineVertex> points;
+		std::vector<PrimitiveVertex> points;
 		for (int i = 0; i < positions.size(); i++)
 		{
-			LineVertex line;
+			PrimitiveVertex line;
 			line.color = glm::vec3(0.1f, 0.2f, 0.3f);
 			line.position = positions[i];
 			points.push_back(line);
@@ -132,21 +132,21 @@ namespace luna
 	}
 
 	// TODO __
-	void Line::draw(RenderProps renderProps, Shader shader)
+	void Line::draw(Frame frame, Shader shader)
 	{
 		shader.use();
 		shader.setFloat("time", glfwGetTime());
-		shader.setFloat("deltatime", renderProps.deltatime);
+		shader.setFloat("deltatime", frame.deltatime);
 
-		shader.setInt("width", renderProps.width);
-		shader.setInt("height", renderProps.height);
+		shader.setInt("width", frame.width);
+		shader.setInt("height", frame.height);
 
 		//renderProps.engine->log.log("%s", );
-		renderProps.model = glm::mat4(1.0f);
+		frame.model = glm::mat4(1.0f);
 		//std::cout << glm::to_string(renderProps.model) << std::endl;
-		shader.setMat4("model", renderProps.model);
-		shader.setMat4("view", renderProps.view);
-		shader.setMat4("projection", renderProps.proj);
+		shader.setMat4("model", frame.model);
+		shader.setMat4("view", frame.view);
+		shader.setMat4("projection", frame.proj);
 		
 		glBindVertexArray(VAO);
 		if (indices.empty())
@@ -163,8 +163,7 @@ namespace luna
 	{
 		this->vertices = vertices;
 		this->textures = textures;
-		toFloatArray();
-		float* floatArrayPointer = &verticesFloatArray[0];
+		float* flatArray = getFlatArray();
 		this->indices = triangulateMesh(vertices);
 
 		glGenVertexArrays(1, &VAO);
@@ -173,7 +172,7 @@ namespace luna
 		glGenBuffers(1, &VBO);
 		glBindBuffer(GL_ARRAY_BUFFER, VBO);
 		glBufferData(GL_ARRAY_BUFFER,
-			sizeof(float) * verticesFloatArray.size(), &verticesFloatArray[0], GL_STATIC_DRAW);
+			VERTEX_SIZE * sizeof(float) * vertices.size(), flatArray, GL_STATIC_DRAW);
 
 		glGenBuffers(1, &EBO);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
@@ -181,17 +180,17 @@ namespace luna
 			sizeof(unsigned int) * this->indices.size(), &this->indices[0], GL_STATIC_DRAW);
 
 		// Position
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, Vertex::SIZE * sizeof(float),
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, VERTEX_SIZE * sizeof(float),
 			(void*)0);
 		glEnableVertexAttribArray(0);
 
 		// Normal
-		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, Vertex::SIZE * sizeof(float),
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, VERTEX_SIZE * sizeof(float),
 			(void*)(3 * sizeof(float)));
 		glEnableVertexAttribArray(1);
 
 		// Texture Coordinates
-		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, Vertex::SIZE * sizeof(float),
+		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, VERTEX_SIZE * sizeof(float),
 			(void*)(6 * sizeof(float)));
 		glEnableVertexAttribArray(2);
 		glBindVertexArray(0);
@@ -205,6 +204,12 @@ namespace luna
 
 	}
 
+	Mesh::Mesh(std::vector<float> vertices)
+	{
+		std::vector<Vertex> newVertices = floatToVertex(vertices);
+		init(newVertices, std::vector<unsigned int>(), MaxSizeVector<Texture, 16>());
+	}
+
 	Mesh::Mesh(std::vector<Vertex> vertices)
 	{
 		init(vertices, std::vector<unsigned int>(), MaxSizeVector<Texture, 16>());
@@ -215,18 +220,18 @@ namespace luna
 		init(vertices, std::vector<unsigned int>(), textures);
 	}
 
-	void Mesh::draw(RenderProps renderProps, Shader shader)
+	void Mesh::draw(Frame frame, Shader shader)
 	{
 		shader.use();
 		shader.setFloat("time", glfwGetTime());
-		shader.setFloat("deltatime", renderProps.deltatime);
+		shader.setFloat("deltatime", frame.deltatime);
 		
-		shader.setInt("width", renderProps.width);
-		shader.setInt("height", renderProps.height);
+		shader.setInt("width", frame.width);
+		shader.setInt("height", frame.height);
 		
-		shader.setMat4("model", renderProps.model);
-		shader.setMat4("view", renderProps.view);
-		shader.setMat4("projection", renderProps.proj);
+		shader.setMat4("model", frame.model);
+		shader.setMat4("view", frame.view);
+		shader.setMat4("projection", frame.proj);
 		glBindVertexArray(VAO);
 		for (int i = 0; i < textures.size(); i++)
 		{
@@ -238,34 +243,44 @@ namespace luna
 		shader.disable();
 	}
 
-	void Mesh::toFloatArray()
+	float* Mesh::getFlatArray()
 	{
-		int totalSize = vertices.size() * Vertex::SIZE;
-		verticesFloatArray = std::vector<float>();
-		for (int i = 0; i < vertices.size(); i++)
+		if (vertices.size() <= 0)
+			return nullptr;
+		return &vertices[0].position.x;
+	}
+
+	std::vector<Vertex> Mesh::floatToVertex(std::vector<float> vertices)
+	{
+		std::vector<Vertex> newVertices;
+		int rows = vertices.size() / VERTEX_SIZE;
+		for (int i = 0; i < rows; i++)
 		{
-			for (int j = 0; j < Vertex::SIZE; j++)
+			Vertex v;
+			float* floatArray = &v.position.x;
+			for (int j = 0; j < VERTEX_SIZE; j++)
 			{
-				verticesFloatArray.push_back(
-					vertices[i].getFloatArray()[j]
-				);
+				floatArray[j] = vertices[i * VERTEX_SIZE + j];
 			}
+			newVertices.push_back(v);
 		}
+	}
+
+	std::vector<Vertex> Mesh::createSquareArray()
+	{
+		std::vector<float> vertices = {
+			-0.5f, -0.5f,  0.0f,  0.0f,  0.0f,  1.0f,  0.0f,  0.0f,
+			-0.5f,  0.5f,  0.0f,  0.0f,  0.0f,  1.0f,  0.0f,  1.0f,
+			 0.5f, -0.5f,  0.0f,  0.0f,  0.0f,  1.0f,  1.0f,  0.0f,
+			 0.5f,  0.5f,  0.0f,  0.0f,  0.0f,  1.0f,  1.0f,  1.0f,
+		};
+
+		return floatToVertex(vertices)
 	}
 
 	Mesh Mesh::createSquare()
 	{
-		std::vector<Vertex> vertices = {
-			Vertex(glm::vec3(-0.5f, -0.5f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f),
-						glm::vec2(0.0f, 0.0f)),
-			Vertex(glm::vec3(-0.5f, 0.5f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f),
-						glm::vec2(0.0f, 1.0f)),
-			Vertex(glm::vec3(0.5f, -0.5f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f),
-						glm::vec2(1.0f, 0.0f)),
-			Vertex(glm::vec3(0.5f, 0.5f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f),
-						glm::vec2(1.0f, 1.0f))
-		};
-
+		std::vector<Vertex> vertices = createSquareArray();
 		return Mesh(vertices);
 	}
 
@@ -420,18 +435,10 @@ namespace luna
 		return &shader;
 	}
 
-	void Object::draw(RenderProps renderProps)
+	void Object::draw(Frame frame)
 	{
-		renderProps.model = model;
-		for (int i = 0; i < this->effects.size(); i++)
-		{
-			this->effects[i]->preDraw(renderProps);
-		}
-		mesh.draw(renderProps, shader);
-		for (int i = 0; i < this->effects.size(); i++)
-		{
-			this->effects[i]->postDraw(renderProps);
-		}
+		frame.model = model;
+		mesh.draw(frame, shader);
 	}
 
 	Object Object::createSquare()
@@ -442,12 +449,7 @@ namespace luna
 		return Object(mesh, shader, glm::vec3(0.0f), glm::vec3(1.0f));
 	}
 
-	void Object::addEffect(Effect* effect)
-	{
-		effects.push_back(effect);
-	}
-
-	void Sprite::draw(RenderProps renderProps)
+	void Sprite::draw(Frame frame)
 	{
 
 	}

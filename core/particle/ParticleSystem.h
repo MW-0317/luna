@@ -72,11 +72,11 @@ namespace luna
 
 		LUNA_API SpriteParticleSystem(ParticleSystemProps props);
 
-		void frameUpdate(FrameProps fp) override;
-		void tickUpdate(TickProps tp) override;
+		void frameUpdate(Frame frame) override;
+		void tickUpdate(Tick tick) override;
 
-		void draw(RenderProps renderProps) override;
-		void drawParticle(RenderProps renderProps, Particle particle);
+		void draw(Frame frame) override;
+		void drawParticle(Frame frame, Particle particle);
 
 		LUNA_API void addParticle(Particle particle);
 		LUNA_API void createSpawner(ParticleSpawner particleSpawner);
@@ -104,10 +104,10 @@ namespace luna
 	public:
 		LUNA_API ParticleSystem(ParticleSystemProps props);
 
-		void frameUpdate(FrameProps fp) override;
-		void tickUpdate(TickProps tp) override;
+		void frameUpdate(Frame frame) override;
+		void tickUpdate(Tick tick) override;
 
-		void draw(RenderProps renderProps) override;
+		void draw(Frame frame) override;
 		void drawParticle(RenderProps renderProps, ShaderParticle particle);
 
 		LUNA_API void addParticle(ShaderParticle particle);

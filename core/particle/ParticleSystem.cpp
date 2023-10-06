@@ -12,12 +12,12 @@ SpriteParticleSystem::SpriteParticleSystem(ParticleSystemProps props)
 	systemProps = props;
 }
 
-void SpriteParticleSystem::frameUpdate(FrameProps fp)
+void SpriteParticleSystem::frameUpdate(Frame frame)
 {
 	//draw();
 }
 
-void SpriteParticleSystem::tickUpdate(TickProps tp)
+void SpriteParticleSystem::tickUpdate(Tick tick)
 {
 	for (int i = 0; i < spawners.size(); i++)
 	{
@@ -27,15 +27,16 @@ void SpriteParticleSystem::tickUpdate(TickProps tp)
 		Particle p;
 		p.sizeBegin = s.sizeBegin;
 		p.sizeEnd = s.sizeEnd;
+		Random* rng = tick.rng;
 		glm::vec3 randomPositionVariation = glm::vec3(
-			tp.rng->generateUniformReal<float>(-1.0f, 1.0f),
-			tp.rng->generateUniformReal<float>(-1.0f, 1.0f),
-			tp.rng->generateUniformReal<float>(-1.0f, 1.0f)
+			rng->generateUniformReal<float>(-1.0f, 1.0f),
+			rng->generateUniformReal<float>(-1.0f, 1.0f),
+			rng->generateUniformReal<float>(-1.0f, 1.0f)
 		);
 		glm::vec3 randomVelocityVariation = glm::vec3(
-			tp.rng->generateUniformReal<float>(-1.0f, 1.0f),
-			tp.rng->generateUniformReal<float>(-1.0f, 1.0f),
-			tp.rng->generateUniformReal<float>(-1.0f, 1.0f)
+			rng->generateUniformReal<float>(-1.0f, 1.0f),
+			rng->generateUniformReal<float>(-1.0f, 1.0f),
+			rng->generateUniformReal<float>(-1.0f, 1.0f)
 		);
 		p.position = s.position + s.positionVariation * randomPositionVariation;
 		p.velocity = s.velocity + s.velocityVariation * randomVelocityVariation;
@@ -46,25 +47,25 @@ void SpriteParticleSystem::tickUpdate(TickProps tp)
 
 	for (int i = 0; i < particles.size(); i++)
 	{
-		particles[i].lifeRemaining -= tp.deltatime;
+		particles[i].lifeRemaining -= tick.deltatime;
 		if (particles[i].lifeRemaining <= 0.0)
 			particles[i].active = false;
 		
-		particles[i].velocity += particles[i].acceleration * tp.deltatime;
-		particles[i].position += particles[i].velocity * tp.deltatime;
+		particles[i].velocity += particles[i].acceleration * tick.deltatime;
+		particles[i].position += particles[i].velocity * tick.deltatime;
 	}
 }
 
-void SpriteParticleSystem::draw(RenderProps renderProps)
+void SpriteParticleSystem::draw(Frame frame)
 {
 	for (int i = 0; i < particles.size(); i++)
 	{
 		Particle currentParticle = particles[i];
-		drawParticle(renderProps, currentParticle);
+		drawParticle(frame, currentParticle);
 	}	
 }
 
-void SpriteParticleSystem::drawParticle(RenderProps renderProps, Particle currentParticle)
+void SpriteParticleSystem::drawParticle(Frame frame, Particle currentParticle)
 {
 	if (!currentParticle.active)
 		return;
@@ -75,10 +76,10 @@ void SpriteParticleSystem::drawParticle(RenderProps renderProps, Particle curren
 		currentParticle.lifeRemaining / currentParticle.lifeTime
 	);
 	particleModel = glm::translate(particleModel, currentParticle.position);
-	renderProps.view = glm::scale(renderProps.view, glm::vec3(currentSize));
-	renderProps.model = particleModel;
+	frame.view = glm::scale(frame.view, glm::vec3(currentSize));
+	frame.model = particleModel;
 	currentParticle.tex.bind();
-	currentParticle.mesh.draw(renderProps, shader);
+	currentParticle.mesh.draw(frame, shader);
 }
 
 void SpriteParticleSystem::addParticle(Particle particle)
@@ -147,12 +148,12 @@ int ParticleSystem::getParticlesSize()
 	return particles.size() * (10 * sizeof(float)); // + sizeof(unsigned int)
 }
 
-void ParticleSystem::frameUpdate(FrameProps fp)
+void ParticleSystem::frameUpdate(Frame frame)
 {
 
 }
 
-void ParticleSystem::tickUpdate(TickProps tp)
+void ParticleSystem::tickUpdate(Tick tick)
 {
 	for (int i = 0; i < spawners.size(); i++)
 	{
@@ -160,15 +161,16 @@ void ParticleSystem::tickUpdate(TickProps tp)
 			continue;
 		ParticleSpawner s = spawners[i];
 		ShaderParticle p;
+		Random* rng = tick.rng;
 		glm::vec3 randomPositionVariation = glm::vec3(
-			tp.rng->generateUniformReal<float>(-1.0f, 1.0f),
-			tp.rng->generateUniformReal<float>(-1.0f, 1.0f),
-			tp.rng->generateUniformReal<float>(-1.0f, 1.0f)
+			rng->generateUniformReal<float>(-1.0f, 1.0f),
+			rng->generateUniformReal<float>(-1.0f, 1.0f),
+			rng->generateUniformReal<float>(-1.0f, 1.0f)
 		);
 		glm::vec3 randomVelocityVariation = glm::vec3(
-			tp.rng->generateUniformReal<float>(-1.0f, 1.0f),
-			tp.rng->generateUniformReal<float>(-1.0f, 1.0f),
-			tp.rng->generateUniformReal<float>(-1.0f, 1.0f)
+			rng->generateUniformReal<float>(-1.0f, 1.0f),
+			rng->generateUniformReal<float>(-1.0f, 1.0f),
+			rng->generateUniformReal<float>(-1.0f, 1.0f)
 		);
 		p.position = s.position + s.positionVariation * randomPositionVariation;
 		p.velocity = s.velocity + s.velocityVariation * randomVelocityVariation;
@@ -179,29 +181,29 @@ void ParticleSystem::tickUpdate(TickProps tp)
 	}
 }
 
-void ParticleSystem::draw(RenderProps renderProps)
+void ParticleSystem::draw(Frame frame)
 {
 	shader.use();
 	glm::mat4 model = glm::mat4(1.0f);
 	model = glm::scale(model, scale);
 	model = glm::translate(model, position);
-	renderProps.model = model;
+	frame.model = model;
 
 	shader.setFloat("time", glfwGetTime());
-	shader.setFloat("deltatime", renderProps.deltatime);
+	shader.setFloat("deltatime", frame.deltatime);
 
-	shader.setInt("width", renderProps.width);
-	shader.setInt("height", renderProps.height);
+	shader.setInt("width", frame.width);
+	shader.setInt("height", frame.height);
 
-	shader.setMat4("model", renderProps.model);
-	shader.setMat4("view", renderProps.view);
-	shader.setMat4("projection", renderProps.proj);
+	shader.setMat4("model", frame.model);
+	shader.setMat4("view", frame.view);
+	shader.setMat4("projection", frame.proj);
 
 	float* testArray = particlesToFlatArray();
 	glBindVertexArray(VAO);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	renderProps.engine->oLog.update("Size", particles.size());
-	renderProps.engine->oLog.update("PSize", getParticlesSize());
+	frame.engine->oLog.update("Size", particles.size());
+	frame.engine->oLog.update("PSize", getParticlesSize());
 	if (particles.size() > 0)
 	{
 		glBufferData(GL_ARRAY_BUFFER, getParticlesSize(), testArray, GL_STATIC_DRAW);

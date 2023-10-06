@@ -15,13 +15,13 @@ namespace luna
 		video->free();
 	}
 
-	void Render::mainFrameUpdate(FrameProps fp)
+	void Render::mainFrameUpdate(Frame frame)
 	{
-		frameUpdate(fp);
-		renderFrameUpdate(fp);
+		frameUpdate(frame);
+		renderFrameUpdate(frame);
 	}
 
-	void Render::renderFrameUpdate(FrameProps fp)
+	void Render::renderFrameUpdate(Frame frame)
 	{
 		// POSSIBLE OPTIMIZATION:
 		// Do the converting process between the 

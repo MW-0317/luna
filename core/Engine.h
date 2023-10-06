@@ -16,7 +16,7 @@ namespace luna
 		bool debug;
 
 		GLFWwindow* window;
-		Space* space;
+		std::vector<Space*> spaces;
 
 		int width, height;
 
@@ -24,6 +24,9 @@ namespace luna
 
 		LUNA_API virtual void init(int width, int height);
 	private:
+		float const MAX_TPS = 60;
+		float const INV_TPS = 1 / MAX_TPS;
+
 		LUNA_API virtual void createWindow(int width, int height);
 	public:
 		DefaultLog log;
@@ -37,12 +40,13 @@ namespace luna
 		LUNA_API void disableDebug() { this->debug = false; }
 
 		LUNA_API int run();
-		virtual void mainFrameUpdate(FrameProps fp);
-		LUNA_API virtual void frameUpdate(FrameProps fp) override;
+		virtual void mainFrameUpdate(Frame frame);
+		LUNA_API virtual void frameUpdate(Frame frame) override;
 		// Deltatime should be near zero, however could fluctuate.
-		LUNA_API virtual void tickUpdate(TickProps tp) override;
+		LUNA_API void mainTickUpdate(Tick tick);
+		LUNA_API virtual void tickUpdate(Tick tick) override;
 
-		LUNA_API Space* getSpace();
+		LUNA_API Space* getSpace(int index);
 
 		LUNA_API static void clearColor(float r, float g, float b, float a);
 	};

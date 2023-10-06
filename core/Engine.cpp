@@ -15,7 +15,7 @@ namespace luna
 		//cs.movement = false;
 		Camera* cam = new Camera(cs);
 
-		space = new Space(cam);
+		spaces.push_back(new Space(cam));
 		this->width = width;
 		this->height = height;
 		//stbi_set_flip_vertically_on_load(true);
@@ -63,7 +63,8 @@ namespace luna
 
 		glfwDestroyWindow(window);
 		glfwTerminate();
-		delete space;
+		for (int i = 0; i < spaces.size(); i++)
+			delete spaces[i];
 		delete window;
 
 		IMGUI_INIT = false;
@@ -74,8 +75,16 @@ namespace luna
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glfwSwapBuffers(window);
 		float delta = 0.0f;
+		float last = 0.0f;
+		float deltatick = 0.0f;
 		while (!glfwWindowShouldClose(window))
 		{
+			float current = glfwGetTime();
+			delta = current - last;
+			last = current;
+
+			deltatick += delta;
+
 			glfwPollEvents();
 
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -89,23 +98,18 @@ namespace luna
 			frame.width = this->width;
 			frame.height = this->height;
 			frame.deltatime = delta;
-
-			Tick tick;
-			tick.engine = this;
-			tick.width = this->width;
-			tick.height = this->height;
-			tick.deltatime = delta;
-
 			mainFrameUpdate(frame);
-			mainTickUpdate(tick);
-			space->frameUpdate(renderProps);
-			if (space->tickUpdate())
+
+			if (deltatick >= INV_TPS)
 			{
-				TickProps tp;
-				tp.deltatime = space->getDeltaTick();
-				tickUpdate(tp);
-			}	
-			delta = space->getDelta();
+				Tick tick;
+				tick.engine = this;
+				tick.width = this->width;
+				tick.height = this->height;
+				tick.deltatime = deltatick;
+				mainTickUpdate(tick);
+				deltatick = 0.0f;
+			}
 
 			ImGui::Render();
 			int display_w, display_h;
@@ -126,24 +130,35 @@ namespace luna
 		return 0;
 	}
 
-	void Engine::mainFrameUpdate(FrameProps fp)
+	void Engine::mainFrameUpdate(Frame frame)
 	{
-		frameUpdate(fp);
+		for (int i = 0; i < spaces.size(); i++)
+			spaces[i]->frameUpdate(frame);
+		frameUpdate(frame);
 	}
 
-	void Engine::frameUpdate(FrameProps fp)
+	void Engine::frameUpdate(Frame frame)
 	{
 		// TODO: Figure out windows/widgets
 		if (debug) {
-			oLog.update("deltaframe", fp.deltatime);
+			oLog.update("deltaframe", frame.deltatime);
 			log.draw("Log:", &debug);
 			oLog.draw("Overlay:");
 		}
 	}
 
-	void Engine::tickUpdate(TickProps fp)
+	void Engine::mainTickUpdate(Tick tick)
 	{
-		// Basically complete virtual function, however will be used as a template.
+		for (int i = 0; i < spaces.size(); i++)
+			spaces[i]->tickUpdate(tick);
+		tickUpdate(tick);
+	}
+
+	void Engine::tickUpdate(Tick tick)
+	{
+		if (debug) {
+			oLog.update("deltatick", tick.deltatime);
+		}
 	}
 
 	void Engine::createWindow(int width, int height)
@@ -175,9 +190,9 @@ namespace luna
 		}
 	}
 
-	Space* Engine::getSpace()
+	Space* Engine::getSpace(int index)
 	{
-		return this->space;
+		return this->spaces[index];
 	}
 
 	void Engine::clearColor(float r, float g, float b, float a)

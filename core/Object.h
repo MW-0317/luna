@@ -7,6 +7,7 @@
 
 #include "Core.h"
 #include "Shader.h"
+#include "System.h"
 #include "effects/Effect.h"
 #include "math/Vector.h"
 
@@ -101,7 +102,7 @@ namespace luna
 		PrimitiveType type;
 		Shader basicShader;
 	public:
-		LUNA_API virtual void draw(RenderProps renderProps, Shader shader) {}
+		LUNA_API virtual void draw(Frame frame, Shader shader) {}
 		LUNA_API Shader getBasicShader()
 		{
 			//return Shader("shaders/example.glsl");
@@ -121,7 +122,7 @@ namespace luna
 		LUNA_API Line(std::vector<glm::vec3> positions);
 		LUNA_API Line(std::vector<glm::vec3> positions,
 			std::vector<unsigned int> indices);
-		void draw(RenderProps renderProps, Shader shader) override;
+		void draw(Frame frame, Shader shader) override;
 
 		float* getFlatArray()
 		{
@@ -134,6 +135,8 @@ namespace luna
 	class Mesh : public Primitive
 	{
 	private:
+		// vec3 + vec3 + vec2
+		static const int VERTEX_SIZE = 8;
 		std::vector<float>			verticesFloatArray;
 	public:
 		std::vector<Vertex>			vertices;
@@ -146,15 +149,17 @@ namespace luna
 		// Requires vertices to be triangulated
 		LUNA_API Mesh();
 		LUNA_API Mesh(const char* objPath);
+		LUNA_API Mesh(std::vector<float> vertices);
 		LUNA_API Mesh(std::vector<Vertex> vertices);
 		LUNA_API Mesh(std::vector<Vertex> vertices, MaxSizeVector<Texture, 16>	textures);
 		Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices,
 			MaxSizeVector<Texture, 16>	textures);
-		LUNA_API void draw(RenderProps renderProps, Shader shader);
+		LUNA_API void draw(Frame frame, Shader shader);
 
-		void toFloatArray();
+		float* getFlatArray();
 		std::vector<unsigned int> triangulateMesh(std::vector<Vertex> vertices);
-
+		LUNA_API static std::vector<Vertex> floatToVertex(std::vector<float> vertices);
+		LUNA_API static std::vector<Vertex> createSquareArray();
 		LUNA_API static Mesh createSquare();
 	};
 
@@ -166,21 +171,17 @@ namespace luna
 		glm::vec3 position;
 		glm::vec3 scale;
 		glm::mat4 model;
-
-		std::vector<Effect*> effects;
 	public:
 		LUNA_API Object(Mesh mesh, Shader shader, glm::vec3 position, glm::vec3 scale);
 		LUNA_API ~Object();
 		Shader* getShader();
-		LUNA_API virtual void draw(RenderProps renderProps);
+		LUNA_API virtual void draw(Frame frame);
 		LUNA_API static Object createSquare();
-
-		LUNA_API void addEffect(Effect* effect);
 	};
 
 	class Sprite : public Object
 	{
 		LUNA_API Sprite(Texture texture);
-		LUNA_API void draw(RenderProps renderProps) override;
+		LUNA_API void draw(Frame frame) override;
 	};
 }

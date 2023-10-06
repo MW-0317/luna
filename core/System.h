@@ -4,6 +4,11 @@
 
 namespace luna
 {
+	class Random;
+	class Engine;
+	class Space;
+	class Camera;
+	class Object;
 	struct Interval
 	{
 		float deltatime;

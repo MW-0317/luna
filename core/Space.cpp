@@ -31,51 +31,29 @@ Space::~Space()
 	delete currentCamera;
 }
 
-void Space::frameUpdate(RenderProps renderProps)
+void Space::frameUpdate(Frame frame)
 {
-	float currentframe = glfwGetTime();
-	deltaframe = currentframe - lastframe;
-	lastframe = currentframe;
-
-	renderProps.space = this;
-	renderProps.camera = currentCamera;
-	renderProps.deltatime = deltaframe;
-	this->draw(renderProps);
+	frame.space = this;
+	frame.camera = currentCamera;
+	this->draw(frame);
 
 	for (int i = 0; i < systems.size(); i++)
 	{
-		FrameProps fp;
-		fp.deltatime = deltaframe;
-		fp.rng = this->getRandom();
-		systems[i]->frameUpdate(fp);
+		frame.rng = this->getRandom();
+		systems[i]->frameUpdate(frame);
 	}
 }
 
-bool Space::tickUpdate()
+void Space::tickUpdate(Tick tick)
 {
-	float currenttick = glfwGetTime();
-	deltatick = currenttick - lasttick;
-
-	bool isTickable = deltatick > INV_TPS;
-	if (isTickable)
+	if (currentCamera->isWindow()) currentCamera->processInput(tick.deltatime);
+	for (int i = 0; i < systems.size(); i++)
 	{
-		lasttick = currenttick;
-		if (currentCamera->isWindow()) currentCamera->processInput(deltatick);
-		for (int i = 0; i < systems.size(); i++)
-		{
-			TickProps tp;
-			tp.deltatime = deltaframe;
-			tp.rng = this->getRandom();
-			systems[i]->tickUpdate(tp);
-		}
+		Tick tick;
+		tick.deltatime = deltaframe;
+		tick.rng = this->getRandom();
+		systems[i]->tickUpdate(tick);
 	}
-
-	return isTickable;
-}
-
-float Space::getDeltaTick()
-{
-	return this->deltatick;
 }
 
 Camera* Space::getCamera()
@@ -93,18 +71,22 @@ Random* Space::getRandom()
 	return this->rng;
 }
 
-void Space::draw(RenderProps renderProps)
+void Space::draw(Frame frame)
 {
-	renderProps.space	= this;
-	renderProps.camera	= this->currentCamera;
-	renderProps.view	= this->currentCamera->getViewMatrix();
-	renderProps.proj	= this->currentCamera->getProjectionMatrix();
+	frame.space	= this;
+	frame.camera	= this->currentCamera;
+	frame.view	= this->currentCamera->getViewMatrix();
+	frame.proj	= this->currentCamera->getProjectionMatrix();
 
 	glm::vec3 pos = this->currentCamera->getPosition();
-	renderProps.engine->oLog.update("x", pos.x);
-	renderProps.engine->oLog.update("y", pos.y);
-	renderProps.engine->oLog.update("z", pos.z);
+	frame.engine->oLog.update("x", pos.x);
+	frame.engine->oLog.update("y", pos.y);
+	frame.engine->oLog.update("z", pos.z);
 
+	for (int i = 0; i < primitives.size(); i++)
+	{
+		primitives[i]->draw(frame);
+	}
 }
 
 void Space::addObject(Object* object)

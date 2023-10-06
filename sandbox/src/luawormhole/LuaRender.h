@@ -13,7 +13,7 @@ public:
 	LuaRender(sol::state* lua, const char* filename, float fps, float seconds,
 		int width, int height);
 
-	void frameUpdate(luna::FrameProps fp) override;
-	void tickUpdate(luna::TickProps tp) override;
+	void frameUpdate(luna::Frame frame) override;
+	void tickUpdate(luna::Tick tick) override;
 };
 
