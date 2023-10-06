@@ -215,7 +215,7 @@ void ParticleSystem::draw(Frame frame)
 	shader.disable();
 }
 
-void ParticleSystem::drawParticle(RenderProps renderProps, ShaderParticle particle)
+void ParticleSystem::drawParticle(Frame frame, ShaderParticle particle)
 {
 
 }

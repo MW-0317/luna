@@ -9,7 +9,7 @@ namespace luna
 {
 	class SpriteParticleSystem;
 	struct Particle;
-	struct RenderProps;
+	struct Frame;
 
 	class Effect
 	{
@@ -17,9 +17,9 @@ namespace luna
 		LUNA_API Effect();
 		LUNA_API ~Effect();
 
-		LUNA_API virtual void preDraw(RenderProps renderProps);
-		LUNA_API virtual void draw(RenderProps renderProps);
-		LUNA_API virtual void postDraw(RenderProps renderProps);
+		LUNA_API virtual void preDraw(Frame frame);
+		LUNA_API virtual void draw(Frame frame);
+		LUNA_API virtual void postDraw(Frame frame);
 	protected:
 		unsigned int data[10000];
 		GLuint ssbo;
@@ -31,9 +31,9 @@ namespace luna
 		LUNA_API DisintegrationEffect(SpriteParticleSystem* particleSystem);
 		LUNA_API ~DisintegrationEffect();
 
-		void preDraw(RenderProps renderProps) override;
-		void draw(RenderProps renderProps) override;
-		void postDraw(RenderProps renderProps) override;
+		void preDraw(Frame frame) override;
+		void draw(Frame frame) override;
+		void postDraw(Frame frame) override;
 	private:
 		SpriteParticleSystem* particleSystem;
 	};

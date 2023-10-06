@@ -53,29 +53,6 @@ namespace luna
 		int loadTexture(const char* path, int index);
 	};
 
-	class Engine;
-	class Space;
-	class Camera;
-	class Object;
-
-	// NEED TO MOVE TO INTERVAL/SYSTEM
-	struct RenderProps
-	{
-		Engine* engine;
-		Space* space;
-		Camera* camera;
-		Object* object;
-
-		glm::mat4 model;
-		glm::mat4 view;
-		glm::mat4 proj;
-
-		int width;
-		int height;
-
-		float deltatime;
-	};
-
 	struct PrimitiveVertex
 	{
 		glm::vec3 position;
@@ -135,8 +112,8 @@ namespace luna
 	class Mesh : public Primitive
 	{
 	private:
-		// vec3 + vec3 + vec2
-		static const int VERTEX_SIZE = 8;
+		// vec3 + vec3 + vec3 + vec2
+		static const int VERTEX_SIZE = 11;
 		std::vector<float>			verticesFloatArray;
 	public:
 		std::vector<Vertex>			vertices;

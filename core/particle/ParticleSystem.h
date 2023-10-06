@@ -108,7 +108,7 @@ namespace luna
 		void tickUpdate(Tick tick) override;
 
 		void draw(Frame frame) override;
-		void drawParticle(RenderProps renderProps, ShaderParticle particle);
+		void drawParticle(Frame frame, ShaderParticle particle);
 
 		LUNA_API void addParticle(ShaderParticle particle);
 		LUNA_API void createSpawner(ParticleSpawner particleSpawner);

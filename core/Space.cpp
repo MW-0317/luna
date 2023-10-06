@@ -83,9 +83,14 @@ void Space::draw(Frame frame)
 	frame.engine->oLog.update("y", pos.y);
 	frame.engine->oLog.update("z", pos.z);
 
+	for (int i = 0; i < objects.size(); i++)
+	{
+		objects[i]->draw(frame);
+	}
+
 	for (int i = 0; i < primitives.size(); i++)
 	{
-		primitives[i]->draw(frame);
+		primitives[i]->draw(frame, primitives[i]->getBasicShader());
 	}
 }
 

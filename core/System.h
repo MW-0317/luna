@@ -2,6 +2,8 @@
 #include "core/Core.h"
 #include "random/Random.h"
 
+#include "Globals.h"
+
 namespace luna
 {
 	class Random;

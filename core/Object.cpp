@@ -184,15 +184,20 @@ namespace luna
 			(void*)0);
 		glEnableVertexAttribArray(0);
 
-		// Normal
+		// Color
 		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, VERTEX_SIZE * sizeof(float),
 			(void*)(3 * sizeof(float)));
 		glEnableVertexAttribArray(1);
 
-		// Texture Coordinates
-		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, VERTEX_SIZE * sizeof(float),
+		// Normal
+		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, VERTEX_SIZE * sizeof(float),
 			(void*)(6 * sizeof(float)));
 		glEnableVertexAttribArray(2);
+
+		// Texture Coordinates
+		glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, VERTEX_SIZE * sizeof(float),
+			(void*)(9 * sizeof(float)));
+		glEnableVertexAttribArray(3);
 		glBindVertexArray(0);
 	}
 
@@ -264,18 +269,20 @@ namespace luna
 			}
 			newVertices.push_back(v);
 		}
+		return newVertices;
 	}
 
 	std::vector<Vertex> Mesh::createSquareArray()
 	{
 		std::vector<float> vertices = {
-			-0.5f, -0.5f,  0.0f,  0.0f,  0.0f,  1.0f,  0.0f,  0.0f,
-			-0.5f,  0.5f,  0.0f,  0.0f,  0.0f,  1.0f,  0.0f,  1.0f,
-			 0.5f, -0.5f,  0.0f,  0.0f,  0.0f,  1.0f,  1.0f,  0.0f,
-			 0.5f,  0.5f,  0.0f,  0.0f,  0.0f,  1.0f,  1.0f,  1.0f,
+		// Position            | Color              | Normal             | Texture Coordinates
+			-0.5f, -0.5f,  0.0f,  1.0f,  1.0f,  1.0f,  0.0f,  0.0f,  1.0f,  0.0f,  0.0f,
+			-0.5f,  0.5f,  0.0f,  1.0f,  1.0f,  1.0f,  0.0f,  0.0f,  1.0f,  0.0f,  1.0f,
+			 0.5f, -0.5f,  0.0f,  1.0f,  1.0f,  1.0f,  0.0f,  0.0f,  1.0f,  1.0f,  0.0f,
+			 0.5f,  0.5f,  0.0f,  1.0f,  1.0f,  1.0f,  0.0f,  0.0f,  1.0f,  1.0f,  1.0f,
 		};
 
-		return floatToVertex(vertices)
+		return floatToVertex(vertices);
 	}
 
 	Mesh Mesh::createSquare()

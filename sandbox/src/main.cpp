@@ -176,7 +176,7 @@ int main(int argc, char* argv[])
 	// ENGINE MUST BE CALLED BEFORE ALL OTHER FUNCTIONS TO INITIALIZE
 	// OpenGL functions. This must be changed in later versions.
 	Engine* e = new Engine(1000, 800);
-	e->getSpace()->createDebugLines();
+	e->getSpace(0)->createDebugLines();
 	e->enableDebug();
 	
 	std::vector<const char*> paths = {
@@ -196,7 +196,7 @@ int main(int argc, char* argv[])
 	ParticleSystem* particleSystem = new ParticleSystem(psp);
 	ParticleSpawner particleSpawner;
 	particleSpawner.lifeTime = 10.0f;
-	particleSpawner.count = 10000;
+	particleSpawner.count = 100;
 	particleSystem->createSpawner(particleSpawner);
 	//DisintegrationEffect* effect = new DisintegrationEffect(particleSystem);
 	//square.addEffect(effect);
@@ -205,7 +205,7 @@ int main(int argc, char* argv[])
 	e->getSpace(0)->addObject(particleSystem);
 
 	Shader shader = Shader("shaders/disintegrate.glsl");
-	Mesh testMesh = Mesh(Vertex::getSquareVector(), Texture::generateFromPaths(paths, names));
+	Mesh testMesh = Mesh(Mesh::createSquareArray(), Texture::generateFromPaths(paths, names));
 	Object square = Object(testMesh, shader, glm::vec3(0.0f), glm::vec3(1.0f));
 	e->getSpace(0)->addObject(&square);
 	e->run();
