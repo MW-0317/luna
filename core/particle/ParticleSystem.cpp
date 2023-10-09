@@ -8,7 +8,7 @@
 using namespace luna;
 
 SpriteParticleSystem::SpriteParticleSystem(ParticleSystemProps props)
-	: Object(props.mesh, props.shader, props.position, props.scale)
+	: Model(props.shader, props.position, props.scale)
 {
 	systemProps = props;
 }
@@ -96,7 +96,7 @@ void SpriteParticleSystem::createSpawner(ParticleSpawner particleSpawner)
 }
 
 ParticleSystem::ParticleSystem(ParticleSystemProps props)
-	: Object(props.mesh, props.shader, props.position, props.scale)
+	: Model(props.shader, props.position, props.scale)
 {
 	systemProps = props;
 
@@ -151,7 +151,7 @@ int ParticleSystem::getParticlesSize()
 
 void ParticleSystem::frameUpdate(Frame frame)
 {
-
+	this->draw(frame);
 }
 
 void ParticleSystem::tickUpdate(Tick tick)

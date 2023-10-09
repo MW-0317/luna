@@ -3,6 +3,7 @@
 #include "random/Random.h"
 
 #include "Globals.h"
+#include "Shader.h"
 
 namespace luna
 {
@@ -36,10 +37,20 @@ namespace luna
 
 	};
 
-	class System
+	class LUNA_API System
 	{
+	protected:
+		std::vector<System*> systems;
 	public:
-		LUNA_API virtual void frameUpdate(Frame frame) {}
-		LUNA_API virtual void tickUpdate(Tick tick) {}
+		System();
+
+		virtual void draw(Frame frame) {}
+
+		virtual void frameUpdate(Frame frame) {}
+		virtual void tickUpdate(Tick tick) {}
+
+		void addSystem(System* system);
+		void tickSystems(Tick tick);
+		void frameSystems(Frame frame);
 	};
 }

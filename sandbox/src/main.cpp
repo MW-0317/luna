@@ -195,16 +195,17 @@ int main(int argc, char* argv[])
 	particleSpawner.lifeTime = 10.0f;
 	particleSpawner.count = 100;
 	particleSystem->createSpawner(particleSpawner);
-	//DisintegrationEffect* effect = new DisintegrationEffect(particleSystem);
-	//square.addEffect(effect);
+	
 	Engine::clearColor(0.5f, 0.5f, 0.5f, 1.0f);
 	e->getSpace(0)->addSystem(particleSystem);
-	e->getSpace(0)->addObject(particleSystem);
+	//e->getSpace(0)->addObject(particleSystem);
 
 	Shader shader = Shader("shaders/disintegrate.glsl");
 	Mesh testMesh = Mesh(Mesh::createSquareArray(), Texture::generateFromPaths(paths, names));
 	Object square = Object(testMesh, shader, glm::vec3(0.0f), glm::vec3(1.0f));
-	e->getSpace(0)->addObject(&square);
+	DisintegrationEffect* effect = new DisintegrationEffect(particleSystem);
+	square.addSystem(effect);
+	e->getSpace(0)->addSystem(&square);
 	e->run();
 
 	_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_DEBUG);

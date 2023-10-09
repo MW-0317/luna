@@ -421,9 +421,8 @@ namespace luna
 		return triangulated;
 	}
 
-	Object::Object(Mesh mesh, Shader shader, glm::vec3 position, glm::vec3 scale)
+	Model::Model(Shader shader, glm::vec3 position, glm::vec3 scale)
 	{
-		this->mesh = mesh;
 		this->shader = shader;
 		this->position = position;
 		this->scale = scale;
@@ -433,13 +432,34 @@ namespace luna
 		model = glm::translate(model, position);
 	}
 
+	Model::~Model() {}
+
+	void Model::draw(Frame frame) { }
+
+	Shader* Model::getShader()
+	{
+		return &shader;
+	}
+
+	Object::Object(Mesh mesh, Shader shader, glm::vec3 position, glm::vec3 scale)
+		: Model(shader, position, scale)
+	{
+		this->mesh = mesh;
+	}
+
 	Object::~Object()
 	{
 	}
 
-	Shader* Object::getShader()
+	void Object::frameUpdate(Frame frame)
 	{
-		return &shader;
+		this->draw(frame);
+		this->frameSystems(frame);
+	}
+
+	void Object::tickUpdate(Tick tick)
+	{
+		this->tickSystems(tick);
 	}
 
 	void Object::draw(Frame frame)

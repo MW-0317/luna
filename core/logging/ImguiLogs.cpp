@@ -1,9 +1,9 @@
 #include "ImguiLogs.h"
 
-DefaultLog Log::console = DefaultLog();
-Overlay Log::overlay = Overlay();
+DefaultLog	Log::console = DefaultLog();
+Overlay		Log::overlay = Overlay();
 
-void Log::log(const char* fmt, ...)
+void Log::log(const char* fmt, ...) IM_FMTARGS(2)
 {
 	va_list args;
 	va_start(args, fmt);
@@ -13,7 +13,7 @@ void Log::log(const char* fmt, ...)
 	va_end(args);
 }
 
-void Log::warn(const char* fmt, ...)
+void Log::warn(const char* fmt, ...) IM_FMTARGS(2)
 {
 	va_list args;
 	va_start(args, fmt);
@@ -23,7 +23,7 @@ void Log::warn(const char* fmt, ...)
 	va_end(args);
 }
 
-void Log::error(const char* fmt, ...)
+void Log::error(const char* fmt, ...) IM_FMTARGS(2)
 {
 	va_list args;
 	va_start(args, fmt);
