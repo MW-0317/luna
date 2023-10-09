@@ -205,7 +205,7 @@ int main(int argc, char* argv[])
 	e->getSpace(0)->addObject(particleSystem);
 
 	Shader shader = Shader("shaders/disintegrate.glsl");
-	Mesh testMesh = Mesh(Vertex::getSquareVector(), Texture::generateFromPaths(paths, names));
+	Mesh testMesh = Mesh(Mesh::(), Texture::generateFromPaths(paths, names));
 	Object square = Object(testMesh, shader, glm::vec3(0.0f), glm::vec3(1.0f));
 	e->getSpace(0)->addObject(&square);
 	e->run();
