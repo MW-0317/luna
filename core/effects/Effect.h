@@ -27,7 +27,7 @@ namespace luna
 	class DisintegrationEffect : public Effect
 	{
 	protected:
-		unsigned int data[10000] = {};
+		float data[100000] = {};
 		GLuint ssbo;
 		ParticleSystem* particleSystem;
 	public:
