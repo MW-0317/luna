@@ -22,6 +22,11 @@ namespace luna
 	{
 		this->ssbo = 0;
 		this->particleSystem = particleSystem;
+
+		glGenBuffers(1, &abo);
+		glBindBuffer(GL_UNIFORM_BUFFER, abo);
+		glBufferData(GL_UNIFORM_BUFFER, sizeof(int) * SIZE, data, GL_STATIC_DRAW);
+		glBindBufferBase(GL_UNIFORM_BUFFER, 6, abo);
 	}
 
 	DisintegrationEffect::~DisintegrationEffect() { }
@@ -47,8 +52,8 @@ namespace luna
 			//float y = static_cast<float>((data[i] << 16) >> 16) / 100;
 			//float x = static_cast<float>(data[2 * i]) / 100;
 			//float y = static_cast<float>(data[2 * i + 1]) / 100;
-			float x = data[2 * i];
-			float y = data[2 * i + 1];
+			float x = data[1 + 2 * i];
+			float y = data[1 + 2 * i + 1];
 			if ((x >= -0.001f && x <= 0.001f) || (y >= -0.001f && y <= 0.001f))
 				continue;
 			ShaderParticle particle;

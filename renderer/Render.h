@@ -13,13 +13,12 @@ namespace luna
 
 		Video* video;
 
-		LUNA_API virtual void mainFrameUpdate(Frame frame) override;
+		LUNA_API void frameUpdate(Frame frame) override;
 		LUNA_API void createWindow(int width, int height) override;
 	public:
 		LUNA_API Render(const char* filename, float fps, float seconds, int width, int height, bool debug);
 		LUNA_API ~Render();
 
-		void renderFrameUpdate(Frame frame);
 		LUNA_API void save();
 	};
 }

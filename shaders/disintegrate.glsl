@@ -66,8 +66,11 @@ FS
             //uint y = (uint(pixelCoordinates.y * 100) << 16) >> 16;
             //data_SSBO[n] =  x + y; //+ 
             //atomicAdd(n, 1);
-            data_SSBO[2 * n]        = pixelCoordinates.x;
-            data_SSBO[2 * n + 1]    = pixelCoordinates.y;
+            //uvec3 id = gl_GlobalInvocationID;
+            //data_SSBO[id.x]         = pixelCoordinates.x;
+            //data_SSBO[id.y]         = pixelCoordinates.y;
+            //data_SSBO[2 * n]        = pixelCoordinates.x;
+            //data_SSBO[2 * n + 1]    = pixelCoordinates.y;
             atomicAdd(n, 1);
         }
         //FragColor = texture2D(defaultTexture, texCoord);

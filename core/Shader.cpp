@@ -4,6 +4,14 @@
 
 namespace luna
 {
+	const std::vector<int> ShaderParser::SHADERS = {
+		GL_VERTEX_SHADER,
+		GL_TESS_CONTROL_SHADER,
+		GL_GEOMETRY_SHADER,
+		GL_FRAGMENT_SHADER,
+		GL_COMPUTE_SHADER
+	};
+
 	ShaderParser::ShaderParser()
 	{
 		this->languageStack = std::vector<char>();
@@ -61,11 +69,16 @@ namespace luna
 			{
 				currentShader = GL_FRAGMENT_SHADER;
 			}
+			else if (cell == "CS" && this->isEmpty())
+			{
+				currentShader = GL_COMPUTE_SHADER;
+			}
 			i++;
 		}
 
 		vertex = shader.substr(shaderPositions[0] + 1, shaderPositions[1] - shaderPositions[0] - 1);
 		fragment = shader.substr(shaderPositions[6] + 1, shaderPositions[7] - shaderPositions[6] - 1);
+		compute = shader.substr(shaderPositions[8] + 1, shaderPositions[9] - shaderPositions[8] - 1);
 	}
 
 	bool ShaderParser::isEmpty()
@@ -86,6 +99,11 @@ namespace luna
 	std::string ShaderParser::getFragment()
 	{
 		return this->fragment;
+	}
+
+	std::string ShaderParser::getCompute()
+	{
+		return this->compute;
 	}
 
 	void Shader::compile(const char* vShaderCode, const char* fShaderCode)
@@ -140,10 +158,15 @@ namespace luna
 	Shader::Shader(const char* shaderPath)
 	{
 		std::string shaderCode;
+
 		std::string vertexCode;
 		std::string fragmentCode;
+		std::string computeCode;
+
 		const char* vShaderCode;
 		const char* fShaderCode;
+		const char* cShaderCode;
+
 		std::ifstream shaderFile;
 
 		ShaderParser s = ShaderParser();
@@ -168,6 +191,9 @@ namespace luna
 
 		fragmentCode = s.getFragment();
 		fShaderCode = fragmentCode.c_str();
+
+		computeCode = s.getCompute();
+		cShaderCode = computeCode.c_str();
 
 		this->compile(vShaderCode, fShaderCode);
 	}

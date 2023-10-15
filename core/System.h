@@ -50,6 +50,7 @@ namespace luna
 		virtual void tickUpdate(Tick tick) {}
 
 		void addSystem(System* system);
+		void addSystem(System system);
 		void tickSystems(Tick tick);
 		void frameSystems(Frame frame);
 	};

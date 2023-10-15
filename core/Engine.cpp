@@ -140,9 +140,9 @@ namespace luna
 
 	void Engine::frameUpdate(Frame frame)
 	{
-		// TODO: Figure out windows/widgets
 		if (debug) {
 			Log::updateOverlay("deltaframe", frame.deltatime);
+			Log::updateOverlay("FPS", 1 / frame.deltatime);
 			Log::draw(&debug);
 		}
 	}
@@ -181,7 +181,7 @@ namespace luna
 			return;
 		}
 		glfwMakeContextCurrent(window);
-		// glfwSwapInterval(1); // Enables vsync, add to Game::Game()
+		glfwSwapInterval(0); // Disables vsync, add option to Game::Game()
 
 		if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 		{

@@ -12,6 +12,11 @@ namespace luna
 		systems.push_back(system);
 	}
 
+	void System::addSystem(System system)
+	{
+		systems.push_back(&system);
+	}
+
 	void System::tickSystems(Tick tick)
 	{
 		int size = systems.size();

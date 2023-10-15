@@ -55,14 +55,14 @@ namespace luna
 
 	struct PrimitiveVertex
 	{
-		glm::vec3 position;
-		glm::vec3 color;
+		glm::vec3 position = glm::vec3(1.0f);
+		glm::vec3 color = glm::vec3(1.0f);
 	};
 
 	struct Vertex : public PrimitiveVertex
 	{
-		glm::vec3 normal;
-		glm::vec2 texcoords;
+		glm::vec3 normal = glm::vec3(1.0f);
+		glm::vec2 texcoords = glm::vec3(0.0f);
 	};
 
 	enum PrimitiveType
@@ -109,7 +109,7 @@ namespace luna
 		}
 	};
 
-	class Mesh : public Primitive
+	class LUNA_API Mesh : public Primitive
 	{
 	private:
 		// vec3 + vec3 + vec3 + vec2
@@ -120,24 +120,32 @@ namespace luna
 		std::vector<unsigned int>	indices;
 		MaxSizeVector<Texture, 16>	textures;
 
+		glm::vec3 center;
+
 		void init(std::vector<Vertex> vertices, std::vector<unsigned int> indices,
 			MaxSizeVector<Texture, 16>	textures);
 
 		// Requires vertices to be triangulated
-		LUNA_API Mesh();
-		LUNA_API Mesh(const char* objPath);
-		LUNA_API Mesh(std::vector<float> vertices);
-		LUNA_API Mesh(std::vector<Vertex> vertices);
-		LUNA_API Mesh(std::vector<Vertex> vertices, MaxSizeVector<Texture, 16>	textures);
+		Mesh();
+		Mesh(const char* objPath);
+		Mesh(std::vector<float> vertices);
+		Mesh(std::vector<Vertex> vertices);
+		Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices);
+		Mesh(std::vector<Vertex> vertices, MaxSizeVector<Texture, 16>	textures);
 		Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices,
 			MaxSizeVector<Texture, 16>	textures);
-		LUNA_API void draw(Frame frame, Shader shader);
+
+		void setTextures(MaxSizeVector<Texture, 16> textures);
+
+		void draw(Frame frame, Shader shader);
 
 		float* getFlatArray();
+		glm::vec3 getCenter();
+		static Mesh loadObjMesh(const char* filename);
 		std::vector<unsigned int> triangulateMesh(std::vector<Vertex> vertices);
-		LUNA_API static std::vector<Vertex> floatToVertex(std::vector<float> vertices);
-		LUNA_API static std::vector<Vertex> createSquareArray();
-		LUNA_API static Mesh createSquare();
+		static std::vector<Vertex> floatToVertex(std::vector<float> vertices);
+		static std::vector<Vertex> createSquareArray();
+		static Mesh createSquare();
 	};
 
 	class LUNA_API Model
@@ -158,7 +166,7 @@ namespace luna
 	class LUNA_API Object : public System, public Model
 	{
 	protected:
-		Mesh mesh; // Change to primitive
+		Mesh mesh; // Give to Model
 	public:
 		Object(Mesh mesh, Shader shader, glm::vec3 position, glm::vec3 scale);
 		~Object();
@@ -168,6 +176,7 @@ namespace luna
 
 		void draw(Frame frame) override;
 		static Object createSquare();
+		static Object createCube();
 	};
 
 	class Sprite : public Model

@@ -27,8 +27,10 @@ namespace luna
 	class DisintegrationEffect : public Effect
 	{
 	protected:
-		float data[100000] = {};
+		const static int SIZE = 100000;
+		float data[SIZE] = {};
 		GLuint ssbo;
+		GLuint abo;
 		ParticleSystem* particleSystem;
 	public:
 		LUNA_API DisintegrationEffect(ParticleSystem* particleSystem);

@@ -7,22 +7,19 @@ namespace luna
 	{
 		DEBUG = debug;
 		init(width, height);
-		video = new Video(filename, fps, seconds, width, height);
+		if (!DEBUG)
+			video = new Video(filename, fps, seconds, width, height);
 	}
 
 	Render::~Render()
 	{
-		video->free();
+		if (!DEBUG)
+			video->free();
 	}
 
-	void Render::mainFrameUpdate(Frame frame)
+	void Render::frameUpdate(Frame frame)
 	{
-		frameUpdate(frame);
-		renderFrameUpdate(frame);
-	}
-
-	void Render::renderFrameUpdate(Frame frame)
-	{
+		if (DEBUG) return;
 		// POSSIBLE OPTIMIZATION:
 		// Do the converting process between the 
 		// readpixels space and the frame space
@@ -38,6 +35,7 @@ namespace luna
 
 	void Render::save()
 	{
+		if (DEBUG) return;
 		video->save();
 		video->free();
 	}

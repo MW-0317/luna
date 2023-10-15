@@ -15,7 +15,7 @@ namespace luna
 			cameraSettings.position + cameraSettings.front,
 			cameraSettings.up
 		);
-		view = glm::translate(view, -cameraSettings.position);
+		//view = glm::translate(view, -cameraSettings.position);
 
 		if (cameraSettings.cameraType == CameraType::Orthographic)
 		{
@@ -121,7 +121,7 @@ namespace luna
 			cameraSettings.position + cameraSettings.front,
 			cameraSettings.up
 		);
-		view = glm::translate(view, -cameraSettings.position);
+		//view = glm::translate(view, -cameraSettings.position);
 		return view;
 	}
 
