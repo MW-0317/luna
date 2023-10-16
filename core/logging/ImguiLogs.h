@@ -1,10 +1,11 @@
 #pragma once
-
+#include "../Core.h"
 #include "thirdparty/imgui/imgui.h"
 #include <map>
 #include <vector>
+#include <string>
 
-struct DefaultLog
+LUNA_API struct DefaultLog
 {
 	ImGuiTextBuffer Buf;
 	ImGuiTextFilter Filter;
@@ -38,6 +39,7 @@ struct DefaultLog
 
 	void draw(const char* title, bool* p_open = NULL)
 	{
+		ImGui::SetNextWindowSize(ImVec2(400, 600));
 		if (!ImGui::Begin(title, p_open))
 		{
 			ImGui::End();
@@ -105,15 +107,12 @@ struct DefaultLog
 	}
 };
 
-struct Overlay
+LUNA_API struct Overlay
 {
 	std::map<std::string, float> overlay;
 	std::vector<std::string> keys;
 
-	Overlay()
-	{
-
-	}
+	Overlay() { }
 
 	void update(std::string text, float value)
 	{
@@ -153,4 +152,18 @@ struct Overlay
 		}
 		ImGui::End();
 	}
+};
+
+LUNA_API class Log
+{
+public:
+	static DefaultLog console;
+	static Overlay overlay;
+
+	static void log(const char* fmt, ...);
+	static void warn(const char* fmt, ...);
+	static void error(const char* fmt, ...);
+	static void updateOverlay(std::string text, float value);
+
+	static void draw(bool* p_open = NULL);
 };

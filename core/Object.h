@@ -53,29 +53,6 @@ namespace luna
 		int loadTexture(const char* path, int index);
 	};
 
-	class Engine;
-	class Space;
-	class Camera;
-	class Object;
-
-	// NEED TO MOVE TO INTERVAL/SYSTEM
-	struct RenderProps
-	{
-		Engine* engine;
-		Space* space;
-		Camera* camera;
-		Object* object;
-
-		glm::mat4 model;
-		glm::mat4 view;
-		glm::mat4 proj;
-
-		int width;
-		int height;
-
-		float deltatime;
-	};
-
 	struct PrimitiveVertex
 	{
 		glm::vec3 position;
@@ -135,8 +112,8 @@ namespace luna
 	class Mesh : public Primitive
 	{
 	private:
-		// vec3 + vec3 + vec2
-		static const int VERTEX_SIZE = 8;
+		// vec3 + vec3 + vec3 + vec2
+		static const int VERTEX_SIZE = 11;
 		std::vector<float>			verticesFloatArray;
 	public:
 		std::vector<Vertex>			vertices;
@@ -163,25 +140,39 @@ namespace luna
 		LUNA_API static Mesh createSquare();
 	};
 
-	class Object
+	class LUNA_API Model
 	{
 	protected:
-		Mesh mesh;
 		Shader shader;
 		glm::vec3 position;
 		glm::vec3 scale;
 		glm::mat4 model;
 	public:
-		LUNA_API Object(Mesh mesh, Shader shader, glm::vec3 position, glm::vec3 scale);
-		LUNA_API ~Object();
+		Model(Shader shader, glm::vec3 position, glm::vec3 scale);
+		~Model();
+
 		Shader* getShader();
-		LUNA_API virtual void draw(Frame frame);
-		LUNA_API static Object createSquare();
+		virtual void draw(Frame frame);
 	};
 
-	class Sprite : public Object
+	class LUNA_API Object : public System, public Model
 	{
-		LUNA_API Sprite(Texture texture);
-		LUNA_API void draw(Frame frame) override;
+	protected:
+		Mesh mesh; // Change to primitive
+	public:
+		Object(Mesh mesh, Shader shader, glm::vec3 position, glm::vec3 scale);
+		~Object();
+
+		void frameUpdate(Frame frame) override;
+		void tickUpdate(Tick tick) override;
+
+		void draw(Frame frame) override;
+		static Object createSquare();
+	};
+
+	class Sprite : public Model
+	{
+		Sprite(Texture texture);
+		void draw(Frame frame) override;
 	};
 }

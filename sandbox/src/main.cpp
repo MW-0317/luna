@@ -113,13 +113,10 @@ int main(int argc, char* argv[])
 		- Initalization of OpenGL should exist outside the creation
 			of the engine/render/game.
 		- Need to rewrite or modify
-			- Meshes, Cells, and Objects
-			- RenderProps -> System.h or Interval.h (yet to be created)
-			- Look into engine run loop
 			- The interaction between camera and space
 			- Debug log needs to be global and static, not attached to engine
 			  (Engine should only draw the logs).
-			- Effect needs to be removed.
+			- Effect needs to be heavily modified.
 			- A lot of clean up in Object.cpp, Engine.cpp, and ParticleSystem.cpp.
 			  ParticleSystem will probably not be changed until everything else
 			  is cleaned up.
@@ -176,7 +173,7 @@ int main(int argc, char* argv[])
 	// ENGINE MUST BE CALLED BEFORE ALL OTHER FUNCTIONS TO INITIALIZE
 	// OpenGL functions. This must be changed in later versions.
 	Engine* e = new Engine(1000, 800);
-	e->getSpace()->createDebugLines();
+	e->getSpace(0)->createDebugLines();
 	e->enableDebug();
 	
 	std::vector<const char*> paths = {
@@ -196,18 +193,23 @@ int main(int argc, char* argv[])
 	ParticleSystem* particleSystem = new ParticleSystem(psp);
 	ParticleSpawner particleSpawner;
 	particleSpawner.lifeTime = 10.0f;
-	particleSpawner.count = 10000;
+	particleSpawner.count = 100;
 	particleSystem->createSpawner(particleSpawner);
-	//DisintegrationEffect* effect = new DisintegrationEffect(particleSystem);
-	//square.addEffect(effect);
+	
 	Engine::clearColor(0.5f, 0.5f, 0.5f, 1.0f);
 	e->getSpace(0)->addSystem(particleSystem);
-	e->getSpace(0)->addObject(particleSystem);
+	//e->getSpace(0)->addObject(particleSystem);
 
 	Shader shader = Shader("shaders/disintegrate.glsl");
+<<<<<<< HEAD
 	Mesh testMesh = Mesh(Mesh::(), Texture::generateFromPaths(paths, names));
+=======
+	Mesh testMesh = Mesh(Mesh::createSquareArray(), Texture::generateFromPaths(paths, names));
+>>>>>>> f8d0ca14a2f01bfd65fb00b9d935bd1a3036cdeb
 	Object square = Object(testMesh, shader, glm::vec3(0.0f), glm::vec3(1.0f));
-	e->getSpace(0)->addObject(&square);
+	DisintegrationEffect* effect = new DisintegrationEffect(particleSystem);
+	square.addSystem(effect);
+	e->getSpace(0)->addSystem(&square);
 	e->run();
 
 	_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_DEBUG);

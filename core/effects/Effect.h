@@ -2,39 +2,38 @@
 
 #include "../Core.h"
 #include "../Globals.h"
+#include "../System.h"
 
 #include <vector>
 
 namespace luna
 {
 	class SpriteParticleSystem;
-	struct Particle;
-	struct RenderProps;
+	class ParticleSystem;
+	struct Frame;
 
-	class Effect
+	class Effect : public System
 	{
 	public:
 		LUNA_API Effect();
 		LUNA_API ~Effect();
 
-		LUNA_API virtual void preDraw(RenderProps renderProps);
-		LUNA_API virtual void draw(RenderProps renderProps);
-		LUNA_API virtual void postDraw(RenderProps renderProps);
-	protected:
-		unsigned int data[10000];
-		GLuint ssbo;
+		LUNA_API virtual void draw(Frame frame);
+
+		LUNA_API void frameUpdate(Frame frame) override;
+		LUNA_API void tickUpdate(Tick tick) override;
 	};
 
 	class DisintegrationEffect : public Effect
 	{
+	protected:
+		unsigned int data[10000] = {};
+		GLuint ssbo;
+		ParticleSystem* particleSystem;
 	public:
-		LUNA_API DisintegrationEffect(SpriteParticleSystem* particleSystem);
+		LUNA_API DisintegrationEffect(ParticleSystem* particleSystem);
 		LUNA_API ~DisintegrationEffect();
 
-		void preDraw(RenderProps renderProps) override;
-		void draw(RenderProps renderProps) override;
-		void postDraw(RenderProps renderProps) override;
-	private:
-		SpriteParticleSystem* particleSystem;
+		LUNA_API virtual void draw(Frame frame) override;
 	};
 }

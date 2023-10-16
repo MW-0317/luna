@@ -55,7 +55,7 @@ namespace luna
 		bool active = false;
 	};
 
-	class SpriteParticleSystem : public Object, public System
+	class SpriteParticleSystem : public System, public Model
 	{
 	private:
 		ParticleSystemProps systemProps;
@@ -90,7 +90,7 @@ namespace luna
 		//unsigned int active;
 	};
 
-	class ParticleSystem : public Object, public System
+	class ParticleSystem : public System, public Model
 	{
 	private:
 		ParticleSystemProps systemProps;
@@ -108,7 +108,7 @@ namespace luna
 		void tickUpdate(Tick tick) override;
 
 		void draw(Frame frame) override;
-		void drawParticle(RenderProps renderProps, ShaderParticle particle);
+		void drawParticle(Frame frame, ShaderParticle particle);
 
 		LUNA_API void addParticle(ShaderParticle particle);
 		LUNA_API void createSpawner(ParticleSpawner particleSpawner);

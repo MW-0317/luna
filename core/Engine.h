@@ -6,8 +6,6 @@
 #include "core/Space.h"
 #include "core/System.h"
 
-#include "logging/ImguiLogs.h"
-
 namespace luna
 {
 	LUNA_API class Engine : public virtual System
@@ -29,9 +27,6 @@ namespace luna
 
 		LUNA_API virtual void createWindow(int width, int height);
 	public:
-		DefaultLog log;
-		Overlay oLog;
-
 		LUNA_API Engine(int width, int height);
 		Engine();
 		~Engine();

@@ -9,7 +9,7 @@
 
 namespace luna
 {
-	class Space
+	class LUNA_API Space : public System
 	{
 	private:
 		Random* rng;
@@ -25,8 +25,7 @@ namespace luna
 
 		int width, height, length;
 
-		std::vector<Object*>	objects;
-		std::vector<System*>	systems;
+		//std::vector<Object*>	objects;
 		std::vector<Primitive*>	primitives;
 	public:
 		void init();
@@ -34,9 +33,9 @@ namespace luna
 		Space(Camera* camera);
 		~Space();
 
-		void frameUpdate(Frame frame);
+		void frameUpdate(Frame frame) override;
 		// Returns true if a tick can be processed outside of the Space class.
-		void tickUpdate(Tick tick);
+		void tickUpdate(Tick tick) override;
 
 		Camera* getCamera();
 		float getDelta();
@@ -44,10 +43,9 @@ namespace luna
 
 		void draw(Frame frame);
 
-		LUNA_API void addObject(Object* object);
-		LUNA_API void addSystem(System* system);
-		LUNA_API void addPrimitive(Primitive* primitive);
+		//LUNA_API void addObject(Object* object);
+		void addPrimitive(Primitive* primitive);
 
-		LUNA_API void createDebugLines();
+		void createDebugLines();
 	};
 }

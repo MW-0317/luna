@@ -1,11 +1,12 @@
 #include "Space.h"
 #include "Engine.h"
+#include "logging/ImguiLogs.h"
 
 using namespace luna;
 
 void Space::init()
 {
-	objects = std::vector<Object*>();
+	//objects = std::vector<Object*>();
 	rng = new Random();
 }
 
@@ -35,7 +36,14 @@ void Space::frameUpdate(Frame frame)
 {
 	frame.space = this;
 	frame.camera = currentCamera;
+	frame.view = this->currentCamera->getViewMatrix();
+	frame.proj = this->currentCamera->getProjectionMatrix();
 	this->draw(frame);
+
+	glm::vec3 pos = this->currentCamera->getPosition();
+	Log::updateOverlay("x", pos.x);
+	Log::updateOverlay("y", pos.y);
+	Log::updateOverlay("z", pos.z);
 
 	for (int i = 0; i < systems.size(); i++)
 	{
@@ -73,31 +81,18 @@ Random* Space::getRandom()
 
 void Space::draw(Frame frame)
 {
-	frame.space	= this;
-	frame.camera	= this->currentCamera;
-	frame.view	= this->currentCamera->getViewMatrix();
-	frame.proj	= this->currentCamera->getProjectionMatrix();
-
-	glm::vec3 pos = this->currentCamera->getPosition();
-	frame.engine->oLog.update("x", pos.x);
-	frame.engine->oLog.update("y", pos.y);
-	frame.engine->oLog.update("z", pos.z);
-
 	for (int i = 0; i < primitives.size(); i++)
 	{
-		primitives[i]->draw(frame);
+		primitives[i]->draw(frame, primitives[i]->getBasicShader());
 	}
 }
 
+/*
 void Space::addObject(Object* object)
 {
 	objects.push_back(object);
 }
-
-void Space::addSystem(System* system)
-{
-	systems.push_back(system);
-}
+*/
 
 void Space::addPrimitive(Primitive* primitive)
 {

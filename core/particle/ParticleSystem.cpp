@@ -3,11 +3,12 @@
 #include "../random/Random.h"
 #include "../Space.h"
 #include "../Camera.h"
+#include "../logging/ImguiLogs.h"
 
 using namespace luna;
 
 SpriteParticleSystem::SpriteParticleSystem(ParticleSystemProps props)
-	: Object(props.mesh, props.shader, props.position, props.scale)
+	: Model(props.shader, props.position, props.scale)
 {
 	systemProps = props;
 }
@@ -95,7 +96,7 @@ void SpriteParticleSystem::createSpawner(ParticleSpawner particleSpawner)
 }
 
 ParticleSystem::ParticleSystem(ParticleSystemProps props)
-	: Object(props.mesh, props.shader, props.position, props.scale)
+	: Model(props.shader, props.position, props.scale)
 {
 	systemProps = props;
 
@@ -150,7 +151,7 @@ int ParticleSystem::getParticlesSize()
 
 void ParticleSystem::frameUpdate(Frame frame)
 {
-
+	this->draw(frame);
 }
 
 void ParticleSystem::tickUpdate(Tick tick)
@@ -202,8 +203,8 @@ void ParticleSystem::draw(Frame frame)
 	float* testArray = particlesToFlatArray();
 	glBindVertexArray(VAO);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	frame.engine->oLog.update("Size", particles.size());
-	frame.engine->oLog.update("PSize", getParticlesSize());
+	Log::updateOverlay("Size", particles.size());
+	Log::updateOverlay("PSize", getParticlesSize());
 	if (particles.size() > 0)
 	{
 		glBufferData(GL_ARRAY_BUFFER, getParticlesSize(), testArray, GL_STATIC_DRAW);
@@ -215,7 +216,7 @@ void ParticleSystem::draw(Frame frame)
 	shader.disable();
 }
 
-void ParticleSystem::drawParticle(RenderProps renderProps, ShaderParticle particle)
+void ParticleSystem::drawParticle(Frame frame, ShaderParticle particle)
 {
 
 }
