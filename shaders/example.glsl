@@ -12,9 +12,12 @@ VS
     uniform mat4 projection;
 
     out vec2 texCoord;
+    out vec3 fColor;
 
     void main()
     {
+        texCoord = aTexCoord;
+        fColor = aColor;
         gl_Position = projection * view * model * vec4(aPos, 1.0);
     }
 }
@@ -24,11 +27,16 @@ FS
     #version 460 core
 
     in vec2 texCoord;
+    in vec3 fColor;
+
+    uniform sampler2D defaultTexture;
+    uniform sampler2D noiseTexture;
 
     out vec4 FragColor;
 
     void main()
     {
-        FragColor = vec4(1.0, 0.5, 1.0, 1.0);
+        vec3 color = texture(defaultTexture, texCoord).xyz;
+        FragColor = vec4(color, 1.0);
     }
 }

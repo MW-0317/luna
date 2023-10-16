@@ -33,7 +33,7 @@ FS
     layout(std430, binding = 3) volatile buffer test
     {
         uint n;
-        uint data_SSBO[];
+        float data_SSBO[];
     };
 
     uniform float time;
@@ -62,7 +62,15 @@ FS
         vec3 pixelCoordinates = getPixelCoordinates();
         if (noiseColor.r < mod((time + deltatime) / 5, 1.0))
         {
-            data_SSBO[n] = (int(pixelCoordinates.x) << 16) + (int(pixelCoordinates.y) << 16) >> 16;
+            //uint x = (uint(pixelCoordinates.x * 100) << 16);
+            //uint y = (uint(pixelCoordinates.y * 100) << 16) >> 16;
+            //data_SSBO[n] =  x + y; //+ 
+            //atomicAdd(n, 1);
+            //uvec3 id = gl_GlobalInvocationID;
+            //data_SSBO[id.x]         = pixelCoordinates.x;
+            //data_SSBO[id.y]         = pixelCoordinates.y;
+            //data_SSBO[2 * n]        = pixelCoordinates.x;
+            //data_SSBO[2 * n + 1]    = pixelCoordinates.y;
             atomicAdd(n, 1);
         }
         //FragColor = texture2D(defaultTexture, texCoord);

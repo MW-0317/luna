@@ -1,4 +1,5 @@
 #include "System.h"
+#include "Object.h"
 
 namespace luna
 {

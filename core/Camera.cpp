@@ -6,7 +6,7 @@
 namespace luna
 {
 	Camera::Camera(CameraSettings cameraSettings)
-		: Object(mesh, shader, cameraSettings.position, glm::vec3(1.0f))
+		: Object(mesh, shader, cameraSettings.position, glm::vec3(1.0f), glm::vec3(0.0f))
 	{
 		this->cameraSettings = cameraSettings;
 		glm::mat4 view = glm::mat4(1.0f);
@@ -15,7 +15,7 @@ namespace luna
 			cameraSettings.position + cameraSettings.front,
 			cameraSettings.up
 		);
-		view = glm::translate(view, -cameraSettings.position);
+		//view = glm::translate(view, -cameraSettings.position);
 
 		if (cameraSettings.cameraType == CameraType::Orthographic)
 		{
@@ -121,7 +121,7 @@ namespace luna
 			cameraSettings.position + cameraSettings.front,
 			cameraSettings.up
 		);
-		view = glm::translate(view, -cameraSettings.position);
+		//view = glm::translate(view, -cameraSettings.position);
 		return view;
 	}
 

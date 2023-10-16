@@ -9,6 +9,8 @@
 #include "Engine.h"
 
 #include <glm/gtx/string_cast.hpp>
+#include <iostream>
+#include <fstream>
 
 namespace luna
 {
@@ -164,7 +166,7 @@ namespace luna
 		this->vertices = vertices;
 		this->textures = textures;
 		float* flatArray = getFlatArray();
-		this->indices = triangulateMesh(vertices);
+		this->center = getCenter();
 
 		glGenVertexArrays(1, &VAO);
 		glBindVertexArray(VAO);
@@ -173,6 +175,12 @@ namespace luna
 		glBindBuffer(GL_ARRAY_BUFFER, VBO);
 		glBufferData(GL_ARRAY_BUFFER,
 			VERTEX_SIZE * sizeof(float) * vertices.size(), flatArray, GL_STATIC_DRAW);
+
+
+		if (indices.empty())
+			this->indices = triangulateMesh(vertices);
+		else
+			this->indices = indices;
 
 		glGenBuffers(1, &EBO);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
@@ -206,7 +214,7 @@ namespace luna
 
 	Mesh::Mesh(const char* objPath)
 	{
-
+		this->vertices = loadObjMesh(objPath).vertices;
 	}
 
 	Mesh::Mesh(std::vector<float> vertices)
@@ -220,9 +228,19 @@ namespace luna
 		init(vertices, std::vector<unsigned int>(), MaxSizeVector<Texture, 16>());
 	}
 
+	Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices)
+	{
+		init(vertices, indices, MaxSizeVector<Texture, 16>());
+	}
+
 	Mesh::Mesh(std::vector<Vertex> vertices, MaxSizeVector<Texture, 16>	textures)
 	{
 		init(vertices, std::vector<unsigned int>(), textures);
+	}
+
+	void Mesh::setTextures(MaxSizeVector<Texture, 16> textures)
+	{
+		this->textures = textures;
 	}
 
 	void Mesh::draw(Frame frame, Shader shader)
@@ -234,6 +252,7 @@ namespace luna
 		shader.setInt("width", frame.width);
 		shader.setInt("height", frame.height);
 		
+		frame.model = glm::translate(frame.model, -center);
 		shader.setMat4("model", frame.model);
 		shader.setMat4("view", frame.view);
 		shader.setMat4("projection", frame.proj);
@@ -243,6 +262,7 @@ namespace luna
 			textures[i].bind();
 			shader.setInt(textures[i].name, i);
 		}
+		//glDrawArrays(GL_TRIANGLES, 0, vertices.size());
 		glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
 		glBindVertexArray(0);
 		shader.disable();
@@ -253,6 +273,30 @@ namespace luna
 		if (vertices.size() <= 0)
 			return nullptr;
 		return &vertices[0].position.x;
+	}
+
+	glm::vec3 Mesh::getCenter()
+	{
+		int vSize = vertices.size();
+		glm::vec3 max = glm::vec3(-INFINITY);
+		glm::vec3 min = glm::vec3(INFINITY);
+		for (int i = 0; i < vSize; i++)
+		{
+			for (int j = 0; j < 3; j++)
+			{
+				if (vertices[i].position[j] > max[j])
+					max[j] = vertices[i].position[j];
+				if (vertices[i].position[j] < min[j])
+					min[j] = vertices[i].position[j];
+			}
+		}
+
+		glm::vec3 center;
+		for (int i = 0; i < 3; i++)
+		{
+			center[i] = (max[i] + min[i]) / 2;
+		}
+		return center;
 	}
 
 	std::vector<Vertex> Mesh::floatToVertex(std::vector<float> vertices)
@@ -289,6 +333,120 @@ namespace luna
 	{
 		std::vector<Vertex> vertices = createSquareArray();
 		return Mesh(vertices);
+	}
+
+	Mesh Mesh::loadObjMesh(const char* filename)
+	{
+		std::vector<Vertex>			vertices;
+
+		std::vector<glm::vec3>		vList;
+		std::vector<glm::vec2>		vtList;
+		std::vector<glm::vec3>		vnList;
+
+		std::string line;
+		std::ifstream meshFile(filename);
+
+		if (!meshFile.is_open())
+		{
+			std::cout << "loadObjMesh\n\t^Could not open file" << std::endl;
+			return Mesh();
+		}
+
+		while (std::getline(meshFile, line))
+		{
+			if (line[0] == '\0' || line[0] == '#') continue;
+			std::vector<std::string> lineData;
+			size_t i = 0;
+			size_t next = line.find(' ');
+			while (next != std::string::npos)
+			{	
+				std::string sub = line.substr(i, next - i);
+				if (sub != "" && sub != " ")
+					lineData.push_back(sub);
+				i = next + 1;
+				next = line.find(' ', i);
+			}
+			std::string sub = line.substr(i, line.size() - i);
+			if (sub != "" && sub != " ")
+				lineData.push_back(line.substr(i, line.size() - i));
+
+			// if v, vn, vt, f...
+
+			if (lineData.size() < 1)
+				continue;
+
+			if (lineData[0] == "v")
+			{
+				glm::vec3 v = glm::vec3(1.0f);
+				for (int j = 1; j < lineData.size(); j++)
+				{
+					v[j - 1] = std::stof(lineData[j]);
+				}
+				vList.push_back(v);
+			}
+
+			else if (lineData[0] == "vt")
+			{
+				glm::vec3 vt = glm::vec3(0.0f);
+				for (int j = 1; j < lineData.size(); j++)
+				{
+					vt[j - 1] = std::stof(lineData[j]);
+				}
+				vtList.push_back(vt);
+			}
+
+			else if (lineData[0] == "vn")
+			{
+				glm::vec3 vn = glm::vec3(1.0f);
+				for (int j = 1; j < lineData.size(); j++)
+				{
+					vn[j - 1] = std::stof(lineData[j]);
+				}
+				vnList.push_back(vn);
+			}
+
+			else if (lineData[0] == "f")
+			{
+				for (int k = 1; k < lineData.size(); k++)
+				{
+					std::vector<std::string> vertexArgs;
+					size_t i = 0;
+					size_t next = lineData[k].find('/');
+					while (next != std::string::npos)
+					{
+						vertexArgs.push_back(lineData[k].substr(i, next - i));
+						i = next + 1;
+						next = lineData[k].find('/', i);
+					}
+					vertexArgs.push_back(lineData[k].substr(i, lineData[k].size() - i));
+
+					Vertex v;
+					if (vertexArgs[0] != "")
+						v.position = vList[std::stoi(vertexArgs[0]) - 1];
+					if (vertexArgs[1] != "")
+						v.texcoords = vtList[std::stoi(vertexArgs[1]) - 1];
+					if (vertexArgs[2] != "")
+						v.normal = vnList[std::stoi(vertexArgs[2]) - 1];
+					vertices.push_back(v);
+				}
+			}
+		}
+		meshFile.close();
+
+		float* a = &vertices[0].position.x;
+		for (int i = 0; i < vertices.size(); i++)
+		{
+			for (int j = 0; j < VERTEX_SIZE; j++)
+			{
+				std::cout << a[i * VERTEX_SIZE + j] << " ";
+			}
+			std::cout << std::endl;
+		}
+
+		std::vector<unsigned int> indices;
+		for (int i = 0; i < vertices.size(); i++)
+			indices.push_back(i);
+		return Mesh(vertices, indices);
 	}
 
 	// This is a mess!
@@ -421,18 +579,43 @@ namespace luna
 		return triangulated;
 	}
 
-	Model::Model(Shader shader, glm::vec3 position, glm::vec3 scale)
+	Model::Model(Shader shader, glm::vec3 position, glm::vec3 scale, glm::vec3 rotation)
 	{
 		this->shader = shader;
 		this->position = position;
 		this->scale = scale;
+		this->rotation = rotation;
 
 		model = glm::mat4(1.0f);
 		model = glm::scale(model, scale);
 		model = glm::translate(model, position);
+		model = glm::rotate(model, rotation.x, glm::vec3(1.0f, 0.0f, 0.0f));
+		model = glm::rotate(model, rotation.y, glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::rotate(model, rotation.z, glm::vec3(0.0f, 0.0f, 1.0f));
 	}
 
 	Model::~Model() {}
+
+	glm::mat4 Model::getModelMatrix()
+	{
+		model = glm::mat4(1.0f);
+		model = glm::scale(model, scale);
+		model = glm::translate(model, position);
+		model = glm::rotate(model, rotation.x, glm::vec3(1.0f, 0.0f, 0.0f));
+		model = glm::rotate(model, rotation.y, glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::rotate(model, rotation.z, glm::vec3(0.0f, 0.0f, 1.0f));
+		return model;
+	}
+
+	void Model::setRotation(glm::vec3 rotation)
+	{
+		this->rotation = rotation;
+	}
+
+	void Model::setRotation(float xRot, float yRot, float zRot)
+	{
+		this->rotation = glm::vec3(xRot, yRot, zRot);
+	}
 
 	void Model::draw(Frame frame) { }
 
@@ -441,8 +624,8 @@ namespace luna
 		return &shader;
 	}
 
-	Object::Object(Mesh mesh, Shader shader, glm::vec3 position, glm::vec3 scale)
-		: Model(shader, position, scale)
+	Object::Object(Mesh mesh, Shader shader, glm::vec3 position, glm::vec3 scale, glm::vec3 rotation)
+		: Model(shader, position, scale, rotation)
 	{
 		this->mesh = mesh;
 	}
@@ -464,7 +647,7 @@ namespace luna
 
 	void Object::draw(Frame frame)
 	{
-		frame.model = model;
+		frame.model = getModelMatrix();
 		mesh.draw(frame, shader);
 	}
 
@@ -473,7 +656,27 @@ namespace luna
 		Mesh mesh = Mesh::createSquare();
 		Shader shader = Shader::getDefaultShader();
 
-		return Object(mesh, shader, glm::vec3(0.0f), glm::vec3(1.0f));
+		return Object(mesh, shader, glm::vec3(0.0f), glm::vec3(1.0f), glm::vec3(0.0f));
+	}
+
+	Object Object::createCube()
+	{
+		Mesh mesh = Mesh::loadObjMesh("resources/objects/b_cube.obj");
+		Shader shader = Shader::getDefaultShader();
+
+		return Object(mesh, shader, glm::vec3(0.0f), glm::vec3(1.0f), glm::vec3(0.0f));
+	}
+
+	void Object::setTexture(std::string filename)
+	{
+		std::cout << filename << std::endl;
+		std::vector<const char*> paths = {
+			filename.c_str(),
+		};
+		std::vector<const char*> names = {
+			"defaultTexture",
+		};
+		this->mesh.setTextures(Texture::generateFromPaths(paths, names));
 	}
 
 	void Sprite::draw(Frame frame)

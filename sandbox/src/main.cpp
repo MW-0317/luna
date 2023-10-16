@@ -9,6 +9,7 @@
 *	- Lightning Simulation
 *	- Wheel of Fortune game
 *	- Star Wars Intro generator
+*	- Cube spin from image given
 */
 
 #define SOL_ALL_SAFETIES_ON 1
@@ -47,21 +48,22 @@ int main(int argc, char* argv[])
 	lua->open_libraries(sol::lib::base);
 
 	LuaManager::registerGlobals(lua);
-	/*
+	
 	LuaRender* r = new LuaRender(lua, filename.c_str(), 30.0f, 2.0f,
 		LuaManager::WINDOW_WIDTH, LuaManager::WINDOW_HEIGHT);
 
 	LuaManager::setLuaRender(r);
 	LuaManager::registerFunctions(lua);
 
-	auto luaR = lua->script_file(luaFile, [](lua_State* L, sol::protected_function_result pfr) {
-		return pfr;
-	});
+	//auto luaR = lua->script_file(luaFile, [](lua_State* L, sol::protected_function_result pfr) {
+	//	return pfr;
+	//});
+	auto luaR = lua->script_file(luaFile, &sol::script_default_on_error);
 	if (!luaR.valid()) return -1;
 
 	r->run();
 	r->save();
-	*/
+	
 
 	/*
 	Random r = Random();
@@ -172,6 +174,7 @@ int main(int argc, char* argv[])
 
 	// ENGINE MUST BE CALLED BEFORE ALL OTHER FUNCTIONS TO INITIALIZE
 	// OpenGL functions. This must be changed in later versions.
+	/*
 	Engine* e = new Engine(1000, 800);
 	e->getSpace(0)->createDebugLines();
 	e->enableDebug();
@@ -200,20 +203,20 @@ int main(int argc, char* argv[])
 	e->getSpace(0)->addSystem(particleSystem);
 	//e->getSpace(0)->addObject(particleSystem);
 
-	Shader shader = Shader("shaders/disintegrate.glsl");
-<<<<<<< HEAD
-	Mesh testMesh = Mesh(Mesh::(), Texture::generateFromPaths(paths, names));
-=======
-	Mesh testMesh = Mesh(Mesh::createSquareArray(), Texture::generateFromPaths(paths, names));
->>>>>>> f8d0ca14a2f01bfd65fb00b9d935bd1a3036cdeb
-	Object square = Object(testMesh, shader, glm::vec3(0.0f), glm::vec3(1.0f));
-	DisintegrationEffect* effect = new DisintegrationEffect(particleSystem);
-	square.addSystem(effect);
+	//Shader shader = Shader("shaders/disintegrate.glsl");
+	Shader shader = Shader("shaders/example.glsl");
+	//Mesh testMesh = Mesh(Mesh::createSquareArray(), Texture::generateFromPaths(paths, names));
+	Mesh cubeMesh = Mesh::loadObjMesh("resources/objects/cube.obj");
+	cubeMesh.setTextures(Texture::generateFromPaths(paths, names));
+	Object square = Object(cubeMesh, shader, glm::vec3(0.0f), glm::vec3(1.0f));
+	//DisintegrationEffect* effect = new DisintegrationEffect(particleSystem);
+	//square.addSystem(effect);
 	e->getSpace(0)->addSystem(&square);
 	e->run();
 
 	_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_DEBUG);
 	_CrtDumpMemoryLeaks();
 	system("pause");
-	//return 0;
+	*/
+	return 0;
 }

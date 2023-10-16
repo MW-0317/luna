@@ -17,7 +17,7 @@ namespace luna
 	{
 	private:
 		std::vector<char> languageStack;
-
+		static const std::vector<int> SHADERS;
 		/*
 		* Formatted as followed:
 		*	vertexStart,		vertexEnd,
@@ -30,6 +30,7 @@ namespace luna
 
 		std::string vertex;
 		std::string fragment;
+		std::string compute;
 
 	public:
 		ShaderParser();
@@ -42,6 +43,7 @@ namespace luna
 
 		std::string getVertex();
 		std::string getFragment();
+		std::string getCompute();
 	};
 
 	class Shader

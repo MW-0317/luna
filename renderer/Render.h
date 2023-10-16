@@ -6,21 +6,21 @@
 
 namespace luna
 {
-	LUNA_API class Render : public Engine
+	class LUNA_API Render : public Engine
 	{
 	private:
 		bool DEBUG;
 
 		Video* video;
-
-		LUNA_API virtual void mainFrameUpdate(Frame frame) override;
-		LUNA_API void createWindow(int width, int height) override;
+		
+		void createWindow(int width, int height) override;
 	public:
-		LUNA_API Render(const char* filename, float fps, float seconds, int width, int height, bool debug);
-		LUNA_API ~Render();
+		Render(const char* filename, float fps, float seconds, int width, int height, bool debug);
+		~Render();
 
-		void renderFrameUpdate(Frame frame);
-		LUNA_API void save();
+		void frameUpdate(Frame frame) override;
+
+		void save();
 	};
 }
 

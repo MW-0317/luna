@@ -5,6 +5,7 @@ namespace luna
 	{
 		// TODO: Follow https://github.com/shi-yan/videosamples/blob/master/libavmp4encoding/main.cpp
 		// main function
+		// Another great resource https://stackoverflow.com/questions/37861764/creating-gif-from-qimages-with-ffmpeg
 		oformat = (AVOutputFormat*) av_guess_format(NULL, filename, NULL);
 		if (!oformat)
 		{
@@ -31,8 +32,8 @@ namespace luna
 		this->width = width;
 		this->height = height;
 		
-		//codec = (AVCodec*) avcodec_find_encoder(oformat->video_codec);
-		codec = (AVCodec*)avcodec_find_encoder(AV_CODEC_ID_H264);
+		codec = (AVCodec*) avcodec_find_encoder(oformat->video_codec);
+		//codec = (AVCodec*)avcodec_find_encoder(AV_CODEC_ID_H264);
 		if (!codec)
 		{
 			std::cout << "VIDEO::CODEC_NOT_FOUND" << std::endl;
@@ -53,12 +54,13 @@ namespace luna
 			return;
 		}
 
-		//stream->codecpar->codec_id		= oformat->video_codec;
-		stream->codecpar->codec_id		= AV_CODEC_ID_H264;
+		stream->codecpar->codec_id		= oformat->video_codec;
+		//stream->codecpar->codec_id		= AV_CODEC_ID_H264;
 		stream->codecpar->codec_type	= AVMEDIA_TYPE_VIDEO;
 		stream->codecpar->width			= width;
 		stream->codecpar->height		= height;
-		stream->codecpar->format		= AV_PIX_FMT_YUV420P;
+		//stream->codecpar->format		= AV_PIX_FMT_YUV420P;
+		stream->codecpar->format		= AV_PIX_FMT_RGB8;
 		stream->codecpar->bit_rate		= bitrate;
 		stream->avg_frame_rate			= av_make_q(fps, 1);
 
@@ -72,7 +74,8 @@ namespace luna
 		c->framerate	= av_make_q(fps, 1);
 		c->gop_size		= 60;
 		c->max_b_frames	= 1;
-		c->pix_fmt		= AV_PIX_FMT_YUV420P;
+		//c->pix_fmt		= AV_PIX_FMT_YUV420P;
+		c->pix_fmt		= AV_PIX_FMT_RGB8;
 		
 		if (stream->codecpar->codec_id == AV_CODEC_ID_H264)
 		{
@@ -133,10 +136,11 @@ namespace luna
 	void Video::encodeFrame(uint8_t* pixels, int pixelSize)
 	{
 		int err;
-		if (!picture)
+		if (true) //!picture
 		{
-			picture = av_frame_alloc();
-			picture->format = AV_PIX_FMT_YUV420P;
+			picture = av_frame_alloc(); // NEEDS TO BE RE ALLOC EVERY FRAME
+			//picture->format = AV_PIX_FMT_YUV420P;
+			picture->format = AV_PIX_FMT_RGB8;
 			picture->width = c->width;
 			picture->height = c->height;
 
@@ -151,7 +155,8 @@ namespace luna
 		if (!swsCtx)
 		{
 			swsCtx = sws_getContext(c->width, c->height, AV_PIX_FMT_RGBA,
-				c->width, c->height, AV_PIX_FMT_YUV420P, SWS_BICUBIC, 0, 0, 0);
+				c->width, c->height, AV_PIX_FMT_RGB8, SWS_BICUBIC, 0, 0, 0);
+			//AV_PIX_FMT_YUV420P
 		}
 
 		AVFrame* rgbaFrame = av_frame_alloc();

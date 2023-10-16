@@ -7,22 +7,19 @@ namespace luna
 	{
 		DEBUG = debug;
 		init(width, height);
-		video = new Video(filename, fps, seconds, width, height);
+		if (!DEBUG)
+			video = new Video(filename, fps, seconds, width, height);
 	}
 
 	Render::~Render()
 	{
-		video->free();
+		if (!DEBUG)
+			video->free();
 	}
 
-	void Render::mainFrameUpdate(Frame frame)
-	{
-		frameUpdate(frame);
-		renderFrameUpdate(frame);
-	}
-
-	void Render::renderFrameUpdate(Frame frame)
-	{
+	void Render::frameUpdate(Frame frame)
+	{		
+		if (DEBUG) return;
 		// POSSIBLE OPTIMIZATION:
 		// Do the converting process between the 
 		// readpixels space and the frame space
@@ -31,13 +28,14 @@ namespace luna
 		uint8_t* pixels = (uint8_t*)malloc(sizeof(uint8_t) * size);
 		glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_INT_8_8_8_8, pixels);
 		video->encodeFrame(pixels, size);
-		if (video->isFull() && !DEBUG)
+		if (video->isFull())
 			glfwSetWindowShouldClose(window, true);
 		free(pixels);
 	}
 
 	void Render::save()
 	{
+		if (DEBUG) return;
 		video->save();
 		video->free();
 	}
