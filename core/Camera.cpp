@@ -6,7 +6,7 @@
 namespace luna
 {
 	Camera::Camera(CameraSettings cameraSettings)
-		: Object(mesh, shader, cameraSettings.position, glm::vec3(1.0f))
+		: Object(mesh, shader, cameraSettings.position, glm::vec3(1.0f), glm::vec3(0.0f))
 	{
 		this->cameraSettings = cameraSettings;
 		glm::mat4 view = glm::mat4(1.0f);

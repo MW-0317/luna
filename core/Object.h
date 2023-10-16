@@ -154,10 +154,16 @@ namespace luna
 		Shader shader;
 		glm::vec3 position;
 		glm::vec3 scale;
+		glm::vec3 rotation;
 		glm::mat4 model;
 	public:
-		Model(Shader shader, glm::vec3 position, glm::vec3 scale);
+		Model(Shader shader, glm::vec3 position, glm::vec3 scale, glm::vec3 rotation);
 		~Model();
+
+		glm::mat4 getModelMatrix();
+
+		void setRotation(glm::vec3 rotation);
+		void setRotation(float xRot, float yRot, float zRot);
 
 		Shader* getShader();
 		virtual void draw(Frame frame);
@@ -168,7 +174,7 @@ namespace luna
 	protected:
 		Mesh mesh; // Give to Model
 	public:
-		Object(Mesh mesh, Shader shader, glm::vec3 position, glm::vec3 scale);
+		Object(Mesh mesh, Shader shader, glm::vec3 position, glm::vec3 scale, glm::vec3 rotation);
 		~Object();
 
 		void frameUpdate(Frame frame) override;
@@ -177,6 +183,8 @@ namespace luna
 		void draw(Frame frame) override;
 		static Object createSquare();
 		static Object createCube();
+
+		void setTexture(std::string filename);
 	};
 
 	class Sprite : public Model

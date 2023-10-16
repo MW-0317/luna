@@ -575,18 +575,43 @@ namespace luna
 		return triangulated;
 	}
 
-	Model::Model(Shader shader, glm::vec3 position, glm::vec3 scale)
+	Model::Model(Shader shader, glm::vec3 position, glm::vec3 scale, glm::vec3 rotation)
 	{
 		this->shader = shader;
 		this->position = position;
 		this->scale = scale;
+		this->rotation = rotation;
 
 		model = glm::mat4(1.0f);
 		model = glm::scale(model, scale);
 		model = glm::translate(model, position);
+		model = glm::rotate(model, rotation.x, glm::vec3(1.0f, 0.0f, 0.0f));
+		model = glm::rotate(model, rotation.y, glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::rotate(model, rotation.z, glm::vec3(0.0f, 0.0f, 1.0f));
 	}
 
 	Model::~Model() {}
+
+	glm::mat4 Model::getModelMatrix()
+	{
+		model = glm::mat4(1.0f);
+		model = glm::scale(model, scale);
+		model = glm::translate(model, position);
+		model = glm::rotate(model, rotation.x, glm::vec3(1.0f, 0.0f, 0.0f));
+		model = glm::rotate(model, rotation.y, glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::rotate(model, rotation.z, glm::vec3(0.0f, 0.0f, 1.0f));
+		return model;
+	}
+
+	void Model::setRotation(glm::vec3 rotation)
+	{
+		this->rotation = rotation;
+	}
+
+	void Model::setRotation(float xRot, float yRot, float zRot)
+	{
+		this->rotation = glm::vec3(xRot, yRot, zRot);
+	}
 
 	void Model::draw(Frame frame) { }
 
@@ -595,8 +620,8 @@ namespace luna
 		return &shader;
 	}
 
-	Object::Object(Mesh mesh, Shader shader, glm::vec3 position, glm::vec3 scale)
-		: Model(shader, position, scale)
+	Object::Object(Mesh mesh, Shader shader, glm::vec3 position, glm::vec3 scale, glm::vec3 rotation)
+		: Model(shader, position, scale, rotation)
 	{
 		this->mesh = mesh;
 	}
@@ -618,7 +643,7 @@ namespace luna
 
 	void Object::draw(Frame frame)
 	{
-		frame.model = model;
+		frame.model = getModelMatrix();
 		mesh.draw(frame, shader);
 	}
 
@@ -627,7 +652,7 @@ namespace luna
 		Mesh mesh = Mesh::createSquare();
 		Shader shader = Shader::getDefaultShader();
 
-		return Object(mesh, shader, glm::vec3(0.0f), glm::vec3(1.0f));
+		return Object(mesh, shader, glm::vec3(0.0f), glm::vec3(1.0f), glm::vec3(0.0f));
 	}
 
 	Object Object::createCube()
@@ -635,7 +660,19 @@ namespace luna
 		Mesh mesh = Mesh::loadObjMesh("resources/objects/cube.obj");
 		Shader shader = Shader::getDefaultShader();
 
-		return Object(mesh, shader, glm::vec3(0.0f), glm::vec3(1.0f));
+		return Object(mesh, shader, glm::vec3(0.0f), glm::vec3(1.0f), glm::vec3(0.0f));
+	}
+
+	void Object::setTexture(std::string filename)
+	{
+		std::cout << filename << std::endl;
+		std::vector<const char*> paths = {
+			filename.c_str(),
+		};
+		std::vector<const char*> names = {
+			"defaultTexture",
+		};
+		this->mesh.setTextures(Texture::generateFromPaths(paths, names));
 	}
 
 	void Sprite::draw(Frame frame)

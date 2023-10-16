@@ -1,4 +1,5 @@
 #include "System.h"
+#include "Object.h"
 
 namespace luna
 {
@@ -10,11 +11,6 @@ namespace luna
 	void System::addSystem(System* system)
 	{
 		systems.push_back(system);
-	}
-
-	void System::addSystem(System system)
-	{
-		systems.push_back(&system);
 	}
 
 	void System::tickSystems(Tick tick)
