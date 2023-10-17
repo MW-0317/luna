@@ -50,6 +50,7 @@ namespace luna
 		glm::mat4 getProjectionMatrix();
 		float getSpeed();
 
+		void setSize(int width, int height);
 		void setPosition(glm::vec3 position);
 		void setSpeed(float speed);
 

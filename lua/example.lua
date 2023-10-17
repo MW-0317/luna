@@ -1,11 +1,8 @@
-WINDOW_WIDTH = 1000
-WINDOW_HEIGHT = 800
-
-clearColor(0.5, 0.5, 0.5, 1.0)
-
---luna.createDebugLines()
+cube = 0
 cube = luna.object.createCube()
 cube:setTexture("resources/textures/ash.png")
+luna.clearColor(0.5, 0.5, 0.5, 1.0)
+--luna.createDebugLines()
 luna.addObject(cube)
 i = 0
 function tickUpdate()

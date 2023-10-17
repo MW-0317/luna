@@ -27,6 +27,9 @@
     <ClCompile Include="src\luawormhole\LuaRender.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\IniParser.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\ArgParser.h">
@@ -36,6 +39,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\luawormhole\LuaRender.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\IniParser.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

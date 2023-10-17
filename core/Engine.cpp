@@ -4,7 +4,7 @@
 
 namespace luna
 {
-	void Engine::init(int width, int height)
+	void Engine::init()
 	{
 		this->createWindow(width, height);
 
@@ -49,9 +49,11 @@ namespace luna
 		glClearColor(1.0f, 0.5f, 1.0f, 1.0f);
 	}
 
-	LUNA_API Engine::Engine(int width, int height)
+	Engine::Engine(int width, int height)
 	{
-		init(width, height);
+		this->width = width;
+		this->height = height;
+		init();
 	}
 
 	Engine::Engine()
@@ -189,6 +191,20 @@ namespace luna
 			std::cout << "MAIN::GLAD_INIT_FAILED" << std::endl;
 			return;
 		}
+	}
+
+	void Engine::setSize(int width, int height)
+	{
+		if (this->spaces.empty())
+		{
+			this->width = width;
+			this->height = height;
+		}
+		else 
+		{
+			getSpace(0)->getCamera()->setSize(width, height);
+		}
+		
 	}
 
 	Space* Engine::getSpace(int index)

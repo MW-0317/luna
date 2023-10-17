@@ -19,8 +19,6 @@ namespace luna
 		int width, height;
 
 		bool exampleWindow = true;
-
-		virtual void init(int width, int height);
 	private:
 		float const MAX_TPS = 60;
 		float const INV_TPS = 1 / MAX_TPS;
@@ -34,6 +32,7 @@ namespace luna
 		void enableDebug() { this->debug = true; }
 		void disableDebug() { this->debug = false; }
 
+		virtual void init();
 		int run();
 		virtual void mainFrameUpdate(Frame frame);
 		virtual void frameUpdate(Frame frame) override;
@@ -41,6 +40,7 @@ namespace luna
 		void mainTickUpdate(Tick tick);
 		virtual void tickUpdate(Tick tick) override;
 
+		void setSize(int width, int height);
 		Space* getSpace(int index);
 
 		static void clearColor(float r, float g, float b, float a);

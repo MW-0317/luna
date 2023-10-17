@@ -1,5 +1,10 @@
 #include "LuaRender.h"
 
+LuaRender::LuaRender() : Render()
+{
+	lua = nullptr;
+}
+
 LuaRender::LuaRender(sol::state* lua, const char* filename, float fps, float seconds, 
 	int width, int height)
 	: Render(filename, fps, seconds, width, height, false)
@@ -19,4 +24,9 @@ void LuaRender::tickUpdate(luna::Tick tick)
 {
 	auto tickUpdate = (*lua)["tickUpdate"];
 	if (tickUpdate.valid()) tickUpdate();
+}
+
+void LuaRender::setLua(sol::state* lua)
+{
+	this->lua = lua;
 }

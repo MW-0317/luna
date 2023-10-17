@@ -135,6 +135,25 @@ namespace luna
 		return this->cameraSettings.speed;
 	}
 
+	void Camera::setSize(int width, int height)
+	{
+		cameraSettings.width = width;
+		cameraSettings.height = height;
+		if (cameraSettings.cameraType == CameraType::Orthographic)
+		{
+			proj = glm::ortho(-1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 100.0f);
+		}
+		else if (cameraSettings.cameraType == CameraType::Perspective)
+		{
+			proj = glm::perspective(glm::radians(cameraSettings.fov),
+				cameraSettings.width / cameraSettings.height, 0.1f, 100.0f);
+		}
+		else
+		{
+			proj = glm::mat4(1.0f);
+		}
+	}
+
 	void Camera::setPosition(glm::vec3 position)
 	{
 		this->cameraSettings.position = position;

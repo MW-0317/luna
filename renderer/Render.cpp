@@ -3,12 +3,26 @@
 
 namespace luna
 {
+	void Render::init()
+	{
+		if (!DEBUG)
+			video = new Video(filename, fps, seconds, width, height);
+		else
+			video = nullptr;
+		Engine::init();
+	}
+
+	Render::Render() {}
+
 	Render::Render(const char* filename, float fps, float seconds, int width, int height, bool debug = false)
 	{
 		DEBUG = debug;
-		init(width, height);
-		if (!DEBUG)
-			video = new Video(filename, fps, seconds, width, height);
+		this->fps = fps;
+		this->seconds = seconds;
+		this->width = width;
+		this->height = height;
+		this->filename = filename;
+		init();
 	}
 
 	Render::~Render()
@@ -38,6 +52,21 @@ namespace luna
 		if (DEBUG) return;
 		video->save();
 		video->free();
+	}
+
+	void Render::setFilename(const char* filename)
+	{
+		this->filename = filename;
+	}
+
+	void Render::setFPS(float fps)
+	{
+		this->fps = fps;
+	}
+
+	void Render::setSeconds(float seconds)
+	{
+		this->seconds = seconds;
 	}
 
 	void Render::createWindow(int width, int height)

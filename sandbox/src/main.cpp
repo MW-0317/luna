@@ -23,6 +23,7 @@
 #include <thirdparty/sol/sol.hpp>
 
 #include "ArgParser.h"
+#include "IniParser.h"
 #include "luawormhole/LuaManager.h"
 #include "luawormhole/LuaRender.h"
 
@@ -32,10 +33,16 @@ int main(int argc, char* argv[])
 {
 	ArgParser arguments = ArgParser(argc, argv);
 	std::string luaFile = arguments.getArgument("input");
+	std::string iniFile = arguments.getArgument("init");
 	std::string filename = arguments.getArgument("output");
 	if (luaFile == "")
 	{
 		std::cout << "Please enter a valid input" << std::endl;
+		return -1;
+	}
+	if (iniFile == "")
+	{
+		std::cout << "Please enter a valid init" << std::endl;
 		return -1;
 	}
 	if (filename == "")
@@ -43,16 +50,23 @@ int main(int argc, char* argv[])
 		std::cout << "Please enter a valid output" << std::endl;
 		return -1;
 	}
-	
-	sol::state* lua = new sol::state();
-	lua->open_libraries(sol::lib::base);
 
-	LuaManager::registerGlobals(lua);
-	
-	LuaRender* r = new LuaRender(lua, filename.c_str(), 30.0f, 2.0f,
-		LuaManager::WINDOW_WIDTH, LuaManager::WINDOW_HEIGHT);
+	IniParser iniParser = IniParser(iniFile);
+
+	sol::state* lua = new sol::state();
+	lua->open_libraries(sol::lib::base);	
+
+	LuaRender* r = new LuaRender(lua, filename.c_str(),
+		std::stof(iniParser.getMap()["init"]["FPS"]),
+		std::stof(iniParser.getMap()["init"]["SECONDS"]),
+		std::stoi(iniParser.getMap()["init"]["WINDOW_WIDTH"]),
+		std::stoi(iniParser.getMap()["init"]["WINDOW_HEIGHT"])
+	);
+
+	//LuaRender* r = new LuaRender();
 
 	LuaManager::setLuaRender(r);
+	
 	LuaManager::registerFunctions(lua);
 
 	//auto luaR = lua->script_file(luaFile, [](lua_State* L, sol::protected_function_result pfr) {
@@ -60,6 +74,8 @@ int main(int argc, char* argv[])
 	//});
 	auto luaR = lua->script_file(luaFile, &sol::script_default_on_error);
 	if (!luaR.valid()) return -1;
+
+	LuaManager::registerGlobals(lua);
 
 	r->run();
 	r->save();
