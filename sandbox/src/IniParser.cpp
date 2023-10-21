@@ -4,6 +4,11 @@
 #include <iostream>
 #include <vector>
 
+std::map<std::string, std::string>& IniParser::operator[](std::string category)
+{
+	return initVals[category];
+}
+
 void IniParser::init(std::string filename)
 {
 	std::string line;
@@ -12,6 +17,8 @@ void IniParser::init(std::string filename)
 	if (!meshFile.is_open())
 	{
 		std::cout << "IniParser\n\t^Could not open file" << std::endl;
+		std::cout << filename << std::endl;
+		return;
 	}
 
 	std::map<std::string, std::string> category;

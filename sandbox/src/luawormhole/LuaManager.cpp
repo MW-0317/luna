@@ -28,24 +28,45 @@ void LuaManager::registerFunctions(sol::state* lua)
 	luna_sol.set_function("clearColor",
 		&LuaRender::clearColor);
 
-	luna_sol.set_function("setSize",
-		[](float width, float height)
-		{
-
-		});
-
 	// Space
 	luna_sol.set_function("createDebugLines",
 		[]()
 		{
 			luaRender->getSpace(0)->createDebugLines();
 		});
+
+	luna_sol.set_function("setCameraFOV",
+		[](float fov)
+		{
+			luaRender->getSpace(0)->getCamera()->setFOV(fov);
+		});
+
+	luna_sol.set_function("setCameraPosition",
+		[](float x, float y, float z)
+		{
+			glm::vec3 pos = glm::vec3(x, y, z);
+			luaRender->getSpace(0)->getCamera()->setPosition(pos);
+		});
+
+	luna_sol.set_function("setCameraLookAt", 
+		[](float x, float y, float z)
+		{
+			luna::Camera* camera = luaRender->getSpace(0)->getCamera();
+			glm::vec3 lookAt = glm::vec3(x, y, z);
+			glm::vec3 pos = camera->getPosition();
+			camera->setForwardVector(lookAt - pos);
+		});
 	
 	// Objects
 	luna_sol.new_usertype<luna::Object>("object",
-		"createCube", &luna::Object::createCube,
-		"setTexture", &luna::Object::setTexture,
-		"setRotation", sol::resolve<void(float, float, float)>(&luna::Object::setRotation)
+		"createCube",			&luna::Object::createCube,
+		"createSphere",			&luna::Object::createSphere,
+		"setTexture",			&luna::Object::setTexture,
+		"setCubeMapTexture",	&luna::Object::setCubeMap,
+		"setRotation",			sol::resolve<void(float, float, float)>(
+			&luna::Object::setRotation),
+		"setPosition",			sol::resolve<void(float, float, float)>(
+			&luna::Object::setPosition)
 	);
 
 	/*
@@ -66,7 +87,6 @@ template<typename T>
 void LuaManager::setGlobal(sol::state* lua, const char* name, T* callbackVar, T defaultVal)
 {
 	auto globalVal = (*lua)[name];
-	std::cout << globalVal.valid() << std::endl;
 	if (globalVal.valid()) *callbackVar = globalVal;
 	else *callbackVar = defaultVal;
 }

@@ -87,10 +87,10 @@
     <ClCompile Include="core\effects\Effect.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="core\logs\ImguiLogs.cpp">
+    <ClCompile Include="core\logging\ImguiLogs.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="core\logging\ImguiLogs.cpp">
+    <ClCompile Include="core\media\Image.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -179,10 +179,10 @@
     <ClInclude Include="core\effects\Effect.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="core\logs\ImguiLogs.h">
+    <ClInclude Include="core\logging\ImguiLogs.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="core\logging\ImguiLogs.h">
+    <ClInclude Include="core\media\Image.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

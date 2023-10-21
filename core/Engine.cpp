@@ -13,7 +13,6 @@ namespace luna
 		cs.height = height;
 		cs.cameraType = CameraType::Perspective;
 		cs.window = window;
-		cs.position = glm::vec3(0.0f, 0.0f, 2.0f);
 		cs.movement = false;
 		Camera* cam = new Camera(cs);
 
@@ -78,12 +77,13 @@ namespace luna
 	{
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glfwSwapBuffers(window);
+		float initTime = glfwGetTime();
 		float delta = 0.0f;
 		float last = 0.0f;
 		float deltatick = 0.0f;
 		while (!glfwWindowShouldClose(window))
 		{
-			float current = glfwGetTime();
+			float current = glfwGetTime() - initTime;
 			delta = current - last;
 			last = current;
 
@@ -104,15 +104,15 @@ namespace luna
 			frame.deltatime = delta;
 			mainFrameUpdate(frame);
 
-			if (deltatick >= INV_TPS)
+			while (deltatick >= INV_TPS)
 			{
 				Tick tick;
 				tick.engine = this;
 				tick.width = this->width;
 				tick.height = this->height;
-				tick.deltatime = deltatick;
+				tick.deltatime = INV_TPS;
 				mainTickUpdate(tick);
-				deltatick = 0.0f;
+				deltatick -= INV_TPS;
 			}
 
 			ImGui::Render();

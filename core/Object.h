@@ -13,13 +13,19 @@
 
 namespace luna
 {
-	class Texture
+	class LUNA_API Texture
 	{
 	public:
 		unsigned int id;
 		unsigned int index;
 		std::string type;
 		const char* name;
+
+		int width, height, nrComponents;
+		GLenum format;
+		unsigned char* data;
+
+		Texture() {}
 
 		Texture(const char* name, const char* path)
 		{
@@ -33,24 +39,37 @@ namespace luna
 			this->name = name;
 		}
 
-		LUNA_API static Texture getDefault();
-		LUNA_API void bind();
+		static Texture getDefault();
+		virtual void bind();
+		virtual void unbind();
 
-		LUNA_API static MaxSizeVector<Texture, 16>
+		static MaxSizeVector<Texture*, 16>
 			generateFromPaths(std::vector<const char*> paths,
-				std::vector<const char*> names)
-		{
-			MaxSizeVector<Texture, 16> textures;
-			for (int i = 0; i < paths.size(); i++)
-			{
-				textures.push_back(Texture(names[i], paths[i], i));
-			}
+				std::vector<const char*> names);
 
-			return textures;
+	protected:
+		int loadImage(const char* path);
+		int loadTexture(const char* path, int index);
+		int loadCubeMap(const char* path, int index);
+	};
+	
+	class LUNA_API CubeMapTexture : public Texture
+	{
+	public:
+		CubeMapTexture(const char* name, const char* path)
+		{
+			loadCubeMap(path, 0);
+			this->name = name;
 		}
 
-	private:
-		int loadTexture(const char* path, int index);
+		CubeMapTexture(const char* name, const char* path, int index)
+		{
+			loadCubeMap(path, index);
+			this->name = name;
+		}
+
+		void bind() override;
+		virtual void unbind();
 	};
 
 	struct PrimitiveVertex
@@ -118,12 +137,12 @@ namespace luna
 	public:
 		std::vector<Vertex>			vertices;
 		std::vector<unsigned int>	indices;
-		MaxSizeVector<Texture, 16>	textures;
+		MaxSizeVector<Texture*, 16>	textures;
 
 		glm::vec3 center;
 
 		void init(std::vector<Vertex> vertices, std::vector<unsigned int> indices,
-			MaxSizeVector<Texture, 16>	textures);
+			MaxSizeVector<Texture*, 16>	textures);
 
 		// Requires vertices to be triangulated
 		Mesh();
@@ -131,11 +150,11 @@ namespace luna
 		Mesh(std::vector<float> vertices);
 		Mesh(std::vector<Vertex> vertices);
 		Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices);
-		Mesh(std::vector<Vertex> vertices, MaxSizeVector<Texture, 16>	textures);
+		Mesh(std::vector<Vertex> vertices, MaxSizeVector<Texture*, 16>	textures);
 		Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices,
-			MaxSizeVector<Texture, 16>	textures);
+			MaxSizeVector<Texture*, 16>	textures);
 
-		void setTextures(MaxSizeVector<Texture, 16> textures);
+		void setTextures(MaxSizeVector<Texture*, 16> textures);
 
 		void draw(Frame frame, Shader shader);
 
@@ -165,6 +184,9 @@ namespace luna
 		void setRotation(glm::vec3 rotation);
 		void setRotation(float xRot, float yRot, float zRot);
 
+		void setPosition(glm::vec3 position);
+		void setPosition(float x, float y, float z);
+
 		Shader* getShader();
 		virtual void draw(Frame frame);
 	};
@@ -183,8 +205,10 @@ namespace luna
 		void draw(Frame frame) override;
 		static Object createSquare();
 		static Object createCube();
+		static Object createSphere();
 
 		void setTexture(std::string filename);
+		void setCubeMap(std::string filename);
 	};
 
 	class Sprite : public Model

@@ -31,11 +31,13 @@ using namespace luna;
 
 int main(int argc, char* argv[])
 {
-	ArgParser arguments = ArgParser(argc, argv);
-	std::string luaFile = arguments.getArgument("input");
-	std::string iniFile = arguments.getArgument("init");
-	std::string filename = arguments.getArgument("output");
-	if (luaFile == "")
+	ArgParser arguments		= ArgParser(argc, argv);
+	std::string luaFile		= arguments.getArgument("input");
+	std::string luaString	= arguments.getArgument("strinput");
+	std::string iniFile		= arguments.getArgument("init");
+	std::string iniString	= arguments.getArgument("strinit");
+	std::string filename	= arguments.getArgument("output");
+	if (luaFile == "" && luaString == "")
 	{
 		std::cout << "Please enter a valid input" << std::endl;
 		return -1;
@@ -57,10 +59,10 @@ int main(int argc, char* argv[])
 	lua->open_libraries(sol::lib::base);	
 
 	LuaRender* r = new LuaRender(lua, filename.c_str(),
-		std::stof(iniParser.getMap()["init"]["FPS"]),
-		std::stof(iniParser.getMap()["init"]["SECONDS"]),
-		std::stoi(iniParser.getMap()["init"]["WINDOW_WIDTH"]),
-		std::stoi(iniParser.getMap()["init"]["WINDOW_HEIGHT"])
+		std::stof(iniParser["init"]["FPS"]),
+		std::stof(iniParser["init"]["SECONDS"]),
+		std::stoi(iniParser["init"]["WINDOW_WIDTH"]),
+		std::stoi(iniParser["init"]["WINDOW_HEIGHT"])
 	);
 
 	//LuaRender* r = new LuaRender();
@@ -72,8 +74,17 @@ int main(int argc, char* argv[])
 	//auto luaR = lua->script_file(luaFile, [](lua_State* L, sol::protected_function_result pfr) {
 	//	return pfr;
 	//});
-	auto luaR = lua->script_file(luaFile, &sol::script_default_on_error);
-	if (!luaR.valid()) return -1;
+	if (luaString == "")
+	{
+		auto luaR = lua->script_file(luaFile, &sol::script_default_on_error);
+		if (!luaR.valid()) return -1;
+	}
+		
+	else if (luaFile == "")
+	{
+		auto luaR = lua->script(luaString, &sol::script_default_on_error);
+		if (!luaR.valid()) return -1;
+	}
 
 	LuaManager::registerGlobals(lua);
 

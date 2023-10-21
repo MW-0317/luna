@@ -127,18 +127,6 @@ namespace luna
 
 	glm::mat4 Camera::getProjectionMatrix()
 	{
-		return proj;
-	}
-
-	float Camera::getSpeed()
-	{
-		return this->cameraSettings.speed;
-	}
-
-	void Camera::setSize(int width, int height)
-	{
-		cameraSettings.width = width;
-		cameraSettings.height = height;
 		if (cameraSettings.cameraType == CameraType::Orthographic)
 		{
 			proj = glm::ortho(-1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 100.0f);
@@ -152,11 +140,33 @@ namespace luna
 		{
 			proj = glm::mat4(1.0f);
 		}
+		return proj;
+	}
+
+	float Camera::getSpeed()
+	{
+		return this->cameraSettings.speed;
+	}
+
+	void Camera::setSize(int width, int height)
+	{
+		cameraSettings.width = width;
+		cameraSettings.height = height;
 	}
 
 	void Camera::setPosition(glm::vec3 position)
 	{
 		this->cameraSettings.position = position;
+	}
+
+	void Camera::setForwardVector(glm::vec3 forward)
+	{
+		this->cameraSettings.front = forward;
+	}
+
+	void Camera::setFOV(float fov)
+	{
+		this->cameraSettings.fov = fov;
 	}
 
 	void Camera::setSpeed(float speed)

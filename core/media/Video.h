@@ -24,6 +24,8 @@ namespace luna
 
 		int width, height;
 
+		Video createGif(const char* filename, float fps, float seconds, int width, int height);
+
 		Video(const char* filename, float fps, float seconds, int width, int height);
 		~Video();
 

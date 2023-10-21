@@ -5,16 +5,28 @@ namespace luna
 {
 	void Render::init()
 	{
-		if (!DEBUG)
-			video = new Video(filename, fps, seconds, width, height);
-		else
+		if (DEBUG)
+		{
 			video = nullptr;
+			Engine::init();
+			return;
+		}
+		if (type == RenderType::VIDEO)
+			video = new Video(filename, fps, seconds, width, height);
+		else if (type == RenderType::IMAGE)
+			;
+
 		Engine::init();
 	}
 
 	Render::Render() {}
 
-	Render::Render(const char* filename, float fps, float seconds, int width, int height, bool debug = false)
+	Render::Render(const char* filename, 
+		float fps, 
+		float seconds, 
+		int width, 
+		int height, 
+		bool debug = false)
 	{
 		DEBUG = debug;
 		this->fps = fps;

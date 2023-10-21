@@ -16,14 +16,15 @@ void LuaRender::frameUpdate(luna::Frame frame)
 {
 	// Call lua update() if it exists
 	auto update = (*lua)["update"];
-	if (update.valid()) update();
+	if (update.valid()) update(frame.deltatime);
 	luna::Render::frameUpdate(frame);
 }
 
 void LuaRender::tickUpdate(luna::Tick tick)
 {
 	auto tickUpdate = (*lua)["tickUpdate"];
-	if (tickUpdate.valid()) tickUpdate();
+	if (tickUpdate.valid()) tickUpdate(tick.deltatime);
+	luna::Render::tickUpdate(tick);
 }
 
 void LuaRender::setLua(sol::state* lua)

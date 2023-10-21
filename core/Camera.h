@@ -29,7 +29,7 @@ namespace luna
 		bool movement = true;
 	};
 
-	class Camera : public Object
+	class LUNA_API Camera : public Object
 	{
 	protected:
 		CameraSettings cameraSettings;
@@ -52,6 +52,8 @@ namespace luna
 
 		void setSize(int width, int height);
 		void setPosition(glm::vec3 position);
+		void setForwardVector(glm::vec3 forward);
+		void setFOV(float fov);
 		void setSpeed(float speed);
 
 		bool isWindow();

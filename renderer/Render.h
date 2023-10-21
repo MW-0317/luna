@@ -6,15 +6,24 @@
 
 namespace luna
 {
+	enum RenderType
+	{
+		VIDEO,
+		IMAGE
+	};
+
 	class LUNA_API Render : public Engine
 	{
 	private:
 		bool DEBUG;
 
 		Video* video;
+		//Image* image; Some image thing
 		const char* filename;
 		float fps;
 		float seconds;
+
+		RenderType type;
 		
 		void createWindow(int width, int height) override;
 	public:

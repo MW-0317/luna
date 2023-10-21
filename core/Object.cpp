@@ -14,22 +14,19 @@
 
 namespace luna
 {
-	int Texture::loadTexture(const char* path, int index)
+	int Texture::loadImage(const char* path)
 	{
-		this->index = index;
 		stbi_set_flip_vertically_on_load(true);
-		glGenTextures(1, &id);
 
-		int width, height, nrComponents;
-		unsigned char* data = stbi_load(path, &width, &height, &nrComponents, 0);
+		data = stbi_load(path, &width, &height, &nrComponents, 0);
 		if (!data)
 		{
 			std::cout << "CORE::TEXTURE::FAILED_TO_LOAD" << std::endl;
+			std::cout << "\t" << path << std::endl;
 			stbi_image_free(data);
 			return -1;
 		}
 
-		GLenum format;
 		if (nrComponents >= 1 && nrComponents <= 4)
 		{
 			GLenum formats[4] = { GL_RED, GL_RG, GL_RGB, GL_RGBA };
@@ -41,7 +38,46 @@ namespace luna
 			stbi_image_free(data);
 			return -1;
 		}
+	}
 
+	int Texture::loadCubeMap(const char* path, int index)
+	{
+		loadImage(path);
+		this->index = index;
+
+		glGenTextures(1, &id);
+		glActiveTexture(GL_TEXTURE0 + index);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, id);
+		for (int i = 0; i < 6; i++)
+			glTexImage2D(
+				GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
+				0, 
+				format, 
+				width, 
+				height, 
+				0, 
+				format, 
+				GL_UNSIGNED_BYTE, 
+				data
+			);
+		glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_REPEAT);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+		stbi_image_free(data);
+		data = nullptr;
+		return id;
+	}
+
+	int Texture::loadTexture(const char* path, int index)
+	{
+		loadImage(path);
+		this->index = index;
+
+		glGenTextures(1, &id);
 		glActiveTexture(GL_TEXTURE0 + index);
 		glBindTexture(GL_TEXTURE_2D, id);
 		glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
@@ -52,7 +88,9 @@ namespace luna
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
+		glBindTexture(GL_TEXTURE_2D, 0);
 		stbi_image_free(data);
+		data = nullptr;
 		return id;
 	}
 
@@ -65,6 +103,46 @@ namespace luna
 	{
 		glActiveTexture(GL_TEXTURE0 + this->index);
 		glBindTexture(GL_TEXTURE_2D, id);
+	}
+
+	void Texture::unbind()
+	{
+		glBindTexture(GL_TEXTURE_2D, 0);
+		glActiveTexture(GL_TEXTURE0);
+	}
+
+	MaxSizeVector<Texture*, 16>
+		Texture::generateFromPaths(std::vector<const char*> paths,
+			std::vector<const char*> names)
+	{
+
+		// Todo try and make Texture a pointer so that bind can be called if
+		// the texture is a cubemap
+		MaxSizeVector<Texture*, 16> textures;
+		for (int i = 0; i < paths.size(); i++)
+		{
+			// Setting CM_ to be a prefix for a cube map
+			if (names[i][0] != '\0' && names[i][0] == 'C' &&
+				names[i][1] != '\0' && names[i][1] == 'M' &&
+				names[i][2] != '\0' && names[i][2] == '_')
+				textures.push_back(new CubeMapTexture(names[i], paths[i], i));
+			else
+				textures.push_back(new Texture(names[i], paths[i], i));
+		}
+
+		return textures;
+	}
+
+	void CubeMapTexture::bind()
+	{
+		glActiveTexture(GL_TEXTURE0 + this->index);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, id);
+	}
+
+	void CubeMapTexture::unbind()
+	{
+		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+		glActiveTexture(GL_TEXTURE0);
 	}
 
 	void Line::init(std::vector<PrimitiveVertex> points, std::vector<unsigned int> indices)
@@ -161,7 +239,7 @@ namespace luna
 	}
 
 	void Mesh::init(std::vector<Vertex> vertices, std::vector<unsigned int> indices,
-		MaxSizeVector<Texture, 16> textures)
+		MaxSizeVector<Texture*, 16> textures)
 	{
 		this->vertices = vertices;
 		this->textures = textures;
@@ -214,31 +292,38 @@ namespace luna
 
 	Mesh::Mesh(const char* objPath)
 	{
-		this->vertices = loadObjMesh(objPath).vertices;
+		std::vector<Vertex> vertices = loadObjMesh(objPath).vertices;
+		std::vector<unsigned int> indices;
+		int size = vertices.size() / 3;
+		for (unsigned int i = 0; i < size; i++)
+		{
+			indices.push_back(i);
+		}
+		init(vertices, indices, MaxSizeVector<Texture*, 16>());
 	}
 
 	Mesh::Mesh(std::vector<float> vertices)
 	{
 		std::vector<Vertex> newVertices = floatToVertex(vertices);
-		init(newVertices, std::vector<unsigned int>(), MaxSizeVector<Texture, 16>());
+		init(newVertices, std::vector<unsigned int>(), MaxSizeVector<Texture*, 16>());
 	}
 
 	Mesh::Mesh(std::vector<Vertex> vertices)
 	{
-		init(vertices, std::vector<unsigned int>(), MaxSizeVector<Texture, 16>());
+		init(vertices, std::vector<unsigned int>(), MaxSizeVector<Texture*, 16>());
 	}
 
 	Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices)
 	{
-		init(vertices, indices, MaxSizeVector<Texture, 16>());
+		init(vertices, indices, MaxSizeVector<Texture*, 16>());
 	}
 
-	Mesh::Mesh(std::vector<Vertex> vertices, MaxSizeVector<Texture, 16>	textures)
+	Mesh::Mesh(std::vector<Vertex> vertices, MaxSizeVector<Texture*, 16>	textures)
 	{
 		init(vertices, std::vector<unsigned int>(), textures);
 	}
 
-	void Mesh::setTextures(MaxSizeVector<Texture, 16> textures)
+	void Mesh::setTextures(MaxSizeVector<Texture*, 16> textures)
 	{
 		this->textures = textures;
 	}
@@ -251,6 +336,8 @@ namespace luna
 		
 		shader.setInt("width", frame.width);
 		shader.setInt("height", frame.height);
+
+		shader.setVec3("camera.position", frame.camera->getPosition());
 		
 		frame.model = glm::translate(frame.model, -center);
 		shader.setMat4("model", frame.model);
@@ -259,8 +346,8 @@ namespace luna
 		glBindVertexArray(VAO);
 		for (int i = 0; i < textures.size(); i++)
 		{
-			textures[i].bind();
-			shader.setInt(textures[i].name, i);
+			textures[i]->bind();
+			shader.setInt(textures[i]->name, i);
 		}
 		//glDrawArrays(GL_TRIANGLES, 0, vertices.size());
 		glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
@@ -407,6 +494,7 @@ namespace luna
 
 			else if (lineData[0] == "f")
 			{
+				std::vector< std::vector<std::string>> verticesArgs;
 				for (int k = 1; k < lineData.size(); k++)
 				{
 					std::vector<std::string> vertexArgs;
@@ -420,7 +508,13 @@ namespace luna
 					}
 					vertexArgs.push_back(lineData[k].substr(i, lineData[k].size() - i));
 
+					verticesArgs.push_back(vertexArgs);
+				}
+
+				for (int l = 0; l < verticesArgs.size() - 2; l++)
+				{
 					Vertex v;
+					std::vector<std::string> vertexArgs = verticesArgs[0];
 					if (vertexArgs[0] != "")
 						v.position = vList[std::stoi(vertexArgs[0]) - 1];
 					if (vertexArgs[1] != "")
@@ -428,20 +522,22 @@ namespace luna
 					if (vertexArgs[2] != "")
 						v.normal = vnList[std::stoi(vertexArgs[2]) - 1];
 					vertices.push_back(v);
+					for (int m = 1; m < 3; m++)
+					{
+						Vertex v;
+						std::vector<std::string> vertexArgs = verticesArgs[l + m];
+						if (vertexArgs[0] != "")
+							v.position = vList[std::stoi(vertexArgs[0]) - 1];
+						if (vertexArgs[1] != "")
+							v.texcoords = vtList[std::stoi(vertexArgs[1]) - 1];
+						if (vertexArgs[2] != "")
+							v.normal = vnList[std::stoi(vertexArgs[2]) - 1];
+						vertices.push_back(v);
+					}
 				}
 			}
 		}
 		meshFile.close();
-
-		float* a = &vertices[0].position.x;
-		for (int i = 0; i < vertices.size(); i++)
-		{
-			for (int j = 0; j < VERTEX_SIZE; j++)
-			{
-				std::cout << a[i * VERTEX_SIZE + j] << " ";
-			}
-			std::cout << std::endl;
-		}
 
 		std::vector<unsigned int> indices;
 		for (int i = 0; i < vertices.size(); i++)
@@ -617,6 +713,16 @@ namespace luna
 		this->rotation = glm::vec3(xRot, yRot, zRot);
 	}
 
+	void Model::setPosition(glm::vec3 position)
+	{
+		this->position = position;
+	}
+
+	void Model::setPosition(float x, float y, float z)
+	{
+		this->position = glm::vec3(x, y, z);
+	}
+
 	void Model::draw(Frame frame) { }
 
 	Shader* Model::getShader()
@@ -667,14 +773,32 @@ namespace luna
 		return Object(mesh, shader, glm::vec3(0.0f), glm::vec3(1.0f), glm::vec3(0.0f));
 	}
 
+	Object Object::createSphere()
+	{
+		Mesh mesh = Mesh::loadObjMesh("resources/objects/sphere.obj");
+		Shader shader = Shader::getDefaultShader();
+
+		return Object(mesh, shader, glm::vec3(0.0f), glm::vec3(1.0f), glm::vec3(0.0f));
+	}
+
 	void Object::setTexture(std::string filename)
 	{
-		std::cout << filename << std::endl;
 		std::vector<const char*> paths = {
 			filename.c_str(),
 		};
 		std::vector<const char*> names = {
 			"defaultTexture",
+		};
+		this->mesh.setTextures(Texture::generateFromPaths(paths, names));
+	}
+
+	void Object::setCubeMap(std::string filename)
+	{
+		std::vector<const char*> paths = {
+			filename.c_str(),
+		};
+		std::vector<const char*> names = {
+			"CM_defaultTexture",
 		};
 		this->mesh.setTextures(Texture::generateFromPaths(paths, names));
 	}

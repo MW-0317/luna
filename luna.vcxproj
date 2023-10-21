@@ -145,6 +145,7 @@
     <ClCompile Include="core\Engine.cpp" />
     <ClCompile Include="core\Globals.cpp" />
     <ClCompile Include="core\logging\ImguiLogs.cpp" />
+    <ClCompile Include="core\media\Image.cpp" />
     <ClCompile Include="core\media\Video.cpp" />
     <ClCompile Include="core\Object.cpp" />
     <ClCompile Include="core\particle\ParticleSystem.cpp" />
@@ -175,6 +176,7 @@
     <ClInclude Include="core\includes.h" />
     <ClInclude Include="core\logging\ImguiLogs.h" />
     <ClInclude Include="core\math\Vector.h" />
+    <ClInclude Include="core\media\Image.h" />
     <ClInclude Include="core\media\Video.h" />
     <ClInclude Include="core\Object.h" />
     <ClInclude Include="core\particle\ParticleSystem.h" />
