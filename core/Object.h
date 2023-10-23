@@ -8,6 +8,7 @@
 #include "Core.h"
 #include "Shader.h"
 #include "System.h"
+#include "media/Image.h"
 #include "effects/Effect.h"
 #include "math/Vector.h"
 
@@ -21,9 +22,7 @@ namespace luna
 		std::string type;
 		const char* name;
 
-		int width, height, nrComponents;
-		GLenum format;
-		unsigned char* data;
+		Image* image;
 
 		Texture() {}
 

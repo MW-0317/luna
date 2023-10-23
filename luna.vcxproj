@@ -154,7 +154,6 @@
     <ClCompile Include="core\Space.cpp" />
     <ClCompile Include="core\System.cpp" />
     <ClCompile Include="core\effects\Effect.cpp" />
-    <ClCompile Include="example\entry.cpp" />
     <ClCompile Include="main\glad.c" />
     <ClCompile Include="main\luna.cpp" />
     <ClCompile Include="main\main_time.cpp" />

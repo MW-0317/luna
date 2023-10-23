@@ -1,8 +1,6 @@
 #include "Object.h"
 
 #include <thirdparty/glad/glad.h>
-#define STB_IMAGE_IMPLEMENTATION
-#include <thirdparty/stb/stb_image.h>
 
 #include "Camera.h"
 #include "Space.h"
@@ -16,28 +14,8 @@ namespace luna
 {
 	int Texture::loadImage(const char* path)
 	{
-		stbi_set_flip_vertically_on_load(true);
-
-		data = stbi_load(path, &width, &height, &nrComponents, 0);
-		if (!data)
-		{
-			std::cout << "CORE::TEXTURE::FAILED_TO_LOAD" << std::endl;
-			std::cout << "\t" << path << std::endl;
-			stbi_image_free(data);
-			return -1;
-		}
-
-		if (nrComponents >= 1 && nrComponents <= 4)
-		{
-			GLenum formats[4] = { GL_RED, GL_RG, GL_RGB, GL_RGBA };
-			format = formats[nrComponents - 1];
-		}
-		else
-		{
-			std::cout << "CORE::TEXTURE::NR_COMPONENTS_INVALID" << std::endl;
-			stbi_image_free(data);
-			return -1;
-		}
+		this->image = new Image(path, true);
+		return 0;
 	}
 
 	int Texture::loadCubeMap(const char* path, int index)
@@ -52,13 +30,13 @@ namespace luna
 			glTexImage2D(
 				GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
 				0, 
-				format, 
-				width, 
-				height, 
+				image->format, 
+				image->width, 
+				image->height, 
 				0, 
-				format, 
+				image->format, 
 				GL_UNSIGNED_BYTE, 
-				data
+				image->data
 			);
 		glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -67,8 +45,6 @@ namespace luna
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_REPEAT);
 		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
-		stbi_image_free(data);
-		data = nullptr;
 		return id;
 	}
 
@@ -80,7 +56,17 @@ namespace luna
 		glGenTextures(1, &id);
 		glActiveTexture(GL_TEXTURE0 + index);
 		glBindTexture(GL_TEXTURE_2D, id);
-		glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
+		glTexImage2D(
+			GL_TEXTURE_2D, 
+			0, 
+			image->format, 
+			image->width, 
+			image->height, 
+			0, 
+			image->format, 
+			GL_UNSIGNED_BYTE, 
+			image->data
+		);
 		glGenerateMipmap(GL_TEXTURE_2D);
 
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -89,8 +75,6 @@ namespace luna
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
 		glBindTexture(GL_TEXTURE_2D, 0);
-		stbi_image_free(data);
-		data = nullptr;
 		return id;
 	}
 
