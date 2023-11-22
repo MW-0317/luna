@@ -15,14 +15,15 @@ LuaRender::LuaRender(sol::state* lua, const char* filename, float fps, float sec
 void LuaRender::frameUpdate(luna::Frame frame)
 {
 	// Call lua update() if it exists
-	auto update = (*lua)["update"];
-	if (update.valid()) update(frame.deltatime);
+	sol::protected_function update = (*lua)["update"];
+	sol::protected_function_result result;
+	if (update.valid()) result = update(frame.deltatime);
 	luna::Render::frameUpdate(frame);
 }
 
 void LuaRender::tickUpdate(luna::Tick tick)
 {
-	auto tickUpdate = (*lua)["tickUpdate"];
+	sol::protected_function tickUpdate = (*lua)["tickUpdate"];
 	if (tickUpdate.valid()) tickUpdate(tick.deltatime);
 	luna::Render::tickUpdate(tick);
 }

@@ -137,6 +137,7 @@ namespace luna
 		std::vector<Vertex>			vertices;
 		std::vector<unsigned int>	indices;
 		MaxSizeVector<Texture*, 16>	textures;
+		float mix = 0.0f;
 
 		glm::vec3 center;
 
@@ -153,7 +154,7 @@ namespace luna
 		Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices,
 			MaxSizeVector<Texture*, 16>	textures);
 
-		void setTextures(MaxSizeVector<Texture*, 16> textures);
+		void setTextures(MaxSizeVector<Texture*, 16> textures, float mix = 0.0f);
 
 		void draw(Frame frame, Shader shader);
 

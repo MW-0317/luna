@@ -9,6 +9,7 @@
 #include <glm/gtx/string_cast.hpp>
 #include <iostream>
 #include <fstream>
+#include <algorithm>
 
 namespace luna
 {
@@ -21,7 +22,20 @@ namespace luna
 	int Texture::loadCubeMap(const char* path, int index)
 	{
 		loadImage(path);
-		this->index = index;
+		if (image->width != image->height)
+		{
+			int newSize = std::max(image->width, image->height);
+			newSize--;
+			newSize |= newSize >> 1;
+			newSize |= newSize >> 2;
+			newSize |= newSize >> 4;
+			newSize |= newSize >> 8;
+			newSize |= newSize >> 16;
+			newSize |= newSize >> 32;
+			newSize++;
+			image->resize(newSize, newSize);
+		}
+;		this->index = index;
 
 		glGenTextures(1, &id);
 		glActiveTexture(GL_TEXTURE0 + index);
@@ -307,9 +321,10 @@ namespace luna
 		init(vertices, std::vector<unsigned int>(), textures);
 	}
 
-	void Mesh::setTextures(MaxSizeVector<Texture*, 16> textures)
+	void Mesh::setTextures(MaxSizeVector<Texture*, 16> textures, float mix)
 	{
 		this->textures = textures;
+		this->mix = mix;
 	}
 
 	void Mesh::draw(Frame frame, Shader shader)
@@ -327,6 +342,8 @@ namespace luna
 		shader.setMat4("model", frame.model);
 		shader.setMat4("view", frame.view);
 		shader.setMat4("projection", frame.proj);
+
+		shader.setFloat("mixAmount", this->mix);
 		glBindVertexArray(VAO);
 		for (int i = 0; i < textures.size(); i++)
 		{
@@ -773,7 +790,7 @@ namespace luna
 		std::vector<const char*> names = {
 			"defaultTexture",
 		};
-		this->mesh.setTextures(Texture::generateFromPaths(paths, names));
+		this->mesh.setTextures(Texture::generateFromPaths(paths, names), 0.0f);
 	}
 
 	void Object::setCubeMap(std::string filename)
@@ -784,7 +801,7 @@ namespace luna
 		std::vector<const char*> names = {
 			"CM_defaultTexture",
 		};
-		this->mesh.setTextures(Texture::generateFromPaths(paths, names));
+		this->mesh.setTextures(Texture::generateFromPaths(paths, names), 1.0f);
 	}
 
 	void Sprite::draw(Frame frame)

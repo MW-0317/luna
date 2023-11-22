@@ -10,9 +10,10 @@ namespace luna
 	class LUNA_API Image
 	{
 	public:
-		int width, height, nrComponents;
-		GLenum format;
-		unsigned char* data;
+		int width, height,	nrComponents;
+		GLenum				format;
+		int					pixFormat;
+		unsigned char*		data;
 
 		// For getting image
 		void init(const char* filename, bool flip = true);
@@ -23,6 +24,7 @@ namespace luna
 		Image(unsigned char* data, int width, int height, int nrComponents);
 
 		void save(const char* filename);
+		void resize(int width, int height);
 
 		~Image();
 	};

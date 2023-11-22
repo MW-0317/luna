@@ -31,6 +31,10 @@ using namespace luna;
 
 int main(int argc, char* argv[])
 {
+	/*
+		General TODO:
+			- Add Tesselation and Geometry Shader Stuff
+	*/
 	ArgParser arguments		= ArgParser(argc, argv);
 	std::string luaFile		= arguments.getArgument("input");
 	std::string luaString	= arguments.getArgument("strinput");
@@ -56,7 +60,7 @@ int main(int argc, char* argv[])
 	IniParser iniParser = IniParser(iniFile);
 
 	sol::state* lua = new sol::state();
-	lua->open_libraries(sol::lib::base);	
+	lua->open_libraries(sol::lib::base, sol::lib::math);	
 
 	LuaRender* r = new LuaRender(lua, filename.c_str(),
 		std::stof(iniParser["init"]["FPS"]),

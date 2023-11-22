@@ -42,26 +42,25 @@ FS
     in vec3 fNormal;
     in vec2 texCoord;
 
-    //uniform sampler2D defaultTexture;
+    uniform sampler2D defaultTexture;
     uniform samplerCube CM_defaultTexture;
     uniform Camera camera;
+    uniform float mixAmount;
 
     out vec4 FragColor;
 
     void main()
     {
-        vec3 color = vec3(0.0);
-        vec3 defaultTextureCol = vec3(1.0); //texture(defaultTexture, texCoord).xyz;
+        vec4 color = vec4(0.0);
+        vec4 defaultTextureCol = texture(defaultTexture, texCoord);
 
         vec3 I = normalize(fPosition - camera.position);
         vec3 R = reflect(-I, normalize(fNormal));
-        vec3 cubeMapTextureCol = texture(CM_defaultTexture, R).xyz;
+        vec4 cubeMapTextureCol = texture(CM_defaultTexture, R);
 
-        color = cubeMapTextureCol;
-        // if (all(equal(cubeMapTextureCol, vec3(0.0))))
-        //     color = defaultTextureCol;
-        // else if (all(equal(defaultTextureCol, vec3(0.0))))
-        //     color = cubeMapTextureCol;
-        FragColor = vec4(color, 1.0);
+        color = mix(defaultTextureCol, cubeMapTextureCol, mixAmount);
+        if (color.a <= 0.01)
+            discard;
+        FragColor = color;
     }
 }
